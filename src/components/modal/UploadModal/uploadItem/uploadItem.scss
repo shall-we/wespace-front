@@ -1,0 +1,92 @@
+@import 'utils';
+
+.fileType{
+    
+    display: flex;
+    flex-direction: row;
+
+    input[type="text"]{
+      width:3.7em;
+      height:2.7em;
+     border:1px solid white;
+      border-radius:10px;
+      padding-top:.6em;
+     padding-bottom:.6em;
+     padding-left:.2em;
+     padding-right:.2em;
+     font-size : .5em;
+     font-weight:bold;
+     text-align:center;
+     color : #233A3F;
+     margin: .5em;
+     margin-left:1em;
+  
+     &:focus{
+      outline: none !important;
+      }
+  }
+
+    }
+ 
+ .fileType-blue{
+   background:#ADD8E6;
+ }
+ 
+ .fileType-red{
+   background-color : rgb(255,203,188);
+ }
+ 
+ .fileType-yellow{
+   background-color : #FBE68B;
+ }
+ 
+ .fileType-green{
+   background-color : #B2F99D;
+ }
+ 
+ .uploadItemInfo{
+  display: flex;
+  flex-direction: column;
+  width:100%;
+ 
+  label{
+    width:unset;
+    word-break:break-all;
+  }
+
+  progress {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      display: block;
+      width: 180px;
+      height: .3em;
+      margin-top:.4em;
+      border:0 none;
+      background:rgb(231,238,250);
+
+      &::-webkit-progress-bar {
+          background: transparent;
+      }  
+      &::-webkit-progress-value {  
+          border-radius: 12px;
+          background: rgb(10,215,152);
+          box-shadow: 2px 5px 7px 2px rgb(207,249,239);
+        } 
+
+      &::-moz-progress-bar{
+
+      }
+    }
+}
+
+.deleteItem{
+  align-self: right;
+  width:15px;
+  height: 15px;
+  margin-right:20px;
+  margin-top:6%;
+  padding-left: 5px;
+}
+ 
+ 

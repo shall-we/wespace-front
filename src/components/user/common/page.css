@@ -1,0 +1,17 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: gray;
+}
+.title{
+    font-size : calc(13px + 10vmin);
+    
+}
+label {
+    color : gray;
+    font-size : calc(13px + 2vmin);
+}
+

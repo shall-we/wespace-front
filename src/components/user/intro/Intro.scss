@@ -1,0 +1,81 @@
+// 파란바탕
+.left-page {
+    // 브라우저 크기에 따라 작업
+    width: 50%;
+    height: calc(100% - 10rem);
+    position: absolute;
+    background: #12b2eb;
+
+    @media (max-height: 650px), (max-width: 1100px) {
+        width: 100%;
+        height: calc(50% - 6rem);
+        position: absolute;
+        background: #12b2eb;
+    }
+}
+
+// 회색바탕
+.right-page {
+    width: 50%;
+    height: calc(100% - 10rem);
+    position: absolute;
+    background: url("../../../image/intro-right.png") no-repeat center center;
+    background-size: cover;
+    left: 50%;
+
+    @media (max-height: 650px), (max-width: 1100px) {
+        top: 50%;
+        left: 0%;
+        width: 100%;
+        height: calc(50% - 6rem);
+        position: absolute;
+        background: #dfdfdf;
+    }
+    // 버튼 위치 가운데 정렬
+    .Buttons {
+        @media (max-height: 650px), (max-width: 1100px) {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            left: 25%;
+            top: 5%;
+        }
+        position: absolute;
+        width: 50%;
+        height: 50%;
+        left: 25%;
+        top: 25%;
+    }
+}
+
+// 큰 글씨
+.maintext {
+    @media (max-width: 1100px) {
+        color: #ffffff;
+        font-size: 45px;
+        text-align: center;
+    }
+
+    @media (max-width: 1800px) {
+        color: #ffffff;
+        font-size: 30px;
+        text-align: center;
+    }
+    color: #ffffff;
+    font-size: 60px;
+    text-align: center;
+}
+
+// 작은 글씨
+.subtext {
+    @media (max-width: 1100px) {
+        color: #ffffff;
+        font-size: 25px;
+        line-height: 160%;
+        text-align: center;
+    }
+    color: #ffffff;
+    font-size: 30px;
+    line-height: 160%;
+    text-align: center;
+}

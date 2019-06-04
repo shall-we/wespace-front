@@ -1,0 +1,4 @@
+.error{
+    font-size : calc(8px + 1vmin);
+    color:red;
+}

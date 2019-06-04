@@ -1,0 +1,38 @@
+@import '../../../styles/utils.scss';
+
+.editor{
+  flex: 1;
+  display: flex;
+  flex-direction:column;
+
+  .editor-main{ 
+
+    display: flex;
+    background: white;
+    height: calc(100vh - 7rem);
+
+    .quill{
+      flex: 1;
+      overflow-y:auto; 
+      overflow-x:inherit;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .ql-editor{
+        overflow-y:unset; 
+        overflow-x:unset;
+      }
+
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+ 
+  
+ 
+}
+

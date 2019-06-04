@@ -1,0 +1,28 @@
+@import 'utils';
+
+.question {
+    width: 350px;
+    background: white;
+    padding: 2rem;
+    .title {
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+    .description {
+        margin-top: 0.25rem;
+    }
+}
+
+.options {
+    padding: 1rem;
+    background: $oc-gray-1;
+    text-align: right;
+}
+
+#focus {
+    background-color: white !important;
+    background-image: none !important;
+    border-color: white;
+    border: none;
+    outline: none;
+}

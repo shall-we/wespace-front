@@ -1,0 +1,96 @@
+@import "../../../styles/utils.scss";
+
+.header {
+    background: white;
+    .header-content {
+        height: 4rem;
+        max-height: 4rem;
+        width: auto;
+        margin:  auto; // 가운데 정렬
+        padding-left: 1rem;
+        padding-right: 1rem;
+
+        // 내부 아이템 세로 가운데 정렬
+        display: flex;
+        align-items: center;
+
+        .brand {
+            // 로고
+            //color: $oc-blue-7;
+            // font-size: 2.5rem;
+            // font-weight: 900;
+            // width: 3rem;
+            .logo {
+                margin-top:0.5rem; 
+                width: 10rem;
+            }
+            .mini-logo {
+                width: 3.3rem;
+            }
+        }
+        // 반응형 레이아웃
+        @include media("<wide") {
+            width: 100%;
+            .logo {
+                display: inline-block;
+            }
+            .mini-logo {
+                display: none;
+            }
+        }
+        @include media("<medium") {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            .logo {
+                //display:none;
+            }
+            .mini-logo {
+                display: inline-block;
+            }
+        }
+
+        .right {
+            // 오른쪽 내용
+           
+            display: flex;
+            align-items: center;
+
+
+            .login {
+                display: flex;
+                background: $oc-blue-5;
+                border-radius: 20px; /* 이미지 반크기만큼 반경을 잡기*/
+                align-items: center;
+                justify-content: center;
+                margin-right:1rem; 
+                cursor: pointer;
+                border:$oc-gray-3 solid 1px;
+
+                span{
+                    color: $oc-gray-0;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    margin:0 1.5rem 0 1rem;
+                }
+                img {
+                    background: white;
+                    width: 2.5rem;
+                    height: 2.5rem;
+                    border-top-left-radius: 20px; /* 이미지 반크기만큼 반경을 잡기*/
+                    border-bottom-left-radius: 20px; /* 이미지 반크기만큼 반경을 잡기*/
+                   
+                }
+                &:hover {
+                    background: $oc-blue-6;
+                    box-shadow: 0 5px 10px $oc-gray-3;
+                    span{
+                        color: white;
+                    }
+                  }
+     
+            }
+            margin-left: auto;
+        }
+        border-bottom: 10px solid $oc-blue-6;
+    }
+}

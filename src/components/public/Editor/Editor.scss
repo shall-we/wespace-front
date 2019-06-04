@@ -1,0 +1,27 @@
+@import '../../../styles/utils.scss';
+
+.editor-public{
+
+ 
+  flex: 1;
+ 
+  display: flex;
+  margin:1rem;
+  overflow-y:auto; 
+  overflow-x:inherit; 
+  background: white;
+  @include material-shadow(5, 2);
+
+  .ql-editor{
+    overflow-y:unset;
+    overflow-x:unset; 
+  }
+  .quill{
+  
+    flex: 1;
+    
+    
+  }
+}
+
+

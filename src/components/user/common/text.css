@@ -1,0 +1,55 @@
+.form-div {
+    position: relative;
+    margin-top : 6px;
+    min-width: 330px;
+    width : 25%;
+  }
+  
+  .form-label {
+    margin: inherit;
+    position: absolute;
+    left: 5%;
+    top: 25%;
+    color: dimgray;
+    font-weight: lighter;
+  
+    font-size : calc(10px + 1vmin);
+    z-index: 10;
+    transition: transform 150ms ease-out, font-size 150ms ease-out;
+  }
+  
+.focus-label {
+    transform: translateY(-125%);
+    color: blue;
+    font-weight: normal;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size : calc(7px + 1vmin);
+  }
+
+  .form-input {
+    margin: inherit;
+    position: relative;
+    padding: 4%;
+    width: 100%;
+    outline: 0;
+    border-radius: 30px;
+    background-color: rgb(241, 243, 245);
+    border :1px solid rgb(193, 194, 196);
+    font-size : calc(11px + 1vmin);
+    font-weight: lighter;
+    transition: border 150ms ease-out, ;
+  }
+  
+  .form-input:focus {
+    border: 1.5px solid rgb(63, 81, 181);
+  }
+
+  .right-end{
+    position: absolute;
+    right: 5%;
+    top: 27%;
+    width: 10%;
+    min-width: 30px;
+    cursor: pointer;
+  }

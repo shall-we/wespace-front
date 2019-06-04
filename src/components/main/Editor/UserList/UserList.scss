@@ -1,0 +1,62 @@
+@import 'utils.scss';
+.userlist{
+    min-height: 3rem;
+    max-height: 3rem;
+    min-width: 100%;
+    width:100%;
+    border-bottom: $oc-gray-3 solid 0.05rem;
+    display: flex;
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .users-container {
+    flex: 1;
+    display: flex;
+    color: #333;
+    background: #fff;
+    overflow-x: auto;
+    position: relative;
+   
+    align-items: center;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+  .user {
+    flex: 0 0 6rem;
+    height: 2rem;
+    display: flex;
+    box-shadow: 0 1px 0.5rem -4px #000;
+    background: #fff;
+    margin: 0.1rem 0.5rem 0.1rem 0.5rem;
+    overflow: hidden;
+    
+    cursor: pointer;
+    transition: all 250ms ease-in-out;
+    
+    img {
+        flex: 0.4;
+        width: 2rem;
+        height: 2rem;
+        object-fit: center;
+    }
+    .user-content {
+        flex: 0.6;
+        font-size: 0.5rem;
+        padding: 0.1rem;
+        text-align: center;
+        font-weight: 600;
+      }
+    &:hover {
+      box-shadow: 0 4px 0.5rem -4px #000;
+      transform: translateY(-3px);
+    }
+  }
+  
+  
+  

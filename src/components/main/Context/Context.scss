@@ -1,0 +1,44 @@
+@import '../../../styles/utils.scss';
+
+
+.context{
+    flex: 1;
+    background: $oc-gray-7;
+    display: flex;
+    flex-direction: column;
+    .system{
+
+        flex:0.1;
+        background: $oc-red-4;
+        margin: 2rem;
+    }
+
+    .notice{
+        flex:0.9;
+        display: flex;
+        background: $oc-gray-2;
+        .comment{
+            flex:1;
+            background: $oc-green-4;
+            margin: 2rem;
+        }
+        .directory{
+            flex:1;
+            display: flex;
+            flex-direction: column;
+            margin-right: 2rem;
+            .folder{
+    
+                flex:1;
+               // background: $oc-blue-4;
+               
+            }
+            .note{
+                flex:1;
+               // background: $oc-teal-4;
+                
+            }
+        }
+       
+    }
+}
