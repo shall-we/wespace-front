@@ -7,7 +7,7 @@ export const join = (name,email,password,profile) => axios.post('/join',{name,em
 export const getUserList = (folder_id) => axios.get(`/user?${queryString.stringify({folder_id})}`);
 export const autoLogin = () => axios.get('/autoLogin');
 export const logout = () => axios.get('/logout');
-export const getAllUserList = () => axios.get('/admin/user');
+
 export const deleteUser = (id) => axios.delete(`/admin/user/${id}`);
 
 // Folder API
@@ -45,3 +45,6 @@ export const createAnnouncement = (title, content) => axios.post('/admin/announc
 export const getAnnouncement = (id) => axios.get(`/admin/announcement/${queryString.stringify({id})}`);
 export const updateAnnouncement = (id, title, content) => axios.patch(`/admin/announcement/${id}`, { title, content });
 export const deleteAnnouncement = (id) => axios.delete(`/admin/announcement/${id}`);
+
+export const getAllUserList = () => axios.get('/admin/user');
+export const getAllFolderList = () => axios.get('/admin/folder');

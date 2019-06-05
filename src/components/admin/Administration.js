@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import { createMuiTheme, withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -37,21 +37,13 @@ const styles = {
       height: 'calc(100vh - 4rem)',
       flexShrink: 0,
   },
-  toolbar: {
-      display: "flex",
-      justifyContent: "flex-end",
-  },
   paper: {
       position : "unset",
       background: "#000000"
   },
-  drawerOverflow: {
-      overflowX: "hidden",
-  },
   nav: {
       padding: '1rem',
       borderBottom: '3px groove white',
-      // background: 'yellow'
   },
   list: {
       overflowX: "hidden",
@@ -76,17 +68,18 @@ class Administration extends React.Component {
   handleManagingNotice = () => {
     this.setState({ visible: true });
     this.props.AdminActions.getAnnouncementList();
-    this.props.noticeOpen(this.state.visible);
+    this.props.onNotice(this.state.visible);
   };
 
   handleManagingEmployees = () => {
       this.setState({ visible: true });
       console.log('[Administration] ', this.state.visible);
-      this.props.visible(this.state.visible);
+      this.props.onEmployees(this.state.visible);
   };
 
   handleManageFolder = () => {
     console.log('handleManageFolder');
+    this.props.onFolder(this.state.visible);
   }
 
   render() {

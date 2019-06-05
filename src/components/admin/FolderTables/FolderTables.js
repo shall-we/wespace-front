@@ -55,11 +55,11 @@ const styles = theme => ({
   }
 });
 
-class CustomizedTables extends React.Component {
+class FolderTables extends React.Component {
   render() {
-    const { classes, userList, onDelete } = this.props;
-    // const { noteCount } = this.props;
-    console.log('userList: ',userList);
+    const { classes, folderList, onDelete } = this.props;
+    // const { folderList } = this.props;
+    console.log('[FolderTables] folderList: ',folderList);
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -68,23 +68,23 @@ class CustomizedTables extends React.Component {
               <StyledTableCell align="center">
                 <FontAwesomeIcon icon="user-circle" size="2x" color="#fff" />
               </StyledTableCell>
-              <StyledTableCell align="center">이메일</StyledTableCell>
               <StyledTableCell align="center">직원 이름</StyledTableCell>
-              <StyledTableCell align="center">폴더 수</StyledTableCell>
-              <StyledTableCell align="center">직원 관리</StyledTableCell>
+              <StyledTableCell align="center">폴더 이름</StyledTableCell>
+              <StyledTableCell align="center">폴더 권한</StyledTableCell>
+              <StyledTableCell align="center">관리</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {userList.map((user) => (
+            {folderList.map((user) => (
               <StyledTableRow key={user.id}>
                 <StyledTableCell align="center"><img className={classes.profile} src={user.profile} alt="profile" /></StyledTableCell>
-                <StyledTableCell align="center" component="th" scope="row">
-                  {user.email}
-                </StyledTableCell>
-                <StyledTableCell align="center">{user.name}</StyledTableCell>
-                <StyledTableCell align="center">{user.folder_count}</StyledTableCell>
                 <StyledTableCell align="center">
-                  <Button key='btn-delete' theme='outline' onClick={() => onDelete(user.id)}>계정 삭제</Button>
+                  {user.u_name}
+                </StyledTableCell>
+                <StyledTableCell align="center" component="th" scope="row">{user.f_name}</StyledTableCell>
+                <StyledTableCell align="center">{user.permission}</StyledTableCell>
+                <StyledTableCell align="center">
+                  <Button key='btn-folder-delete' theme='outline' onClick={() => onDelete(user.id)}>폴더 삭제</Button>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
@@ -95,4 +95,4 @@ class CustomizedTables extends React.Component {
   }
 }
 
-export default withStyles(styles)(CustomizedTables);
+export default withStyles(styles)(FolderTables);
