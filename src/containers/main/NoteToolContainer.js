@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
-import * as noticeActions from 'store/modules/notice';
-import * as noteToolActions from 'store/modules/noteTool';
-import NoteToolTemplate from 'components/common/NoteToolTemplate'
-import NoteToolBox from 'components/toolbox/NoteToolBox'
-import CommentTool from 'components/tool/CommentTool'
-import AttachmentTool from 'components/tool/AttachmentTool';
+import * as noticeActions from "store/modules/notice";
+import * as noteToolActions from "store/modules/noteTool";
+import NoteToolTemplate from "components/common/NoteToolTemplate";
+import NoteToolBox from "components/toolbox/NoteToolBox";
+import CommentTool from "components/tool/CommentTool";
+import AttachmentTool from "components/tool/AttachmentTool";
 
-import socketio from 'socket.io-client';
-const socket=socketio.connect('http://192.168.0.70:4000');
+import socketio from "socket.io-client";
+const socket = socketio.connect("http://192.168.0.68:4000");
 
 class NoteToolContainer extends Component {
   state={

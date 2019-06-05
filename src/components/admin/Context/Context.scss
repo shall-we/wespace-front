@@ -1,0 +1,73 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,700,700italic,400italic);
+
+$yellow: rgb(248, 159, 0);
+$wecolor: rgb(0, 170, 240);
+$grey: rgb(51, 51, 51);
+$black: rgb(38, 38, 38);
+$base: rgb(255, 255, 255);
+$lightGrey: rgb(235, 235, 235);
+
+$BASE_FONT_SIZE: 16px;
+
+$breakpointMega: 1600px;
+$breakpointLarge: 990px;
+$breakpointMed: 767px;
+
+.left {
+  // 오른쪽 내용
+  display: flex;
+  align-items: center;
+  .login {
+      text-align: center;
+      img {
+          width: 40px;
+          height: 40px;
+          border-radius: 20px; /* 이미지 반크기만큼 반경을 잡기*/
+      }
+      label {
+          font-weight: 600;
+          font-size: 1.2rem;
+      }
+  }
+  margin-right: auto;
+  margin-bottom: 1rem;
+}
+
+// context-wrapper(cx-wrapper)
+.cx-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 6rem);
+  overflow-x: hidden;
+  margin: 1rem;
+  padding: 1rem;
+  // -webkit-scrollbar {
+  //   display: none;
+  // }
+
+  .cx-title {
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    line-height: 2.5rem;
+
+    .logo {
+      justify-content: center;
+      align-items: center;
+      width: 25rem;
+    }
+  }
+
+  .right {
+    float: right;
+    margin: -0.5rem;
+    // margin: 1rem;
+    Button {
+      height: 0.1rem;
+    }
+  }
+}
+
+@import "component/Collapsible";
