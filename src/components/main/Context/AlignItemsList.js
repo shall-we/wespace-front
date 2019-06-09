@@ -25,10 +25,10 @@ function AlignItem(props){
 return(
   <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="https://item.kakaocdn.net/do/4be9625c0426fb7d21c0bff1e8af2e1df43ad912ad8dd55b04db6a64cddaf76d" />
+          <Avatar alt="Remy Sharp" src={props.data.propfile} />
         </ListItemAvatar>
         <ListItemText
-          primary= {props.data.message}
+          primary= {props.data.object+'-'+props.data.message}
           secondary={
             <React.Fragment>
               <Typography
@@ -39,7 +39,7 @@ return(
               >
                {props.data.from}
               </Typography>
-              {props.data.reg_date}
+              {'-'+props.data.reg_date}
             </React.Fragment>
           }
         />

@@ -26,7 +26,7 @@ const CommentList =(props)=>{
         ); 
     });
         return (
-            <div className={cx("comment-list")}>
+            <div className={cx("comment-list")} ref={(ref)=>props.handleRef(ref)}>
                 { commentNodes }
             </div>
         )
@@ -96,7 +96,9 @@ class CommentTool extends Component {
         select_user_list:[],
         display:'none',
         text:'',
+        ref:null
     }
+
 
 
     componentInit(props){
@@ -171,13 +173,21 @@ class CommentTool extends Component {
             }
             this.componentInit(this.props);
             this.setState({text: ''});
+            
+          
         }
+    }
+
+    handleRef=(ref)=>{
+        let list_ref=ref;
+        if(list_ref)
+        this.list_ref.scrollTop = this.list_ref.scrollHeight;
     }
 
     render(){
         return (
             <div className={cx('comment-tool')}>
-                <CommentList data={this.props.data} user_id={this.props.user_id}  />
+                <CommentList data={this.props.data} user_id={this.props.user_id} handleRef={this.handleRef} />
                 <UserList data={this.state.select_user_list} member={this.state.match_user_list}  display={this.state.display} selectCancel={this.selectCancel}/>
                 <CommentForm handleSubmit={this.handleSubmit} handleTextChange={this.handleTextChange} text={this.state.text}/>
             </div>
