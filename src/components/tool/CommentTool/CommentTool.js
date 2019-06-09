@@ -181,7 +181,7 @@ class CommentTool extends Component {
     handleRef=(ref)=>{
         let list_ref=ref;
         if(list_ref)
-        this.list_ref.scrollTop = this.list_ref.scrollHeight;
+       list_ref.scrollTop = list_ref.scrollHeight;
     }
 
     render(){
