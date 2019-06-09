@@ -5,19 +5,21 @@ import { bindActionCreators } from 'redux';
 
 import * as noticeActions from 'store/modules/notice';
 import * as noteToolActions from 'store/modules/noteTool';
+
 import NoteToolTemplate from 'components/common/NoteToolTemplate'
 import NoteToolBox from 'components/toolbox/NoteToolBox'
 import CommentTool from 'components/tool/CommentTool'
 import AttachmentTool from 'components/tool/AttachmentTool';
 
 import socketio from 'socket.io-client';
-const socket=socketio.connect('http://192.168.0.70:4000');
+const socket=socketio.connect('172.30.1.2:4000');
 
 class NoteToolContainer extends Component {
   state={
     user_id:this.props.user_id,
     comment:this.props.comment,
-    note_id:this.props.note_id
+    note_id:this.props.note_id,
+    user_list:this.props.user_list 
   }
 /////////////////////////////////////////////////////첨부파일
   getAttachmentList = ()=>{
@@ -56,9 +58,19 @@ class NoteToolContainer extends Component {
     socket.emit('updateCommentList',{ msg:'handleSendMessage'});
   }
 
+  handleSelectSendMessage=async(to_list,message)=>{
+    const {NoticeActions,user_id} =this.props;
+    const {note_id}=this.state;
+   await to_list.forEach(function (user) {
+      NoticeActions.sendMessage('CHAT',user_id,note_id,message,'SINGLE',user.id);
+      NoticeActions.sendMessage('CHAT',user_id,note_id,message,'SINGLE',user_id);
+  });
+    socket.emit('updateCommentList',{ msg:'handleSendMessage'});
+  }
+
   updateCommentList=async()=>{
     await this.props.NoticeActions.updateNoticeList(this.state.user_id,this.state.note_id,'COMMENT');
-    await this.props.NoticeActions.getNoticeList(this.state.note_id,'COMMENT');
+    await this.props.NoticeActions.getNoticeList(this.state.note_id,'COMMENT',this.state.user_id);
   }
 
 
@@ -76,20 +88,20 @@ componentWillReceiveProps(nextProps) {
 
   if(this.props.comment!==nextProps.comment)
   {
-    this.setState({comment:nextProps.comment,note_id:nextProps.note_id, user_id:nextProps.user_id});
+    this.setState({comment:nextProps.comment,note_id:nextProps.note_id, user_id:nextProps.user_id,user_list:nextProps.user_list});
   }
 
 }
 
     render() {
-      const {comment,note_id,user_id}=this.state;
-      const { note, attachmentList, attachment} = this.props;
+      const {comment,note_id,user_id,user_list}=this.state;
+      const { attachmentList, attachment} = this.props;
       const {addAttachment , deleteAttachment, downloadAttachment} = this;
       if(note_id){
       return (
           <NoteToolTemplate >
              <NoteToolBox items={ ['댓글', '첨부'] } >
-                <CommentTool data={comment} sendMessage={this.handleSendMessage} user_id={user_id}/>
+                <CommentTool data={comment} sendMessage={this.handleSendMessage} handleSelectSendMessage={this.handleSelectSendMessage} user_id={user_id} user_list={user_list}/>
                 <AttachmentTool 
                 data={attachmentList}
                 attachment = {attachment}
@@ -98,7 +110,6 @@ componentWillReceiveProps(nextProps) {
                 downloadAttachment = {downloadAttachment}
                 />
              </NoteToolBox>
-
           </NoteToolTemplate>
                 
     );
@@ -117,6 +128,7 @@ export default connect(
     comment: state.notice.get("COMMENT"),
     attachmentList : state.noteTool.get("attachmentList"),
     attachment : state.noteTool.get("attachment"),
+    user_list: state.user.get('user_list'),
   }),
   (dispatch) => ({
     NoticeActions: bindActionCreators(noticeActions, dispatch),

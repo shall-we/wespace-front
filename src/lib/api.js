@@ -25,7 +25,7 @@ export const updateNoteStatusDeleted = (note_id) => axios.patch(`/note/status/${
 
 
 export const sendMessage = (type,from,object,message,option,to) => axios.post('/notice',{type,from,object,message,option,to});
-export const getNoticeList = (id,type) => axios.get(`/notice?${queryString.stringify({id,type})}`);
+export const getNoticeList = (id,type,user_id) => axios.get(`/notice?${queryString.stringify({id,type,user_id})}`);
 export const updateNoticeList = (to, object,type) => axios.patch(`/notice/${to}/${object}/${type}`);
 
 export const addAttachment = (note_id, uploadList) => axios.post(`/attachment/create/${note_id}`, uploadList, { headers: {
