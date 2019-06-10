@@ -5,11 +5,15 @@ import { withRouter } from "react-router-dom";
 import Administration from "components/admin/Administration";
 import Context from "components/admin/Context";
 import NoticeForm from "components/admin/NoticeForm";
-import ManageEmployees from "components/admin/ManageEmployees";
+import ManagingEmployees from "components/admin/ManagingEmployees";
 import ManagingFolder from "components/admin/ManagingFolder";
+import ManagingNote from "components/admin/ManagingNote";
 import * as adminActions from "store/modules/admin";
 import * as userActions from "store/modules/user";
 import * as directoryActions from "store/modules/directory";
+
+import socketio from "socket.io-client";
+const socket = socketio.connect("http://192.168.0.68:4000");
 
 class AdminContainer extends React.Component {
   constructor(props) {
@@ -19,6 +23,7 @@ class AdminContainer extends React.Component {
       isNoticeWritable: false,
       isManagingEmployees: false,
       isManagingFolder: false,
+      isManagingNote: false,
 
       announcementList: [],
       userList: [],
@@ -33,7 +38,7 @@ class AdminContainer extends React.Component {
         announcementList: nextProps.announcementList,
         userList: nextProps.userList,
         folderList: nextProps.folderList,
-        // noteCount: nextProps.noteCount
+        noteList: nextProps.noteList
       };
     }
     return null;
@@ -46,6 +51,7 @@ class AdminContainer extends React.Component {
       isManagingEmployees: false,
       onModify: false,
       isManagingFolder: false,
+      isManagingNote: false,
     });
   }
 
@@ -56,17 +62,30 @@ class AdminContainer extends React.Component {
       isNoticeWritable: false,
       isManagingEmployees: isManagingEmployees,
       isManagingFolder: false,
+      isManagingNote: false,
     });
   }
 
   handleOnFolder = (isManagingFolder) => {
     this.props.AdminActions.getAllFolderList();
-    console.log("=======================");
     this.setState({
       isNoticeOpened: false,
       isNoticeWritable: false,
       isManagingEmployees: false,
       isManagingFolder: isManagingFolder,
+      isManagingNote: false,
+    });
+  }
+
+  handleOnNote = (isManagingNote) => {
+    this.props.AdminActions.getAllNoteList();
+    console.log("=======================");
+    this.setState({
+      isNoticeOpened: false,
+      isNoticeWritable: false,
+      isManagingEmployees: false,
+      isManagingFolder: false,
+      isManagingNote: isManagingNote,
     });
   }
   
@@ -76,6 +95,7 @@ class AdminContainer extends React.Component {
       isNoticeWritable: isNoticeWritable,
       isManagingEmployees: false,
       isManagingFolder: false,
+      isManagingNote: false,
       title: '',
       content: ''
     });
@@ -89,6 +109,7 @@ class AdminContainer extends React.Component {
       isNoticeWritable: true,
       isManagingEmployees: false,
       isManagingFolder: false,
+      isManagingNote: false,
       id: id,
       title: title,
       content: content,
@@ -113,9 +134,25 @@ class AdminContainer extends React.Component {
   }
 
   handleDeleteFolder = async(folder_id) => {
-    console.log('handleDeleteFolder: ', folder_id);
+    console.log('handleDeleteFolder is ', folder_id);
     await this.props.DirectoryActions.deleteFolder(folder_id);
-    this.handleOnFolder(true);
+    await this.props.DirectoryActions.getNoteList(0);
+    socket.emit('updateFolderList', { msg:'deleteFolder'});
+    this.props.AdminActions.getAllFolderList();
+  }
+
+  componentDidMount() {
+    socket.on('updateFolderList', (obj) => {
+        this.updateFolderList();
+    });
+    socket.on('updateNoteList', (obj) => {
+        this.updateNoteList();
+    });
+  }
+
+  handleDeleteNote = (note_id) => {
+    this.props.DirectoryActions.deleteNote(note_id);
+    this.props.AdminActions.getAllNoteList();
   }
 
   handleCreateAnnouncement = (title, content) => {
@@ -129,10 +166,10 @@ class AdminContainer extends React.Component {
 
   render() {
     const { title, content } = this.state;
-    console.log('admincontainer: ', this.state.userList);
+
     return (
       <div style={{ display: "flex" }}>
-        <Administration onNotice={this.handleOnNotice} onEmployees={this.handleOnEmployees} onFolder={this.handleOnFolder} />
+        <Administration onNotice={this.handleOnNotice} onEmployees={this.handleOnEmployees} onFolder={this.handleOnFolder} onNote={this.handleOnNote} />
 
         {this.state.isNoticeOpened ?
          (<Context announcementList={this.state.announcementList} onWrite={this.handleWriteNotice} onModify={this.handleModifyNotice} onDelete={this.handleDeleteAnnouncement} />) : null}
@@ -142,10 +179,13 @@ class AdminContainer extends React.Component {
         }
         
         {this.state.isManagingEmployees ?
-         (<ManageEmployees userList={this.state.userList} onDelete={this.handleDeleteUser} />) : null}
+         (<ManagingEmployees userList={this.state.userList} onAnnouncementDelete={this.handleDeleteUser} />) : null}
 
         {this.state.isManagingFolder ?
-         (<ManagingFolder folderList={this.state.folderList} onDelete={this.handleDeleteFolder} />) : null}
+         (<ManagingFolder folderList={this.state.folderList} onDeleteFolder={this.handleDeleteFolder} />) : null}
+
+        {this.state.isManagingNote ?
+         (<ManagingNote noteList={this.state.noteList} onDelete={this.handleDeleteNote} />) : null}
       </div>
     );
   }
@@ -156,7 +196,8 @@ export default connect(
     announcementList: state.admin.get("announcement_list"),
     userList: state.user.get("all_user_list"),
     folderList: state.admin.get("all_folder_list"),
-    // noteCount: state.admin.get("note_count")
+    noteList: state.admin.get("all_note_list"),
+    folder: state.directory.get("folder"),
   }),
   (dispatch) => ({
     AdminActions: bindActionCreators(adminActions, dispatch),

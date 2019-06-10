@@ -52,7 +52,7 @@ class Context extends React.Component {
           <ul>
             {announcementList.map((item, index) => {
               return (
-                <Collapsible key={item.id} transitionTime={200} trigger={item.title} triggerWhenOpen={this.handleClick(item.id)} onOpen={(e) => console.log(index)}>
+                <Collapsible key={item.id} transitionTime={200} trigger={item.title} onOpen={(e) => console.log('Announcement id: ', item.id)}>
                 <div className={cx('right')}>
                   <Button key='btn-update' theme='outline' onClick={() => onModify(item.id, item.title, item.content)}>수정</Button>
                   <Button key='btn-delete' theme='outline' onClick={() => onDelete(item.id)}>삭제</Button>

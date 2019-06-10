@@ -10,8 +10,8 @@ const GET_ANNOUNCEMENT = "admin/GET_ANNOUNCEMENT";
 const UPDATE_ANNOUNCEMENT = "admin/UPDATE_ANNOUNCEMENT";
 const DELETE_ANNOUNCEMENT = "admin/DELETE_ANNOUNCEMENT";
 
-const GET_ALL_FOLDER_LIST = "folder/GET_ALL_FOLDER_LIST";
-// const GET_NOTE_COUNT = "admin/GET_NOTE_COUNT";
+const GET_ALL_FOLDER_LIST = "admin/GET_ALL_FOLDER_LIST";
+const GET_ALL_NOTE_LIST = "admin/GET_ALL_NOTE_LIST";
 
 // action creators
 export const getAnnouncementList = createAction(GET_ANNOUNCEMENT_LIST, api.getAnnouncementList);
@@ -20,7 +20,7 @@ export const getAnnouncement = createAction(GET_ANNOUNCEMENT, api.getAnnouncemen
 export const updateAnnouncement = createAction(UPDATE_ANNOUNCEMENT, api.updateAnnouncement);
 export const deleteAnnouncement = createAction(DELETE_ANNOUNCEMENT, api.deleteAnnouncement);
 export const getAllFolderList = createAction(GET_ALL_FOLDER_LIST, api.getAllFolderList);
-// export const getNoteCount = createAction(GET_NOTE_COUNT, api.getNoteCount);
+export const getAllNoteList = createAction(GET_ALL_NOTE_LIST, api.getAllNoteList);
 
 // initial state
 const initialState = Map({
@@ -45,12 +45,12 @@ export default handleActions({
         return state.set("all_folder_list", all_folder_list);
     }
   }),
-  // ...pender({
-  //   type: [GET_NOTE_COUNT],
-  //   onSuccess: (state, action) => {
-  //     const { data: note_count } = action.payload.data;
-  //     // console.log("[GET_NOTE_COUNT] ", note_count);
-  //     return state.set("note_count", note_count);
-  //   }
-  // }),
+  ...pender({
+    type: [GET_ALL_NOTE_LIST],
+    onSuccess: (state, action) => {
+      const { data: all_note_list } = action.payload.data;
+      // console.log("[GET_ALL_NOTE_LIST] ", all_note_list);
+      return state.set("all_note_list", all_note_list);
+    }
+  }),
 }, initialState);

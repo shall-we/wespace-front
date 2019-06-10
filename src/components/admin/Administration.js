@@ -72,14 +72,18 @@ class Administration extends React.Component {
   };
 
   handleManagingEmployees = () => {
-      this.setState({ visible: true });
-      console.log('[Administration] ', this.state.visible);
-      this.props.onEmployees(this.state.visible);
+    this.setState({ visible: true });
+    this.props.onEmployees(this.state.visible);
   };
 
   handleManageFolder = () => {
-    console.log('handleManageFolder');
+    this.setState({ visible: true });
     this.props.onFolder(this.state.visible);
+  }
+
+  handleManageNote = () => {
+    this.setState({ visible: true });
+    this.props.onNote(this.state.visible);
   }
 
   render() {
@@ -122,11 +126,11 @@ class Administration extends React.Component {
           </List>
           {/* 파일 현황 관리 */}
           <List className={classes.list}>
-            <ListItem className={classes.item} button onClick={(e) => this.handleManageFolder()}>
+            <ListItem className={classes.item} button onClick={(e) => this.handleManageNote()}>
               <ListItemIcon>
                 <FontAwesomeIcon icon="clone" size="2x" color="#fff" />
               </ListItemIcon>
-              <ListItemText className={classes.lit} disableTypography primary={"파일현황 관리"} style={{ color: "#FFF" }} />
+              <ListItemText className={classes.lit} disableTypography primary={"노트현황 관리"} style={{ color: "#FFF" }} />
             </ListItem>
           </List>
         </Drawer>

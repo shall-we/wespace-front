@@ -1,12 +1,12 @@
 import React from "react";
-import styles from './ManageEmployees.scss';
+import styles from './ManagingEmployees.scss';
 import classNames from 'classnames/bind';
 import logo from 'image/employees.png';
-import CustomizedTables from 'components/admin/CustomizedTables';
+import TablesForUser from 'components/admin/TablesForUser';
 
 const cx = classNames.bind(styles);
 
-class ManageEmployees extends React.Component {
+class ManagingEmployees extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,14 +32,14 @@ class ManageEmployees extends React.Component {
       <div className={cx('cx-wrapper')}>
         <div className={cx('cx-title')}>
           <img className={cx('logo')} src={logo} alt='logo'/><br />
-          <div><p>현재 WESPACE에 가입되어 있는 직원 목록입니다.&nbsp;&nbsp;&nbsp;</p></div>
+          <div><p>WESPACE에 가입되어 있는 직원 목록입니다.&nbsp;&nbsp;&nbsp;</p></div>
         </div>
         <div>
-          <CustomizedTables onDelete={onDelete} userList={userList} />
+          <TablesForUser onDelete={onDelete} userList={userList} />
         </div>
       </div>
     );
   }
 }
 
-export default ManageEmployees;
+export default ManagingEmployees;

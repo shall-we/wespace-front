@@ -48,3 +48,4 @@ export const deleteAnnouncement = (id) => axios.delete(`/admin/announcement/${id
 
 export const getAllUserList = () => axios.get('/admin/user');
 export const getAllFolderList = () => axios.get('/admin/folder');
+export const getAllNoteList = () => axios.get('/admin/note');
