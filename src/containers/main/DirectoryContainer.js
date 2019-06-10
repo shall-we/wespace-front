@@ -10,7 +10,7 @@ import Directory from "components/main/Directory";
 import {withRouter} from 'react-router-dom';
 
 import socketio from 'socket.io-client';
-const socket=socketio.connect('172.30.1.2:4000');
+const socket=socketio.connect('http://localhost:4000');
 
 class DirectoryContainer extends React.Component {
 

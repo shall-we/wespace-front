@@ -7,14 +7,12 @@ import * as api from '../../lib/api';
 
 // action types
 const LOGIN = 'user/LOGIN';
-const AUTOLOGIN = 'user/AUTOLOGIN';
 const JOIN  = 'user/JOIN';
 const LOGOUT  = 'user/LOGOUT';
 const GET_USER_LIST = "user/GET_USER_LIST";
 
 // action creators
 export const login = createAction(LOGIN,api.login);
-export const autoLogin = createAction(AUTOLOGIN,api.login);
 export const join = createAction(JOIN,api.join);
 export const logout = createAction(LOGOUT);
 export const getUserList = createAction(GET_USER_LIST, api.getUserList);
@@ -33,8 +31,9 @@ export default handleActions({
   ...pender({
     type: [LOGIN],
     onSuccess: (state, action) => {
-      const { name,profile,id } = action.payload.data.data;
-      return state.set('name', name).set('profile',profile).set('id', id);
+      const { name,profile,id} = action.payload.data.data;
+
+        return state.set('name', name).set('profile',profile).set('id', id);
     }
   }),
   ...pender({
@@ -43,13 +42,6 @@ export default handleActions({
         const { data: user_list } = action.payload.data;
         console.log("[user.js] ", user_list);
         return state.set("user_list",user_list);
-    }
-  }),
-  ...pender({
-    type: [AUTOLOGIN],
-    onSuccess: (state, action) => {
-      const { name,profile,id } = action.payload.data.data;
-      return state.set('name', name).set('profile',profile).set('id', id);
     }
   }),
 }, initialState);

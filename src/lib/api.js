@@ -2,7 +2,9 @@ import axios from 'axios';
 import queryString from 'query-string';
 
 export const login = (email,password,autoLogin) => axios.post('/login',{email, password, autoLogin});
-export const join = (name,email,password,profile) => axios.post('/join',{name,email,password,profile});
+export const join = (formdata) => axios.post('/join',formdata, { headers: {
+    'Content-Type':'multipart/form-data;charset=utf-8'
+}} );
 export const getUserList = (folder_id) => axios.get(`/user?${queryString.stringify({folder_id})}`);
 export const autoLogin = () => axios.get('/autoLogin');
 export const logout = () => axios.get('/logout');

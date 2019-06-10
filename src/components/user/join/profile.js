@@ -37,7 +37,24 @@ class Profile extends React.Component {
 
   getImgPath=()=>{
     //return this.fileOpen.files[0].path;
-   return this.img.src;
+    const {files} = this.fileOpen;
+    //console.log(files[0]);
+
+    if(files&&files[0] ){//&&this.state.isResize){
+      console.log('before :', files[0]);
+      console.log(this.state.image);
+      let formData = new FormData();
+        console.log('resized!');
+        //formData.append('profile', this.state.image);
+        formData.append('profile', files[0]);
+        return formData;
+      
+    }else {
+      console.log(defaultProfile);
+      let formData = new FormData();
+      formData.append('profile', this.img.src);
+      return formData;
+    }
   }
 
   render() {
