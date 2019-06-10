@@ -39,7 +39,7 @@ class uploadItem extends React.Component {
     const color= 'fileType-'+this.getImage(type.toLowerCase());
     
     return (
-        <div className={cx("fileType")}>
+        <div className={cx("fileType")} key ={key}>
                 <input type="text" value={type} className={cx(color)} readOnly />
                 <div className={cx("uploadItemInfo")}>
                     <label htmlFor="filename" >{name}</label>

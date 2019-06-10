@@ -16,6 +16,8 @@ function importAll(r) {
 class AttachmentItem extends React.Component { 
 
     fileDownload=async(e)=>{
+        e.preventDefault();
+
         const {downloadAttachment , data} = this.props;
         
         //console.log('url : '+data.url);
@@ -70,26 +72,31 @@ class AttachmentItem extends React.Component {
 
 function AttachmentList(props) {
 
-    const {data, handleShow, attachment, deleteAttachment, downloadAttachment} =props;
+    const {data, attachment, deleteAttachment, downloadAttachment} =props;
 
     let dataList=[];
 
     if(data){
 
     for(var i=0; i<data.length; i++){
+        if(i===data.length-1 && data.length%2===1){
+            dataList.push(
+            <AttachmentItem style="align-items : flex-start" key={i} data={data[i]} attachment={attachment}
+            onDelete={deleteAttachment} downloadAttachment={downloadAttachment}/>
+            );
+        }else{
+
         dataList.push(
             <AttachmentItem key={i} data={data[i]} attachment={attachment}
             onDelete={deleteAttachment} downloadAttachment={downloadAttachment}/>
             );
+        }
     }
 
 }
     
     return (
         <div className={cx('attachment')}>
-            <div className={cx("upload-img")}>
-                <img src={images['upload.svg']} alt="" onClick={handleShow} />
-            </div>
             <div className={cx("list")}>
                 {dataList}
             </div>

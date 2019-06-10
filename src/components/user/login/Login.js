@@ -28,10 +28,10 @@ class Login extends Component {
         this.setState({autoLogin:!this.state.autoLogin});
   }
 
- ClickHandler = (event) => {
-  this.props.action(this.state.email,this.state.password, this.state.autoLogin);
-  this.props.history.push('/note');
- }
+  ClickHandler = async(event) => {
+    await this.props.action(this.state.email,this.state.password, this.state.autoLogin);
+    this.props.history.push('/note');
+   }
   handleChecked = () => {
     this.setState = ({
       autoLogin : !this.state.autoLogin

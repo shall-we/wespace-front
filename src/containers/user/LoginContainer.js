@@ -6,9 +6,9 @@ import Login from "../../components/user/login/Login";
 
 class LoginContainer extends Component {
     
-    login = (email, password, autoLogin) => {
+    login = async(email, password, autoLogin) => {
         const { UserActions} = this.props;
-        UserActions.login(email, password, autoLogin);
+        await UserActions.login(email, password, autoLogin);
     };
 
     render() {
