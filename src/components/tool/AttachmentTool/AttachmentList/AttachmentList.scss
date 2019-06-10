@@ -7,36 +7,26 @@
   flex:1;
   display:flex;
   flex-direction: column;
-
-  .upload-img{
-    flex:0.1;
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    background-color : rgb(61,68,129);
-    img{
-      height: 4rem;
-    }
-  }
+  
 
   .list{
-    flex:0.9;
+   // flex:0.9;
 
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    align-content: space-around;
-    
+    align-items: baseline;
+    //align-content: space-around;
       .fileItem{
         flex: 1;
         width:6rem;
         height: 6rem;
-        margin: 1rem;
+        margin: 1rem;  
 
         display :flex;
         flex-direction:column;
         align-items: center;
-        justify-content: center;
+        //justify-content: center;
 
           .ItemDelete{
             flex:0.01;
@@ -55,10 +45,25 @@
               }
               .label{
                 flex: 0.1;
-                max-width: 5rem;
+                display: -webkit-box;
+                max-width: 90px;
                 text-align: center;
                 color:#233A3F;
                 font-size : 0.8rem;
+                //word-break: keep-all;
+                text-overflow:ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                word-wrap: normal !important;
+                min-height: 1rem;
+                &:hover{
+                  word-wrap:break-word; 
+                  white-space:pre-wrap;
+                  word-break : break-all;
+                  overflow: unset;
+                  max-height: 2rem;
+                  margin-bottom: 2rem;
+                }
               }
         }
 

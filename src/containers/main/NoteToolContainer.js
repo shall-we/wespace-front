@@ -1,52 +1,57 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
-import * as noticeActions from 'store/modules/notice';
-import * as noteToolActions from 'store/modules/noteTool';
+import * as noticeActions from "store/modules/notice";
+import * as noteToolActions from "store/modules/noteTool";
 
-import NoteToolTemplate from 'components/common/NoteToolTemplate'
-import NoteToolBox from 'components/toolbox/NoteToolBox'
-import CommentTool from 'components/tool/CommentTool'
-import AttachmentTool from 'components/tool/AttachmentTool';
+import NoteToolTemplate from "components/common/NoteToolTemplate";
+import NoteToolBox from "components/toolbox/NoteToolBox";
+import CommentTool from "components/tool/CommentTool";
+import AttachmentTool from "components/tool/AttachmentTool";
 
-import socketio from 'socket.io-client';
-const socket=socketio.connect('172.30.1.2:4000');
+import socketio from "socket.io-client";
+const socket = socketio.connect("http://localhost:4000");
 
 class NoteToolContainer extends Component {
   state={
     user_id:this.props.user_id,
     comment:this.props.comment,
     note_id:this.props.note_id,
-    user_list:this.props.user_list 
+    user_list:this.props.user_list,
+    attachmentList : this.props.attachmentList,
+    attachment : this.props.attachment,
   }
 /////////////////////////////////////////////////////첨부파일
-  getAttachmentList = ()=>{
-    console.log('getAttachmentList');
-    const { NoteToolActions }= this.props; //note_id
-    NoteToolActions.getAttachmentList(this.state.note_id);
-  };
+getAttachmentList = async()=>{
+  console.log('getAttachmentList');
+  const { NoteToolActions }= this.props; //note_id
+  await NoteToolActions.getAttachmentList(this.state.note_id);
+};
 
-  deleteAttachment = async(attachment_id)=>{
-    console.log('deleteAttachment');
-    const {NoteToolActions}= this.props;
-    await NoteToolActions.deleteAttachment(attachment_id);
-    NoteToolActions.getAttachmentList(this.state.note_id);
-  }
+deleteAttachment = async(attachment_id)=>{
+  console.log('deleteAttachment');
+  const {NoteToolActions}= this.props;
+  await NoteToolActions.deleteAttachment(attachment_id);
+  await NoteToolActions.getAttachmentList(this.state.note_id);
+  socket.emit('updateShareBox',{ msg:'deleteAttachment'});
+}
 
-  addAttachment = async(uploadList)=>{
-    console.log('addAttachment');
-    const {NoteToolActions} = this.props; //note_id
-    await NoteToolActions.addAttachment(this.state.note_id,uploadList);
-    NoteToolActions.getAttachmentList(this.state.note_id);
-  }
+addAttachment = async(uploadList)=>{
+  console.log('addAttachment');
+  const {NoteToolActions} = this.props; //note_id
+  await NoteToolActions.addAttachment(this.state.note_id,uploadList);
+  await NoteToolActions.getAttachmentList(this.state.note_id);
+  socket.emit('updateShareBox',{ msg:'addAttachment'});
+}
 
-  downloadAttachment=async(url)=>{
-    console.log('downloadAttachment');
-    const {NoteToolActions} =this.props;
-    await NoteToolActions.downloadAttachment(url);
-  }
+downloadAttachment=async(url)=>{
+  console.log('downloadAttachment');
+  const {NoteToolActions} =this.props;
+  await NoteToolActions.downloadAttachment(url);
+  socket.emit('updateShareBox',{ msg:'downloadAttachment'});
+}
 
 /////////////////////////////////////////첨부파일 영역
 
@@ -89,13 +94,16 @@ componentWillReceiveProps(nextProps) {
   if(this.props.comment!==nextProps.comment)
   {
     this.setState({comment:nextProps.comment,note_id:nextProps.note_id, user_id:nextProps.user_id,user_list:nextProps.user_list});
+  }else if(this.props.attachmentList !==nextProps.attachmentList){
+    this.setState({attachmentList : nextProps.attachmentList, attachment : nextProps.attachment});
+  }else if(this.props.attachment !== nextProps.attachment){
+    this.setState({attachment : nextProps.attachment});
   }
 
 }
 
     render() {
-      const {comment,note_id,user_id,user_list}=this.state;
-      const { attachmentList, attachment} = this.props;
+      const {comment,note_id,user_id,attachmentList, attachment,user_list}=this.state;
       const {addAttachment , deleteAttachment, downloadAttachment} = this;
       if(note_id){
       return (

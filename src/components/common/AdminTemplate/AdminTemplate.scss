@@ -1,0 +1,8 @@
+@import "../../../styles/utils.scss";
+
+.admin-template {
+  main {
+    background: $oc-gray-3;
+    min-height: calc(100vh - 4rem);
+  }
+}

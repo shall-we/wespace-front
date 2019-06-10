@@ -12,6 +12,9 @@ body {
 // box-sizing 일괄 설정
 * {
   box-sizing: inherit;
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
 }
  
 // 링크 스타일 밑줄 및 색상 무효화

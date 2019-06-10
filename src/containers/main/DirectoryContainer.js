@@ -3,14 +3,13 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as directoryActions from "store/modules/directory";
 import * as UserActions from "store/modules/user";
-import * as noticeActions from 'store/modules/notice';
-
+import * as noticeActions from "store/modules/notice";
 
 import Directory from "components/main/Directory";
-import {withRouter} from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 
-import socketio from 'socket.io-client';
-const socket=socketio.connect('172.30.1.2:4000');
+import socketio from "socket.io-client";
+const socket = socketio.connect("http://localhost:4000");
 
 class DirectoryContainer extends React.Component {
 

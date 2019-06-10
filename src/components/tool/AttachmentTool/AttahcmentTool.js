@@ -3,6 +3,7 @@ import UploadModal from '../../modal/UploadModal/index';
 import AttachmentList from './AttachmentList/index';
 import style from './AttachmentTool.scss';
 import classNames from 'classnames';
+import uploadImg from '../../../image/Attachment/upload.svg';
 const cx=classNames.bind(style);
 
 class AttachmentTool extends React.Component{
@@ -10,15 +11,26 @@ class AttachmentTool extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            isShow : false,
+            isClickUploadButton : false,
         }
     }
 
     handleShow=(e)=>{
       console.log('handleShow');
+      console.log(this.state.isClickUploadButton);
         this.setState({
-            isShow :!this.state.isShow
+            isClickUploadButton :!this.state.isClickUploadButton
         });
+    }
+
+    componentWillMount(){
+        console.log(this.props.data);
+        if(this.props.data.length<1){
+            this.setState({isClickUploadButton : true});
+        }else{
+            console.log(this.props.data);
+            this.setState({isClickUploadButton : false});
+        }
     }
 
     render(){
@@ -27,16 +39,19 @@ class AttachmentTool extends React.Component{
         
         return (
             <div className={cx('attach-Template')} >
-                <AttachmentList handleShow={this.handleShow} 
+                <div className={cx("upload-img")}>
+                <img src={uploadImg} alt="" onClick={this.handleShow} />
+                </div>
+                {(!this.state.isClickUploadButton)? (
+                <AttachmentList
                 data={data}
                 attachment={attachment}
                 deleteAttachment={deleteAttachment}
-                downloadAttachment={downloadAttachment}/>
+                downloadAttachment={downloadAttachment}/>):(
                 <UploadModal 
-                    show={this.state.isShow} 
                     handleShow={this.handleShow}
                     addAttachment = {addAttachment}       
-                    />
+                    />)}
             </div>
             );
     }
