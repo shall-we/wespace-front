@@ -9,6 +9,7 @@ const CREATE_ANNOUNCEMENT = "admin/CREATE_ANNOUNCEMENT";
 const GET_ANNOUNCEMENT = "admin/GET_ANNOUNCEMENT";
 const UPDATE_ANNOUNCEMENT = "admin/UPDATE_ANNOUNCEMENT";
 const DELETE_ANNOUNCEMENT = "admin/DELETE_ANNOUNCEMENT";
+const PERMANENT_DELETE_NOTE = "admin/PERMANENT_DELETE_NOTE";
 
 const GET_ALL_FOLDER_LIST = "admin/GET_ALL_FOLDER_LIST";
 const GET_ALL_NOTE_LIST = "admin/GET_ALL_NOTE_LIST";
@@ -21,6 +22,7 @@ export const updateAnnouncement = createAction(UPDATE_ANNOUNCEMENT, api.updateAn
 export const deleteAnnouncement = createAction(DELETE_ANNOUNCEMENT, api.deleteAnnouncement);
 export const getAllFolderList = createAction(GET_ALL_FOLDER_LIST, api.getAllFolderList);
 export const getAllNoteList = createAction(GET_ALL_NOTE_LIST, api.getAllNoteList);
+export const permanentDeleteNote = createAction(PERMANENT_DELETE_NOTE, api.permanentDeleteNote);
 
 // initial state
 const initialState = Map({
@@ -33,7 +35,7 @@ export default handleActions({
     type: [GET_ANNOUNCEMENT_LIST],
     onSuccess: (state, action) => {
       const { data: announcement_list } = action.payload.data;
-      console.log("[GET_ANNOUNCEMENT_LIST] ", announcement_list);
+      // console.log("[GET_ANNOUNCEMENT_LIST] ", announcement_list);
       return state.set("announcement_list", announcement_list);
     }
   }),
@@ -41,7 +43,7 @@ export default handleActions({
     type: [GET_ALL_FOLDER_LIST],
     onSuccess: (state, action) => {
         const { data: all_folder_list } = action.payload.data;
-        console.log("[GET_ALL_FOLDER_LIST] ", all_folder_list);
+        // console.log("[GET_ALL_FOLDER_LIST] ", all_folder_list);
         return state.set("all_folder_list", all_folder_list);
     }
   }),

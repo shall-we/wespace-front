@@ -55,7 +55,9 @@ const styles = theme => ({
 class TablesForNote extends React.Component {
   render() {
     const { classes, noteList, onDelete } = this.props;
-    console.log('[TablesForNote] noteList: ',noteList);
+    
+    // console.log('[TablesForNote] noteList: ', noteList);
+
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>

@@ -39,9 +39,6 @@ const styles = theme => ({
     flex: 1,
     display: 'flex',
     width: 'auto',
-    // margin: '2rem',
-    // padding: '2rem',
-    // marginTop: theme.spacing(3),
     height: 'auto',
     maxHeight: 'calc(100vh - 21rem)',
     overflowX: "hidden",
@@ -57,9 +54,8 @@ const styles = theme => ({
 
 class TablesForUser extends React.Component {
   render() {
-    const { classes, userList, onAnnouncementDelete } = this.props;
-    // const { noteCount } = this.props;
-    console.log('userList: ',userList);
+    const { classes, userList, onDelete } = this.props;
+
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -84,7 +80,7 @@ class TablesForUser extends React.Component {
                 <StyledTableCell align="center">{user.name}</StyledTableCell>
                 <StyledTableCell align="center">{user.folder_count}</StyledTableCell>
                 <StyledTableCell align="center">
-                  <Button key='btn-user-delete' theme='outline' onClick={() => onAnnouncementDelete(user.id)}>계정 삭제</Button>
+                  <Button key='btn-user-delete' theme='outline' onClick={() => onDelete(user.id)}>계정 삭제</Button>
                 </StyledTableCell>
               </StyledTableRow>
             ))}

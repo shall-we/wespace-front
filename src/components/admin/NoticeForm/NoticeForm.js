@@ -45,7 +45,6 @@ class NoticeForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isNoticeWritable: true,
       title: '',
       content: ''
     };
@@ -58,11 +57,11 @@ class NoticeForm extends React.Component {
     return null;
   }
 
-  handleWriteNotice = () => {
+  handleWriteAnnouncement = () => {
     this.props.onConfirm(this.state.title, this.state.content);
   }
 
-  handleModifyNotice = () => {
+  handleModifyAnnouncement = () => {
     this.props.onUpdate(this.props.id, this.state.title, this.state.content);
   }
 
@@ -104,7 +103,7 @@ class NoticeForm extends React.Component {
           <Button key="notice-cancel" theme="outline" to="/admin" onClick={onCancel}>
             취소
           </Button>
-          { onModify ? [<Button key="notice-confirm" theme="outline" onClick={this.handleModifyNotice}>수정</Button>] : [<Button key="notice-confirm" theme="outline" onClick={this.handleWriteNotice}>작성</Button>] }
+          { onModify ? [<Button key="notice-confirm" theme="outline" onClick={this.handleModifyAnnouncement}>수정</Button>] : [<Button key="notice-confirm" theme="outline" onClick={this.handleWriteAnnouncement}>작성</Button>] }
         </div>
       </div>
       </div>

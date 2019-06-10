@@ -9,7 +9,7 @@ import Directory from "components/main/Directory";
 import { withRouter } from "react-router-dom";
 
 import socketio from "socket.io-client";
-const socket = socketio.connect("http://192.168.0.68:4000");
+const socket = socketio.connect("http://localhost:4000");
 
 class DirectoryContainer extends React.Component {
 
@@ -90,17 +90,17 @@ class DirectoryContainer extends React.Component {
 
 
     setNote=async(note)=>{
-        const {DirectoryActions,NoticeActions} = this.props;
+        const {DirectoryActions,NoticeActions,UserActions,folder,id} = this.props;
+        await UserActions.getUserList(folder);
         await DirectoryActions.setNote(note);
-        await NoticeActions.updateNoticeList(this.props.id,note.note_id,'COMMENT');
-        await NoticeActions.getNoticeList(note.note_id,'COMMENT');
+        await NoticeActions.updateNoticeList(id,note.note_id,'COMMENT');
+        await NoticeActions.getNoticeList(note.note_id,'COMMENT',id);
         await socket.emit('updateCommentList',{ msg:'setNote'});
     }
-    setFolder=(folder_id)=>{
+    setFolder=async(folder_id)=>{
         const {DirectoryActions} = this.props;
-       
-        DirectoryActions.setFolder(folder_id);
-        DirectoryActions.getNoteList(folder_id);
+        await DirectoryActions.setFolder(folder_id);
+        await DirectoryActions.getNoteList(folder_id);
         
     }
 

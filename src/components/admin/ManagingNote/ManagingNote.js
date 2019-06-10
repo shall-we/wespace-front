@@ -27,7 +27,7 @@ class ManagingNote extends React.Component {
 
   render() {
     const { noteList = [], onDelete } = this.props;
-    console.log('noteList: ', noteList);
+
     return (
       <div className={cx('cx-wrapper')}>
         <div className={cx('cx-title')}>
