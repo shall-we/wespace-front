@@ -35,12 +35,12 @@ componentWillReceiveProps(nextProps) {
 }
 
     render() {
-      const { note,name,profile} = this.props;
+      const { note,name,profile,lock} = this.props;
       const {noteNotice,folderNotice}=this.state;
       console.log('noteNotice',noteNotice);
       if(note){
       return (
-          <Editor  key={note} note={note} name={name} profile={profile} />
+          <Editor  key={note} note={note} name={name} profile={profile} lock={lock}/>
     );
       }else{
         return(
@@ -58,7 +58,7 @@ export default connect(
     profile:state.user.get("profile"),
     noteNotice:state.notice.get("NOTE"),
     folderNotice:state.notice.get("FOLDER"),
-    
+    lock: state.directory.get("lock"),
   }),
   (dispatch) => ({
     DirectoryActions: bindActionCreators(directoryActions, dispatch),

@@ -1,0 +1,316 @@
+$btn-color: #20a0ff; 
+
+.create-folder {
+  position: relative;
+    background-color: dodgerblue;
+    color: white;
+    width: 11.75em;
+    border-radius: 0.2em;
+    border: none;
+    box-shadow: 0 0.125em 0.125em rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+    font-size: inherit;
+    line-height: normal;
+    font-weight: bold;
+    text-align: center;
+    outline: none;
+    padding: 0.6em;
+    margin: 0.2em;
+    transition: all 0.1s;
+
+}
+
+.react-contextmenu {
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    color: #373a3c;
+    font-size: 16px;
+    margin: 2px 0 0;
+    min-width: 160px;
+    outline: none;
+    opacity: 0;
+    padding: 5px 0;
+    pointer-events: none;
+    text-align: left;
+    transition: opacity 250ms ease !important;
+  }
+  
+  .react-contextmenu.react-contextmenu--visible {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 9999;
+  }
+  
+  .react-contextmenu-item {
+    background: 0 0;
+    border: 0;
+    color: #373a3c;
+    cursor: pointer;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 3px 20px;
+    text-align: inherit;
+    white-space: nowrap;
+  }
+  
+  .react-contextmenu-item.react-contextmenu-item--active,
+  .react-contextmenu-item.react-contextmenu-item--selected {
+    color: #fff;
+    background-color: #20a0ff;
+    border-color: #20a0ff;
+    text-decoration: none;
+  }
+  
+  .react-contextmenu-item.react-contextmenu-item--disabled,
+  .react-contextmenu-item.react-contextmenu-item--disabled:hover {
+    background-color: transparent;
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #878a8c;
+  }
+  
+  .react-contextmenu-item--divider {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    cursor: inherit;
+    margin-bottom: 3px;
+    padding: 2px 0;
+  }
+  .react-contextmenu-item--divider:hover {
+    background-color: transparent;
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+  
+  .react-contextmenu-item.react-contextmenu-submenu {
+    padding: 0;
+  }
+    
+  .react-contextmenu-item.react-contextmenu-submenu
+    > .react-contextmenu-item:after {
+    content: '▶';
+    display: inline-block;
+    position: absolute;
+    right: 7px;
+  }
+  
+  .example-multiple-targets::after {
+    content: attr(data-count);
+    display: block;
+  }
+  
+  
+  .search-input {
+    width: 100%;
+    display: block;
+    padding: 15px;
+    border-radius: 5px 5px 0px 0px;
+    border: 0;
+    font-size: inherit;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .count {
+    width: 23px;
+    height: 23px;
+    color : #fff;
+    font-size : 15px;
+    background-color: #20a0ff;
+    border: 0;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 22px;
+  }
+
+  
+  .file-list {
+    padding: 10px 20px;
+    .stateButton {
+      display: none;
+    }
+    &:hover {
+      background: #fff;
+      cursor: pointer;
+      .stateButton {
+        display: inherit;
+        .menu {
+    
+          display: flex;
+          min-width: 150px;
+          margin-top: 0.3em;
+          flex-direction: row;
+          justify-content: left;
+          
+          &__item {
+            position: relative;
+            display: inline-block;
+            
+            max-width: 1.5em;
+            overflow: hidden;
+            white-space: nowrap;
+            
+            padding: 0.25em 0.25em 0em 0.25em;
+            margin: 0 0;
+            
+            transition: none; 
+            
+            font-size: 1.2em;
+            text-align: center;
+            color: lighten($btn-color, 10%);
+          }
+          
+          &__item-icon {
+            display: inline-block;
+          }
+          
+          &__item-text {
+            display: inline-block;
+            padding-left: 0.25em;
+            opacity: 0;
+            transition: none;
+          }
+          
+          &__item:hover {
+            
+            max-width: 100%;
+            transition: 0.5s all ease-in-out,
+              0.5s 0.2s max-width ease-in;
+            color: $btn-color;
+            border-color: $btn-color;
+            
+            .menu__item-text {
+              position: relative;
+              opacity: 1;
+              transition: 0.25s 0.4s opacity ease-in-out; 
+            }
+            
+          }
+          &--button {
+            .menu__item {
+              border-radius: 0;
+    
+              &:before {
+                content: "";
+                position: absolute;
+                
+                border-radius: 1em;
+                
+                top: 0;
+                left: 50%;
+                bottom: 0;
+        
+                width: 0;
+                //height: 0.25em;
+                
+                background-color: #eee;
+        
+                transition: none;
+                transform: translateX(-50%);
+                
+                opacity: 0;
+                z-index: -1;
+              }
+              
+            }
+        
+            .menu__item:hover {
+              
+              transition: 0.2s all ease-in-out,
+                0.5s max-width ease-in;
+              
+              &:before {
+                background-color: rgba($btn-color, 0.2);
+                opacity: 1;
+                transform: translateX(-50%);
+                
+                width: 100%;
+                
+                transition: 
+                  0.25s 0.1s all ease-in,
+                  0.25s 0.1s transform ease-in;
+               
+              }
+              
+              .menu__item-text {
+                transition: 0.4s opacity ease-in-out;
+              }
+              
+            }
+        
+            .menu__item--rename {
+              
+            }
+            .menu__item--share {
+              
+            }
+            .menu__item--lock {
+              &:hover {
+        
+                border-color: black;
+                color: black;
+                
+                &:before {
+                  background-color: rgba(black, 0.2);
+                }
+        
+                .menu__item-text {
+                  color: black;
+                }
+        
+                .menu__item-icon {
+                  color: black;
+                }
+        
+              }
+            }
+            .menu__item--unlock {
+              &:hover {
+        
+                border-color: #3CB371;
+                color: #3CB371;
+                
+                &:before {
+                  background-color: rgba(#3CB371, 0.2);
+                }
+        
+                .menu__item-text {
+                  color: #3CB371;
+                }
+        
+                .menu__item-icon {
+                  color: #3CB371;
+                }
+        
+              }
+            }
+  
+            .menu__item--delete {
+              
+              &:hover {
+        
+                border-color: red;
+                color: red;
+                
+                &:before {
+                  background-color: rgba(red, 0.2);
+                }
+        
+                .menu__item-text {
+                  color: red;
+                }
+        
+                .menu__item-icon {
+                  color: red;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+  }

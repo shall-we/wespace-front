@@ -4,12 +4,13 @@ import { bindActionCreators } from "redux";
 import * as directoryActions from "store/modules/directory";
 import * as UserActions from "store/modules/user";
 import * as noticeActions from "store/modules/notice";
+import * as noteToolActions from "store/modules/noteTool";
 
 import Directory from "components/main/Directory";
 import { withRouter } from "react-router-dom";
 
 import socketio from "socket.io-client";
-const socket = socketio.connect("http://192.168.0.68:4000");
+const socket = socketio.connect("http://localhost:4000");
 
 class DirectoryContainer extends React.Component {
 
@@ -61,6 +62,12 @@ class DirectoryContainer extends React.Component {
         if(folder)
         DirectoryActions.getNoteList(folder);
     }
+    updateSearchNoteList=async (search)=>{
+        const {DirectoryActions,folder}=this.props;
+        console.log('updateSearchNoteList::',folder);
+        if(folder)
+        await DirectoryActions.getSearchNoteList(folder, '%'+search+'%');
+    }
 
     createNote=async(folder_id,note_name)=>{
         const {DirectoryActions}=this.props;
@@ -88,7 +95,6 @@ class DirectoryContainer extends React.Component {
         DirectoryActions.setNote(null);
     }
 
-
     setNote=async(note)=>{
         const {DirectoryActions,NoticeActions} = this.props;
         await DirectoryActions.setNote(note);
@@ -101,9 +107,13 @@ class DirectoryContainer extends React.Component {
        
         DirectoryActions.setFolder(folder_id);
         DirectoryActions.getNoteList(folder_id);
-        
     }
 
+    setLock=(note_id, note_lock)=> {
+        const {DirectoryActions} = this.props;
+        console.log('setLock : ',note_id, note_lock);
+        DirectoryActions.setLock(note_id, note_lock);
+    }
 
     componentWillMount(){
         setTimeout(()=>{
@@ -126,14 +136,14 @@ class DirectoryContainer extends React.Component {
 
     render() {
         const { sharedList,privateList, noteList, id} = this.props;
-        const { createFolder,sharedFolder,unsharedFolder, deleteFolder, updateFolder, updateNote, createNote, deleteNote, setNote,setFolder} = this;
+        const { createFolder,sharedFolder,unsharedFolder, deleteFolder, updateFolder, updateNote, createNote, deleteNote, setNote,setFolder, updateSearchNoteList, setLock} = this;
         return (
             <div style={{ display: "flex" }}>
                 <Directory 
                 sharedList={sharedList} privateList={privateList}  noteList={noteList} user_id={id}
                 createFolder={createFolder} updateFolder={updateFolder} deleteFolder={deleteFolder} sharedFolder={sharedFolder} unsharedFolder={unsharedFolder}
-                createNote={createNote} updateNote={updateNote}  deleteNote={deleteNote} 
-                setNote={setNote} setFolder={setFolder}
+                createNote={createNote} updateNote={updateNote}  deleteNote={deleteNote} setLock={setLock}
+                setNote={setNote} setFolder={setFolder} updateSearchNoteList={updateSearchNoteList}
                 />
             </div>
         );

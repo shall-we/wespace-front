@@ -6,24 +6,32 @@ import * as userActions from '../../store/modules/user';
 import {withRouter} from 'react-router-dom';
 import {autoLogin, logout} from '../../lib/api';
 
+let flag = false;
+
 class HeaderContainer extends Component {
 
   componentDidMount= async () => {
     await autoLogin()
     .then(res =>{
+      if(!flag) {
         if(res.data.data.autoLogin) {
           const { UserActions } = this.props;
-          UserActions.autoLogin(res.data.data.email, res.data.data.password, true);
+          UserActions.login(res.data.data.email, res.data.data.password, true);
+          flag = true;
+          this.props.history.push('/note');
+        }
+        else {
+          flag = false;
         }
       }
+    }
     )
   }
 
   logout = async () => {
-    await logout();
     const { UserActions } = this.props;
-    UserActions.logout();
-    this.props.history.push('/intro');
+    await logout();
+    await UserActions.logout();
   }
 
   render() {

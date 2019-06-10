@@ -11,7 +11,7 @@ import CommentTool from "components/tool/CommentTool";
 import AttachmentTool from "components/tool/AttachmentTool";
 
 import socketio from "socket.io-client";
-const socket = socketio.connect("http://192.168.0.68:4000");
+const socket = socketio.connect("http://localhost:4000");
 
 class NoteToolContainer extends Component {
   state={

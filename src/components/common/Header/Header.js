@@ -12,10 +12,17 @@ const Header = ({name,profile,logout}) => (
   <header className={cx('header')}>
     <div className={cx('header-content')}>
       <div className={cx('brand')}>
-        <Link to='/'>
-        <img className={cx('logo')} src={logo} alt='logo'/>
-        {/*<img className={cx('mini-logo')} src={miniLogo} alt='mini-logo'/>*/}
-        </Link>
+      {(name) ? 
+          ( <Link to='/note'>
+            <img className={cx('logo')} src={logo} alt='logo'/>
+            {/*<img className={cx('mini-logo')} src={miniLogo} alt='mini-logo'/>*/}
+            </Link>
+          ) : (
+          <Link to='/'>
+            <img className={cx('logo')} src={logo} alt='logo'/>
+            {/*<img className={cx('mini-logo')} src={miniLogo} alt='mini-logo'/>*/}
+            </Link>
+          )}
       </div>
       <div className={cx('right')}>
       {

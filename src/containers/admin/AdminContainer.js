@@ -13,7 +13,7 @@ import * as userActions from "store/modules/user";
 import * as directoryActions from "store/modules/directory";
 
 import socketio from "socket.io-client";
-const socket = socketio.connect("http://192.168.0.68:4000");
+const socket = socketio.connect("http://localhost:4000");
 
 class AdminContainer extends React.Component {
   constructor(props) {

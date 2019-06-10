@@ -207,11 +207,12 @@ class Editor extends React.Component {
       cursors.localConnection.profile= 'https://cdn.onlinewebfonts.com/svg/img_83486.png';
     };
 
+    if(this.props.lock) {
+      quillRef.enable(false);
+    }
+
     updateUserList();
-
-
-
-}
+  }
 
   
 
