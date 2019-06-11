@@ -40,10 +40,11 @@ componentWillReceiveProps(nextProps) {
       const { note,name,profile,lock} = this.props;
       const {noteNotice=[],folderNotice=[],chatNotice=[]}=this.state;
       console.log('noteNotice',noteNotice);
+
       if(note){
       return (
           <Editor  key={note} note={note} name={name} profile={profile} lock={lock}/>
-    );
+      );
       }else{
         return(
              <Context noteNotice={noteNotice} folderNotice={folderNotice} chatNotice={chatNotice}/>

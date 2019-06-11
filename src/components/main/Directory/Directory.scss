@@ -19,8 +19,6 @@ $btn-color: #20a0ff;
     outline: none;
     padding: 0.6em;
     margin: 0.2em;
-    transition: all 0.1s;
-
 }
 
 .react-contextmenu {
@@ -108,7 +106,7 @@ $btn-color: #20a0ff;
     padding: 15px;
     border-radius: 5px 5px 0px 0px;
     border: 0;
-    font-size: inherit;
+    font-size: 15px;
     &:focus {
       outline: none;
     }
@@ -242,7 +240,24 @@ $btn-color: #20a0ff;
             }
         
             .menu__item--rename {
-              
+              &:hover {
+        
+                border-color: orange;
+                color: orange;
+                
+                &:before {
+                  background-color: rgba(orange, 0.2);
+                }
+        
+                .menu__item-text {
+                  color: orange;
+                }
+        
+                .menu__item-icon {
+                  color: orange;
+                }
+        
+              }
             }
             .menu__item--share {
               

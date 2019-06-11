@@ -31,13 +31,15 @@ const initialState = Map({
 
 // reducer
 export default handleActions({
-  [LOGOUT]: (state, action) => initialState,
+  [LOGOUT]: (state, action) => {
+    return initialState;
+  },
   ...pender({
     type: [LOGIN],
     onSuccess: (state, action) => {
       const { name,profile,id} = action.payload.data.data;
 
-        return state.set('name', name).set('profile',profile).set('id', id);
+        return state.set('name', name).set('profile',profile).set('id', id).set('note',);
     }
   }),
   ...pender({
