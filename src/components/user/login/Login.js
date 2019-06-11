@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import SubmitButton from '../common/submitButton';
 import Text from '../common/text';
 import PasswordText from '../common/passwordText';
-import {withRouter} from 'react-router-dom';
 //import GoogleLogin from 'react-google-login';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -28,9 +27,8 @@ class Login extends Component {
         this.setState({autoLogin:!this.state.autoLogin});
   }
 
-  ClickHandler = async(event) => {
-    await this.props.action(this.state.email,this.state.password, this.state.autoLogin);
-    this.props.history.push('/note');
+  ClickHandler = (event) => {
+    this.props.action(this.state.email,this.state.password, this.state.autoLogin);
    }
   handleChecked = () => {
     this.setState = ({
@@ -80,4 +78,4 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login);
+export default Login;

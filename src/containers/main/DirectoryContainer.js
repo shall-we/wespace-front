@@ -79,20 +79,21 @@ class DirectoryContainer extends React.Component {
     }
 
     deleteNote=async(ids) => {
-        const {DirectoryActions,NoticeActions,id} = this.props;
+        const {DirectoryActions,NoticeActions,NoteToolActions,id} = this.props;
         await DirectoryActions.deleteNote(ids.note_id);
         await NoticeActions.sendMessage('NOTE',id,ids.note_id,'삭제','MULTI',null);
         socket.emit('updateFolderList',{ msg:'deleteNote'});
         socket.emit('updateNoteList',{ msg:'deleteNote'});
 
         DirectoryActions.setNote(null);
+        
     }
 
 
     setNote=async(note)=>{
         const {DirectoryActions,NoticeActions,UserActions,folder,id} = this.props;
         await UserActions.getUserList(folder);
-        await DirectoryActions.setNote(note);
+        await DirectoryActions.setNote(note); 
         await NoticeActions.updateNoticeList(id,note.note_id,'COMMENT');
         await NoticeActions.getNoticeList(note.note_id,'COMMENT',id);
         await socket.emit('updateCommentList',{ msg:'setNote'});
@@ -151,6 +152,6 @@ export default connect(
     (dispatch) => ({
         DirectoryActions: bindActionCreators(directoryActions, dispatch),
         UserActions: bindActionCreators(UserActions, dispatch),
-        NoticeActions: bindActionCreators(noticeActions, dispatch)
+        NoticeActions: bindActionCreators(noticeActions, dispatch),
     })
 )(withRouter(DirectoryContainer));

@@ -27,6 +27,7 @@ const initialState = Map({
     name: '',
     profile: '',
     user_list: [],
+    authorizated :false,
 });
 
 // reducer
@@ -35,9 +36,9 @@ export default handleActions({
   ...pender({
     type: [LOGIN],
     onSuccess: (state, action) => {
-      const { name,profile,id} = action.payload.data.data;
+      const { name,profile,id, authorizated} = action.payload.data.data;
 
-        return state.set('name', name).set('profile',profile).set('id', id);
+        return state.set('name', name).set('profile',profile).set('id', id).set('authorizated',authorizated);
     }
   }),
   ...pender({

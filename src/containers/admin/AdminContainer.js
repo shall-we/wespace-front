@@ -32,6 +32,14 @@ class AdminContainer extends React.Component {
     };
   }
 
+  componentWillMount(){
+    setTimeout(()=>{
+      if(!this.props.authorizated){
+        this.props.history.push('/');
+      }
+    },1000); 
+  }
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps !== prevState) {
       return {
@@ -240,6 +248,7 @@ export default connect(
     folderList: state.admin.get("all_folder_list"),
     noteList: state.admin.get("all_note_list"),
     folder: state.directory.get("folder"),
+    authorizated : state.user.get("authorizated"),
   }),
   (dispatch) => ({
     AdminActions: bindActionCreators(adminActions, dispatch),

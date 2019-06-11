@@ -66,7 +66,7 @@ class Join extends Component {
   ClickHandler = () => {
     //select id, name from user where name NOT IN(select name from user, folder_list where user.id=folder_list.user_id and folder_list.id=###)
     const {username,email,password} =this.state;
-    console.log('getImageFile',this.profile.getImgFile());
+    //console.log('getImageFile',this.profile.getImgFile());
 
     const formdata = this.profile.getImgFile();
     formdata.append('name', username);
@@ -74,6 +74,7 @@ class Join extends Component {
     formdata.append('password', password);
 
    this.props.action(formdata);
+  
    this.props.history.push('/');
  console.log('sjdksjdks',username,email,password);
  }

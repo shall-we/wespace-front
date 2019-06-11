@@ -1,6 +1,6 @@
 import React from "react";
 import style from './profiles.scss';
-import defaultProfile from "./default_profile.png";
+import defaultProfile from "../../../image/User/default_profile.png";
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import classNames from 'classnames';
@@ -19,40 +19,33 @@ class Profile extends React.Component {
   onImagePreviewHandler = e => {
       console.log('onImagePreviewHandler');
      
-
+      console.log(this.img);
     if (e.target.files && e.target.files[0]) {
      
-        let reader = new FileReader();
+     
+      let reader = new FileReader();
 
-        reader.onload=()=>{
-            this.img.setAttribute("src", reader.result);
-        };
-
-        
-      reader.readAsDataURL(e.target.files[0]);
-        return;
+      reader.onload=()=>{
+          this.img.setAttribute("src", reader.result);
+          console.log(reader.result);
+      };
+    reader.readAsDataURL(e.target.files[0]);
+    return;
     }
 
   };
-
   getImgFile=()=>{
-    //return this.fileOpen.files[0].path;
     const {files} = this.fileOpen;
-    //console.log(files[0]);
-
-    if(files&&files[0] ){//&&this.state.isResize){
+    if(files&&files[0] ){
       console.log('before :', files[0]);
-      // console.log(this.state.image);
       let formData = new FormData();
-        console.log('resized!');
-        //formData.append('profile', this.state.image);
         formData.append('profile', files[0]);
         return formData;
       
     }else {
-      console.log(defaultProfile);
       let formData = new FormData();
-      formData.append('profile', this.img.src);
+      formData.append('profile', 'defaultProfile');
+      console.log(formData.get('profile'));
       return formData;
     }
   }
