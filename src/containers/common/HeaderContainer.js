@@ -38,7 +38,7 @@ class HeaderContainer extends Component {
 
   logout = async () => {
     const { UserActions } = this.props;
-   // await logout();
+    await logout();
     await UserActions.logout();
   }
 
