@@ -1,8 +1,12 @@
-@import '../../../styles/utils.scss';
+@import "../../../styles/utils.scss";
 
 .page-template {
-    main {
-      background: $oc-gray-1;
-      min-height: calc(100vh - 10rem);
-    }
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  main {
+    background: $oc-gray-1;
+    min-height: calc(100vh - 8.5rem);
   }
+}
