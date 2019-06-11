@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import Button from '../Button';
 import logo from '../../../image/logo.png';
 import miniLogo from '../../../image/mini-logo.png';
-
 const cx = classNames.bind(styles);
  
-const Header = ({name,profile,logout}) => (
+const Header = ({name,profile,logout}) => {
+  return (
   <header className={cx('header')}>
     <div className={cx('header-content')}>
       <div className={cx('brand')}>
@@ -31,6 +31,6 @@ const Header = ({name,profile,logout}) => (
       </div>
     </div>
   </header>
-);
+)};
  
 export default Header;

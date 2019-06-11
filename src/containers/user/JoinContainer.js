@@ -6,9 +6,9 @@ import Join from '../../components/user/join/Join';
 
 class JoinContainer extends Component {
 
-    join=(name,email,password,profile)=>{
+    join=async(name,email,password,profile)=>{
         const {UserActions}=this.props;
-        UserActions.join(name,email,password,profile);
+        await UserActions.join(name,email,password,profile);
     }
 
     render() {
