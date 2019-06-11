@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './uploadModal.scss';
 import UploadItem from './uploadItem/index';
-import closeImg from 'image/Attachment/close.svg';
 import classNames from 'classnames';
 const cx = classNames.bind(styles);
 
@@ -86,7 +85,7 @@ class UploadModal extends React.Component{
             fileList : []
         });
 
-        this.props.handleShow();
+       // this.props.handleShow();
 
         //fileList -> formData,
         for(let i = 0; i<fileList.length; ++i){
@@ -110,14 +109,11 @@ class UploadModal extends React.Component{
 
     render() { 
 
-    if(!this.props.show) return (<null/>); 
-
     const {fileDropHandler,fileDragOverHandler, fileOpenHandler} = this;
 
 
-    return (<div className={cx("uploadModal", "modal_"+this.props.show) } >
+    return (
     <div className={cx("dialog")}>
-        <img className={cx("closeModal")} src={closeImg} data-src={closeImg} alt="" onClick={this.props.handleShow}/>
            
             {/* <label id="submitFile">Upload</label> */}
             
@@ -128,21 +124,21 @@ class UploadModal extends React.Component{
              >
                 <label>Drag files here or Browser</label>
             </div>
-
+            <div className={cx("uploadItem")}>
             {
                 this.state.fileList.map((data, index)=>{
 
-                    return(<div className={cx("uploadItem")}><UploadItem key={index} data={data} onDelete={(e)=>{this.onItemDelete(index)}}/> </div>)
+                    return(<UploadItem key={index} data={data} onDelete={(e)=>{this.onItemDelete(index)}}/>)
 
                 })
                             
             }
+             </div>
         
         <input type="button"  value="Upload" 
         className={(this.state.fileList.length<1)?cx("button_nolist","uploadButton"):cx("uploadButton")}
         onClick={this.handleOnClick}
         />
-        </div>
         </div>
   )
 }

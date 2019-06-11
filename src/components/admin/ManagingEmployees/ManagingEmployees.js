@@ -26,7 +26,7 @@ class ManagingEmployees extends React.Component {
   }
 
   render() {
-    const { userList = [], onDelete } = this.props;
+    const { userList = [], onAnnouncementDelete } = this.props;
 
     return (
       <div className={cx('cx-wrapper')}>
@@ -35,7 +35,7 @@ class ManagingEmployees extends React.Component {
           <div><p>WESPACE에 가입되어 있는 직원 목록입니다.&nbsp;&nbsp;&nbsp;</p></div>
         </div>
         <div>
-          <TablesForUser onDelete={onDelete} userList={userList} />
+          <TablesForUser onDelete={onAnnouncementDelete} userList={userList} />
         </div>
       </div>
     );

@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 import * as directoryActions from "store/modules/directory";
 import * as UserActions from "store/modules/user";
 import * as noticeActions from "store/modules/notice";
-import * as noteToolActions from "store/modules/noteTool";
 
 import Directory from "components/main/Directory";
 import { withRouter } from "react-router-dom";
@@ -62,6 +61,7 @@ class DirectoryContainer extends React.Component {
         if(folder)
         DirectoryActions.getNoteList(folder);
     }
+
     updateSearchNoteList=async (search)=>{
         const {DirectoryActions,folder}=this.props;
         console.log('updateSearchNoteList::',folder);
@@ -95,24 +95,27 @@ class DirectoryContainer extends React.Component {
         DirectoryActions.setNote(null);
     }
 
+
     setNote=async(note)=>{
-        const {DirectoryActions,NoticeActions} = this.props;
+        const {DirectoryActions,NoticeActions,UserActions,folder,id} = this.props;
+        await DirectoryActions.getNoteLock(note.note_id);
+        await UserActions.getUserList(folder);
         await DirectoryActions.setNote(note);
-        await NoticeActions.updateNoticeList(this.props.id,note.note_id,'COMMENT');
-        await NoticeActions.getNoticeList(note.note_id,'COMMENT');
+        await NoticeActions.updateNoticeList(id,note.note_id,'COMMENT');
+        await NoticeActions.getNoticeList(note.note_id,'COMMENT',id);
         await socket.emit('updateCommentList',{ msg:'setNote'});
     }
-    setFolder=(folder_id)=>{
+    setFolder=async(folder_id)=>{
         const {DirectoryActions} = this.props;
-       
-        DirectoryActions.setFolder(folder_id);
-        DirectoryActions.getNoteList(folder_id);
+        await DirectoryActions.setFolder(folder_id);
+        await DirectoryActions.getNoteList(folder_id);
     }
 
-    setLock=(note_id, note_lock)=> {
+    setLock= async (note, Lock)=>{
         const {DirectoryActions} = this.props;
-        console.log('setLock : ',note_id, note_lock);
-        DirectoryActions.setLock(note_id, note_lock);
+        console.log("result : ", note.note_id, Lock);
+        await DirectoryActions.setNoteLock(note.note_id, Lock);
+        await DirectoryActions.getNoteList(note.folder_id);
     }
 
     componentWillMount(){

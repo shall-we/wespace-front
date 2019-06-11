@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from './Context.scss';
 import classNames from 'classnames/bind';
 import EnhancedTable from './EnhancedTable';
+ import AlignItemsList from './AlignItemsList';
 const cx = classNames.bind(styles);
 
 class Context extends Component {
@@ -13,7 +14,7 @@ class Context extends Component {
           </div>
           <div className={cx('notice')} >
               <div className={cx('comment')}>
-                    댓글
+                    <AlignItemsList rows={this.props.chatNotice}/>
               </div>
               <div className={cx('directory')} >
                   <div className={cx('folder')}>

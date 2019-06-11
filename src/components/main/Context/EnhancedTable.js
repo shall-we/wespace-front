@@ -181,7 +181,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 750,
+    minWidth: 300,
   },
   tableWrapper: {
     overflowX: 'auto',
@@ -190,8 +190,8 @@ const useStyles = makeStyles(theme => ({
 
 function EnhancedTable(props) {
   const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('from');
+  const [order, setOrder] = React.useState('desc');
+  const [orderBy, setOrderBy] = React.useState('reg_date');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
@@ -241,9 +241,6 @@ function EnhancedTable(props) {
     setRowsPerPage(+event.target.value);
   }
 
-  function handleChangeDense(event) {
-    setDense(event.target.checked);
-  }
 
   const isSelected = object => selected.indexOf(object) !== -1;
 
@@ -279,7 +276,7 @@ function EnhancedTable(props) {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.object}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -319,10 +316,6 @@ function EnhancedTable(props) {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      /> */}
     </div>
   );
 }

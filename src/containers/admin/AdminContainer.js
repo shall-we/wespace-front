@@ -19,16 +19,16 @@ class AdminContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isNoticeOpened: false,
-      isNoticeWritable: false,
-      isManagingEmployees: false,
-      isManagingFolder: false,
-      isManagingNote: false,
+      // Switch states
+      onAnnouncement: false,
+      onAnnouncementForm: false,
+      onModify: false,
+      onEmployee: false,
+      onFolder: false,
+      onNote: false,
 
       announcementList: [],
       userList: [],
-      noteCount: [],
-      onModify: false
     };
   }
 
@@ -44,148 +44,190 @@ class AdminContainer extends React.Component {
     return null;
   }
 
-  handleOnNotice = (isNoticeOpened) => {
+  handleOnAnnouncement = onAnnouncement => {
     this.setState({
-      isNoticeOpened: isNoticeOpened,
-      isNoticeWritable: false,
-      isManagingEmployees: false,
-      onModify: false,
-      isManagingFolder: false,
-      isManagingNote: false,
-    });
-  }
+      onAnnouncement: onAnnouncement,
+      onAnnouncementForm: false,
+      onEmployee: false,
+      onFolder: false,
+      onNote: false,
 
-  handleOnEmployees = (isManagingEmployees) => {
+      onModify: false,
+    });
+  };
+
+  handleOnEmployees = onEmployee => {
     this.props.UserActions.getAllUserList();
     this.setState({
-      isNoticeOpened: false,
-      isNoticeWritable: false,
-      isManagingEmployees: isManagingEmployees,
-      isManagingFolder: false,
-      isManagingNote: false,
+      onAnnouncement: false,
+      onAnnouncementForm: false,
+      onEmployee: onEmployee,
+      onFolder: false,
+      onNote: false
     });
-  }
+  };
 
-  handleOnFolder = (isManagingFolder) => {
+  handleOnFolder = onFolder => {
     this.props.AdminActions.getAllFolderList();
     this.setState({
-      isNoticeOpened: false,
-      isNoticeWritable: false,
-      isManagingEmployees: false,
-      isManagingFolder: isManagingFolder,
-      isManagingNote: false,
+      onAnnouncement: false,
+      onAnnouncementForm: false,
+      onEmployee: false,
+      onFolder: onFolder,
+      onNote: false
     });
-  }
+  };
 
-  handleOnNote = (isManagingNote) => {
+  handleOnNote = onNote => {
     this.props.AdminActions.getAllNoteList();
-    console.log("=======================");
     this.setState({
-      isNoticeOpened: false,
-      isNoticeWritable: false,
-      isManagingEmployees: false,
-      isManagingFolder: false,
-      isManagingNote: isManagingNote,
+      onAnnouncement: false,
+      onAnnouncementForm: false,
+      onEmployee: false,
+      onFolder: false,
+      onNote: onNote
     });
-  }
-  
-  handleWriteNotice = (isNoticeWritable) => {
-    this.setState({
-      isNoticeOpened: false,
-      isNoticeWritable: isNoticeWritable,
-      isManagingEmployees: false,
-      isManagingFolder: false,
-      isManagingNote: false,
-      title: '',
-      content: ''
-    });
-  }
+  };
 
-  handleModifyNotice = (id, title, content) => {
+  handleWriteAnnouncement = onAnnouncementForm => {
+    this.setState({
+      onAnnouncement: false,
+      onAnnouncementForm: onAnnouncementForm,
+      onEmployee: false,
+      onFolder: false,
+      onNote: false,
+
+      title: "",
+      content: ""
+    });
+  };
+
+  handleModifyAnnouncement = (id, title, content) => {
     this.props.AdminActions.getAnnouncement(id);
     this.setState({
       onModify: true,
-      isNoticeOpened: false,
-      isNoticeWritable: true,
-      isManagingEmployees: false,
-      isManagingFolder: false,
-      isManagingNote: false,
+      onAnnouncement: false,
+      onAnnouncementForm: true,
+      onEmployee: false,
+      onFolder: false,
+      onNote: false,
+      
       id: id,
       title: title,
-      content: content,
+      content: content
     });
-  }
+  };
 
   handleUpdate = (id, title, content) => {
     this.props.AdminActions.updateAnnouncement(id, title, content);
     this.props.AdminActions.getAnnouncementList();
-    this.handleOnNotice(true);
-  }
+    this.handleOnAnnouncement(true);
+  };
 
-  handleDeleteAnnouncement = (id) => {
+  handleDeleteAnnouncement = id => {
     this.props.AdminActions.deleteAnnouncement(id);
     this.props.AdminActions.getAnnouncementList();
-    this.handleOnNotice(true);
-  }
+    this.handleOnAnnouncement(true);
+  };
 
-  handleDeleteUser = (id) => {
-    this.props.UserActions.deleteUser(id);
+  handleDeleteUser = async(id) => {
+    // console.log("[handleDeleteUser] user id is ", id);
+    await this.props.UserActions.deleteUser(id);
     this.props.UserActions.getAllUserList();
-  }
+  };
 
   handleDeleteFolder = async(folder_id) => {
-    console.log('handleDeleteFolder is ', folder_id);
+    // console.log("[handleDeleteFolder] folder_id is ", folder_id);
     await this.props.DirectoryActions.deleteFolder(folder_id);
-    await this.props.DirectoryActions.getNoteList(0);
-    socket.emit('updateFolderList', { msg:'deleteFolder'});
-    this.props.AdminActions.getAllFolderList();
-  }
+    socket.emit("updateFolderList", { msg: "deleteFolder" });
+  };
+
+  handleDeleteNote = async(note_id) => {
+    // console.log("[handleDeleteNote] note_id is ", note_id);
+    await this.props.AdminActions.permanentDeleteNote(note_id);
+    socket.emit("updateFolderList", { msg: "deleteNote" });
+    socket.emit("updateNoteList", { msg: "deleteNote" });
+  };
 
   componentDidMount() {
-    socket.on('updateFolderList', (obj) => {
-        this.updateFolderList();
+    console.log('[updateFolderList] -> componentDidMount');
+    socket.on("updateFolderList", obj => {
+      this.props.AdminActions.getAllFolderList();
     });
-    socket.on('updateNoteList', (obj) => {
-        this.updateNoteList();
+    socket.on("updateNoteList", obj => {
+      this.props.AdminActions.getAllNoteList();
     });
-  }
-
-  handleDeleteNote = (note_id) => {
-    this.props.DirectoryActions.deleteNote(note_id);
-    this.props.AdminActions.getAllNoteList();
   }
 
   handleCreateAnnouncement = (title, content) => {
     this.props.AdminActions.createAnnouncement(title, content);
     this.props.AdminActions.getAnnouncementList();
-    this.handleOnNotice(true);
-  }
+    this.handleOnAnnouncement(true);
+  };
 
-  handleChangeTitle = (e) => { this.setState({ title: e.target.value }) }
-  handleChangeContent = (e) => { this.setState({ content: e.target.value }) }
+  handleChangeTitle = e => {
+    this.setState({ title: e.target.value });
+  };
+  handleChangeContent = e => {
+    this.setState({ content: e.target.value });
+  };
 
   render() {
     const { title, content } = this.state;
 
     return (
       <div style={{ display: "flex" }}>
-        <Administration onNotice={this.handleOnNotice} onEmployees={this.handleOnEmployees} onFolder={this.handleOnFolder} onNote={this.handleOnNote} />
+        <Administration
+          onNotice={this.handleOnAnnouncement}
+          onEmployees={this.handleOnEmployees}
+          onFolder={this.handleOnFolder}
+          onNote={this.handleOnNote}
+        />
 
-        {this.state.isNoticeOpened ?
-         (<Context announcementList={this.state.announcementList} onWrite={this.handleWriteNotice} onModify={this.handleModifyNotice} onDelete={this.handleDeleteAnnouncement} />) : null}
-        
-        {this.state.isNoticeWritable ?
-          (<NoticeForm title={title} content={content} onConfirm={this.handleCreateAnnouncement} onCancel={this.handleOnNotice} changeTitle={this.handleChangeTitle} changeContext={this.handleChangeContent} onModify={this.state.onModify} id={this.state.id} onUpdate={this.handleUpdate} />) : null
-        }
-        
-        {this.state.isManagingEmployees ?
-         (<ManagingEmployees userList={this.state.userList} onAnnouncementDelete={this.handleDeleteUser} />) : null}
+        {this.state.onAnnouncement ? (
+          <Context
+            announcementList={this.state.announcementList}
+            onWrite={this.handleWriteAnnouncement}
+            onModify={this.handleModifyAnnouncement}
+            onDelete={this.handleDeleteAnnouncement}
+          />
+        ) : null}
 
-        {this.state.isManagingFolder ?
-         (<ManagingFolder folderList={this.state.folderList} onDeleteFolder={this.handleDeleteFolder} />) : null}
+        {this.state.onAnnouncementForm ? (
+          <NoticeForm
+            key={this.state.id}
+            title={title}
+            content={content}
+            onConfirm={this.handleCreateAnnouncement}
+            onCancel={this.handleOnAnnouncement}
+            changeTitle={this.handleChangeTitle}
+            changeContext={this.handleChangeContent}
+            onModify={this.state.onModify}
+            id={this.state.id}
+            onUpdate={this.handleUpdate}
+          />
+        ) : null}
 
-        {this.state.isManagingNote ?
-         (<ManagingNote noteList={this.state.noteList} onDelete={this.handleDeleteNote} />) : null}
+        {this.state.onEmployee ? (
+          <ManagingEmployees
+            userList={this.state.userList}
+            onAnnouncementDelete={this.handleDeleteUser}
+          />
+        ) : null}
+
+        {this.state.onFolder ? (
+          <ManagingFolder
+            folderList={this.state.folderList}
+            onDeleteFolder={this.handleDeleteFolder}
+          />
+        ) : null}
+
+        {this.state.onNote ? (
+          <ManagingNote
+            noteList={this.state.noteList}
+            onDelete={this.handleDeleteNote}
+          />
+        ) : null}
       </div>
     );
   }
@@ -203,5 +245,6 @@ export default connect(
     AdminActions: bindActionCreators(adminActions, dispatch),
     UserActions: bindActionCreators(userActions, dispatch),
     DirectoryActions: bindActionCreators(directoryActions, dispatch),
+    // NoticeActions: bindActionCreators(noticeActions, dispatch)
   })
 )(withRouter(AdminContainer));

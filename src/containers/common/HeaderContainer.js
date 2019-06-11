@@ -12,11 +12,11 @@ class HeaderContainer extends Component {
 
   componentDidMount= async () => {
     await autoLogin()
-    .then(res =>{
+    .then(async res =>{
       if(!flag) {
         if(res.data.data.autoLogin) {
           const { UserActions } = this.props;
-          UserActions.login(res.data.data.email, res.data.data.password, true);
+          await UserActions.login(res.data.data.email, res.data.data.password, true);
           flag = true;
           this.props.history.push('/note');
         }

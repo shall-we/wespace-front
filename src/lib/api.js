@@ -3,7 +3,9 @@ import queryString from 'query-string';
 
 // User API
 export const login = (email,password,autoLogin) => axios.post('/login',{email, password, autoLogin});
-export const join = (name,email,password,profile) => axios.post('/join',{name,email,password,profile});
+export const join = (formdata) => axios.post('/join',formdata, { headers: {
+    'Content-Type':'multipart/form-data;charset=utf-8'
+}} );
 export const getUserList = (folder_id) => axios.get(`/user?${queryString.stringify({folder_id})}`);
 export const autoLogin = () => axios.get('/autoLogin');
 export const logout = () => axios.get('/logout');
@@ -26,11 +28,12 @@ export const updateNote = (note_id, note_name) => axios.patch(`note/${note_id}/$
 export const updateNoteStatusDeleted = (note_id) => axios.patch(`/note/status/${note_id}/DELETED`);
 export const getSearchNoteList = (folder_id, search) => axios.get(`/note/searchlist?${queryString.stringify({folder_id, search})}`);
 export const setLock = (note_id, note_lock) => axios.patch(`/note/lock/${note_id}/${note_lock}`);
+export const getLock = (note_id) => axios.get(`/note/lock?${queryString.stringify({note_id})}`);
 // export const getNoteCount = () => axios.get('/admin/note');
 
 // Notice API
 export const sendMessage = (type,from,object,message,option,to) => axios.post('/notice',{type,from,object,message,option,to});
-export const getNoticeList = (id,type) => axios.get(`/notice?${queryString.stringify({id,type})}`);
+export const getNoticeList = (id,type,user_id) => axios.get(`/notice?${queryString.stringify({id,type,user_id})}`);
 export const updateNoticeList = (to, object,type) => axios.patch(`/notice/${to}/${object}/${type}`);
 
 // Attachment API
@@ -51,3 +54,4 @@ export const deleteAnnouncement = (id) => axios.delete(`/admin/announcement/${id
 export const getAllUserList = () => axios.get('/admin/user');
 export const getAllFolderList = () => axios.get('/admin/folder');
 export const getAllNoteList = () => axios.get('/admin/note');
+export const permanentDeleteNote = (note_id) => axios.delete(`/admin/note/${note_id}`);

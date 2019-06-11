@@ -25,8 +25,8 @@ const DELETE_NOTE="directory/DELETE_NOTE";
 const SET_NOTE="directory/SET_NOTE";
 const SET_FOLDER="directory/SET_FOLDER";
 
-const SET_LOCK="directory/SET_LOCK";
-
+const SET_NOTE_LOCK="directory/SET_LOCK";
+const GET_NOTE_LOCK="directory/GET_LOCK";
 
 
 // action creators
@@ -47,7 +47,8 @@ export const deleteNote = createAction(DELETE_NOTE, api.updateNoteStatusDeleted)
 export const setNote = createAction(SET_NOTE);
 export const setFolder = createAction(SET_FOLDER);
 
-export const setLock = createAction(SET_LOCK, api.setLock);
+export const setNoteLock = createAction(SET_NOTE_LOCK, api.setLock);
+export const getNoteLock = createAction(GET_NOTE_LOCK, api.getLock);
 
 // initial state
 const initialState = Map({
@@ -95,8 +96,17 @@ export default handleActions({
                 return state.set("noteList", noteList);
             }
         }),
+    ...pender(
+        {
+            type: [GET_NOTE_LOCK],
+            onSuccess: (state, action) => {
+                const { data: lock } = action.payload.data;
+                console.log('note_lock data :',lock);
+                return state.set("note_lock", lock[0].lock);
+            }
+        }),
     [SET_NOTE]: (state, action) => {
-        const { payload} = action;
+        const { payload } = action;
         console.log('setNote test:::',action.payload);
         return state.set('note', payload.note_content).set('note_id',payload.note_id);
     },
@@ -105,5 +115,6 @@ export default handleActions({
         console.log("SET_FOLDER", folder);
         return state.set('folder', folder);
     },
+
 
 }, initialState);
