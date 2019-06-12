@@ -1,6 +1,18 @@
 # WESPACE
 본 애플리케이션은 **직원 간 업무 공유 노트 서비스** 개발 프로젝트입니다.
 
+## Quick Start
+전체 검색(SEARCH)을 통해 **localhost**를 검색하여 환경에 맞게 변경합니다.
+```javascript
+const socket = socketio.connect("http://localhost:4000");
+```
+
+그 다음 관련 패키지를 설치하고 실행합니다.
+```shell
+yarn install
+yarn start
+```
+
 ## React Router
 | 기능 | HTTP 메서드 | 엔드포인트 | 이동 페이지 | 비고 |
 |------|------------|-----------|------------|------|
