@@ -6,40 +6,42 @@ import * as userActions from '../../store/modules/user';
 import {withRouter} from 'react-router-dom';
 import {autoLogin, logout} from '../../lib/api';
 import defaultProfile from '../../image/User/default_profile.png';
+import * as directoryActions from "store/modules/directory";
 
 let flag = false;
 
 class HeaderContainer extends Component {
 
-  componentDidMount= async () => {
-    await autoLogin()
-    .then(async res =>{
-      if(!flag) {
-        const {autoLogin, email, password,  authorizated } = res.data.data;
-        if(autoLogin) {
-          const { UserActions } = this.props;
-          await UserActions.login(email, password, true);
-          flag = true;
+  // componentDidMount= async () => {
+  //   await autoLogin()
+  //   .then(async res =>{
+  //     if(!flag) {
+  //       const {autoLogin, email, password,  authorizated } = res.data.data;
+  //       if(autoLogin) {
+  //         const { UserActions } = this.props;
+  //         await UserActions.login(email, password, true);
+  //         flag = true;
           
-          if(authorizated){
-          this.props.history.push('/admin');
-          }else{
-          this.props.history.push('/note');
-          }
-        }
-        else {
-          flag = false;
-        }
-      }
-    }
-    );
+  //         if(authorizated){
+  //         this.props.history.push('/admin');
+  //         }else{
+  //         this.props.history.push('/note');
+  //         }
+  //       }
+  //       else {
+  //         flag = false;
+  //       }
+  //     }
+  //   }
+  //   );
+// 
+  // }
 
-  }
-
-  logout = async () => {
-    const { UserActions } = this.props;
+    logout = async () => {
+    const { UserActions, DirectoryActions } = this.props;
     await logout();
     await UserActions.logout();
+    DirectoryActions.setNote(null);
   }
 
   render() {
@@ -62,6 +64,7 @@ class HeaderContainer extends Component {
       profile: state.user.get('profile'),
     }),
     (dispatch) => ({
-      UserActions: bindActionCreators(userActions, dispatch)
+      UserActions: bindActionCreators(userActions, dispatch),
+      DirectoryActions: bindActionCreators(directoryActions, dispatch),
     })
   )(withRouter(HeaderContainer));
