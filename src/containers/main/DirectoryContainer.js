@@ -41,6 +41,7 @@ class DirectoryContainer extends React.Component {
     };
 
     deleteFriend = async (obj, friend_id)=>{
+        console.log("친구 삭제", obj, friend_id);
         const {DirectoryActions} = this.props;
         if(obj instanceof Object ) {
             await DirectoryActions.deleteFriend(obj.user_id, obj.friend_id);

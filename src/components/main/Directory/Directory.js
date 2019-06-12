@@ -736,13 +736,13 @@ class Directory extends React.Component {
                                 <NoteAdd color="primary" />
                             </IconButton>
                             
-                            <IconButton>
+{/*                            <IconButton>
                                 <Share color="primary" onClick={this.handleNoteExportPdf} />
                             </IconButton>
 
                             <IconButton>   
                                 <Lock color="primary" onClick={this.handleAccessToFile} />
-                            </IconButton>
+                            </IconButton>*/}
 
                             <IconButton
                                 onClick={this.handleSubDrawerClose}
