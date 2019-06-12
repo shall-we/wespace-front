@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 const User = (props) => (
     <div className={cx('user')}>
-      <img src={ props.imgUrl } 
+      <img src={props.imgUrl }
         alt={ props.alt || 'Image' } />
          
       <div className={cx('user-content')} style={{'border-right':props.content+ ' solid 1rem'}}>

@@ -7,6 +7,8 @@ export const join = (formdata) => axios.post('/join',formdata, { headers: {
     'Content-Type':'multipart/form-data;charset=utf-8'
 }} );
 export const getUserList = (folder_id) => axios.get(`/user?${queryString.stringify({folder_id})}`);
+export const getUserListExceptFriend = (user_id) => axios.get(`/userExceptFriend?${queryString.stringify({user_id})}`);
+
 export const autoLogin = () => axios.get('/autoLogin');
 export const logout = () => axios.get('/logout');
 
@@ -47,7 +49,28 @@ export const getAnnouncement = (id) => axios.get(`/admin/announcement/${queryStr
 export const updateAnnouncement = (id, title, content) => axios.patch(`/admin/announcement/${id}`, { title, content });
 export const deleteAnnouncement = (id) => axios.delete(`/admin/announcement/${id}`);
 
+
+
+export const getSingleChat = (user_id,friend_id) => axios.get(`/chat/getSingleChat?${queryString.stringify({user_id,friend_id})}`);
+export const initChatroom = (user_id,friend_id) => axios.post(`/chat/initChatroom`, {user_id,friend_id});
+
+export const getChats = (chatroom_id, page, volume) => axios.get(`/chat/getChats?${queryString.stringify({chatroom_id,page, volume})}`);
+export const insertChat = (user_id, chatroom_id, content) => axios.post(`/chat/insertChat`, {user_id, chatroom_id, content});
+export const getChatParticipantsInfo = (chatroom_id) => axios.get(`/chat/getChatParticipantsInfo?${queryString.stringify({chatroom_id})}`);
+export const getPrivateChatList = (user_id) => axios.get(`/chat/getPrivateChatroomList?${queryString.stringify({user_id})}`);
+export const countChatroom = (chatroom_id) => axios.get(`/chat/countChatroom?${queryString.stringify({chatroom_id})}`);
+
+export const updateChatroomTitle = (info, newTitle) => axios.patch(`/chat/updateChatRoomTitle`, {info, newTitle});
+
+
+export const addFriend = (user_id, friend_id) => axios.post(`/friend/add?`, {user_id, friend_id});
+export const deleteFriend = (user_id, friend_id) => axios.delete(`/friend/delete?${queryString.stringify({user_id, friend_id})}`);
+export const dropChatroom = (user_id, chatroom_id) => axios.delete(`/chat/dropChatroom?${queryString.stringify({user_id, chatroom_id})}`);
+export const getAllFriend = (user_id) => axios.get(`/friend/getAllFriend?${queryString.stringify({user_id})}`);
+
+
 export const getAllUserList = () => axios.get('/admin/user');
 export const getAllFolderList = () => axios.get('/admin/folder');
 export const getAllNoteList = () => axios.get('/admin/note');
 export const permanentDeleteNote = (note_id) => axios.delete(`/admin/note/${note_id}`);
+

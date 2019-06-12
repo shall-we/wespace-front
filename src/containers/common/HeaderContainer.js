@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import * as userActions from '../../store/modules/user';
 import {withRouter} from 'react-router-dom';
 import {autoLogin, logout} from '../../lib/api';
-import defaultProfile from '../../image/User/default_profile.png';
 import * as directoryActions from "store/modules/directory";
 
 let flag = false;
@@ -21,7 +20,7 @@ class HeaderContainer extends Component {
   //         const { UserActions } = this.props;
   //         await UserActions.login(email, password, true);
   //         flag = true;
-          
+
   //         if(authorizated){
   //         this.props.history.push('/admin');
   //         }else{
@@ -34,7 +33,7 @@ class HeaderContainer extends Component {
   //     }
   //   }
   //   );
-// 
+//
   // }
 
     logout = async () => {
@@ -47,11 +46,12 @@ class HeaderContainer extends Component {
   render() {
     const { name,profile } = this.props;
     // update image if image url includes 'static' , it change default_profile.png
+      console.log("확인!!", name, profile);
     const { logout } = this;
     return (
       <Header
         name={name}
-        profile={(profile ==="defaultProfile")?defaultProfile:profile}
+        profile={profile}
         logout={logout}
       />
     );

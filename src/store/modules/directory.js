@@ -1,7 +1,7 @@
 // createAction: 액션생성 자동화
 import { createAction, handleActions } from "redux-actions";
 
-import { Map } from "immutable";
+import { Map, fromJS } from "immutable";
 import { pender } from "redux-pender";
 import * as api from "lib/api";
 
@@ -24,6 +24,13 @@ const DELETE_NOTE="directory/DELETE_NOTE";
 const SET_NOTE="directory/SET_NOTE";
 const SET_FOLDER="directory/SET_FOLDER";
 
+const SET_FRIENDS="directory/SET_FRIENDS";
+const DEL_FRIEND="directory/DEL_FRIEND";
+const ADD_FRIEND = "directory/ADD_FRIEND";
+
+
+const SET_JOIN_FRIEND="directory/SET_JOIN_FRIEND";
+const SET_OUT_FRIEND="directory/SET_OUT_FRIEND";
 
 
 // action creators
@@ -43,6 +50,11 @@ export const deleteNote = createAction(DELETE_NOTE, api.updateNoteStatusDeleted)
 export const setNote = createAction(SET_NOTE);
 export const setFolder = createAction(SET_FOLDER);
 
+export const setFriends = createAction(SET_FRIENDS);
+export const setJoinFriend = createAction(SET_JOIN_FRIEND);
+export const addFriend = createAction(ADD_FRIEND, api.addFriend);
+export const deleteFriend = createAction(DEL_FRIEND, api.deleteFriend);
+export const setOutFriend = createAction(SET_OUT_FRIEND);
 
 // initial state
 const initialState = Map({
@@ -51,6 +63,7 @@ const initialState = Map({
     noteList: [],
     folder: null,
     note: null,
+    friends:[],
     note_id:null,
 });
 
@@ -82,6 +95,50 @@ export default handleActions({
             return state.set("noteList", noteList);
         }
     }),
+
+    ...pender({
+        type: [DEL_FRIEND],
+        onSuccess: (state, action) => {
+            return state.set("friends", state.get("friends"));
+        }
+    }),
+
+    ...pender({
+        type: [ADD_FRIEND],
+        onSuccess: (state, action) => {
+            return state.set("friends", state.get("friends"));
+        }
+    }),
+
+    [SET_FRIENDS]: (state, action) => {
+        const { payload: friends } = action;
+        console.log("SET_FRIENDS",friends);
+        return state.set('friends', fromJS(friends));
+    },
+    [SET_JOIN_FRIEND]: (state, action) => {
+        const { payload: friendId } = action;
+        const friends = state.get("friends");
+        const newFriend = friends.map(el=>{
+            if(parseInt(el.get("id")) === parseInt(friendId)){
+                el = el.set("joined", true);
+            }
+            return el;
+        });
+
+        return state.set('friends', newFriend);
+    },
+    [SET_OUT_FRIEND]: (state, action) => {
+        const { payload: friendId } = action;
+        let friends = state.get("friends");
+        friends = friends.map(el=>{
+            if(parseInt(el.id) === parseInt(friendId)){
+                el = el.set("joined", false);
+            }
+            return el;
+        });
+        return state.set('friends', friends);
+    },
+
     [SET_NOTE]: (state, action) => {
         const { payload} = action;
         console.log('setNote test:::',action.payload);

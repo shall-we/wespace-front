@@ -1,6 +1,5 @@
 import React from "react";
 import style from './profiles.scss';
-import defaultProfile from "../../../image/User/default_profile.png";
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import classNames from 'classnames';
@@ -44,7 +43,7 @@ class Profile extends React.Component {
       
     }else {
       let formData = new FormData();
-      formData.append('profile', 'defaultProfile');
+      formData.append('profile', '/static/media/default_profile.002ff40d.png');
       console.log(formData.get('profile'));
       return formData;
     }
@@ -54,9 +53,9 @@ class Profile extends React.Component {
     return (
       <div className={cx("profile")}>
         <div onClick={this.onClickFileOpenHandler.bind(this)}>
-        <img id="profile" src={defaultProfile} ref={ref => (this.img = ref)} alt="profile" />
-        <Fab color="primary" aria-label="Add" >
-        <AddIcon />
+        <img id="profile" src="/static/media/default_profile.002ff40d.png" ref={ref => (this.img = ref)} alt="profile" />
+            <Fab color="primary" aria-label="Add" >
+                <AddIcon/>
         </Fab>
         </div>
         <input type="file" onChange={this.onImagePreviewHandler.bind(this)} ref={(ref)=>(this.fileOpen=ref)}/>
