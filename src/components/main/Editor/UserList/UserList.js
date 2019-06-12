@@ -1,11 +1,12 @@
 import React from 'react';
 import styles from './UserList.scss';
 import classNames from 'classnames/bind';
+import defaultProfile from '../../../../image/User/default_profile.png';
 
 const cx = classNames.bind(styles);
 const User = (props) => (
     <div className={cx('user')}>
-      <img src={ props.imgUrl } 
+      <img src={ (props.imgUrl==="defaultProfile")? defaultProfile: props.imgUrl }
         alt={ props.alt || 'Image' } />
          
       <div className={cx('user-content')} style={{'border-right':props.content+ ' solid 1rem'}}>

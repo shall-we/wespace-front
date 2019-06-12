@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import ListItem from "@material-ui/core/ListItem";
 import Switch from '@material-ui/core/Switch';
@@ -12,12 +13,19 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import { Menu, ExpandMore, ExpandLess, CreateNewFolder, FolderShared, Delete, Folder, Share, Lock, 
-    GroupAdd, ChevronLeft, ChevronRight, NoteAdd} from "@material-ui/icons";
+    GroupAdd, ChevronLeft, ChevronRight, NoteAdd, People, Chat,
+    NotificationImportant, Assignment,
+    KeyboardArrowRight, Brightness1, AddAlert, PersonAdd} from "@material-ui/icons";
 import OneInputModal from "../../modal/OneInputModal";
 import AskShareModal from '../../modal/AskShareModal';
 import NoticeModal from '../../modal/NoticeModal';
+import AskInviteModal from '../../modal/AskShareModal/AskInviteModal';
+import AskInviteChatroomModal from '../../modal/AskShareModal/AskInviteChatroomModal';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import './Contextmenu.css';
+
+import ChatBox from '../chat/chat';
+import * as api from "lib/api";
 
 const drawerWidth = 250;
 
@@ -65,6 +73,46 @@ const styles = theme => ({
     SubDrawerClose: {
         display: 'none'
     },
+    FriendDrawerOpen: {
+        height: 'calc(100vh - 4rem)',
+        position:'unset',
+        width: drawerWidth,
+        transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+        }),
+    },
+    FriendDrawerClose: {
+        display: 'none'
+    },
+
+    ChatDrawerOpen: {
+        height: 'calc(100vh - 4rem)',
+        position:'unset',
+        width: drawerWidth,
+        transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+        }),
+    },
+    ChatDrawerClose: {
+        display: 'none'
+    },
+
+    ChatListDrawerOpen :{
+        height: 'calc(100vh - 4rem)',
+        position:'unset',
+        width: drawerWidth,
+        transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+        }),
+    },
+
+    ChatListDrawerClose: {
+        display: 'none'
+    },
+
     toolbar: {
         display: "flex",
         justifyContent: "flex-end",
@@ -95,6 +143,13 @@ const updateNoteModalData = ["oneInputModal", 'file-signature', '노트 이름 �
 const exportNoteModalData = ["oneInputModal", 'file-pdf', '노트 내보내기', '해당 내용을 PDF 파일로 내보내겠습니까?', '확인'];
 const lockedNoteModalData = ["noticeModal", 'file-alt', '노트 생성', '생성할 노트명을 입력해주세요.', '생성'];
 
+const deleteFriendModalData = ["noticeModal", 'trash-alt', '친구 삭제', '친구를 정말 삭제하시겠습니까?', '삭제'];
+const updateChatTitleModalData = ["oneInputModal", 'file-signature', '채팅방 이름 수정', '수정할 채팅방 이름을 입력하세요.', '수정'];
+const deleteChatModalData = ["noticeModal", 'trash-alt', '채팅방 나가기', '이 채팅방에서 나가시겠습니까? ', '나가기'];
+
+const addFriendModalData = ["selectFriendModal", 'group', '친구 추가', '추가할 친구를 선택하세요', '완료'];
+const inviteFriendModalData = ["selectInviteChatroomModal", 'group', '친구 초대', '그룹 채팅에 초대할 친구를 선택하세요.', '확인'];
+
 
 const modalList=[
     createFolderModalData,
@@ -107,7 +162,13 @@ const modalList=[
 
     exportNoteModalData,
     lockedNoteModalData,
-    shareFolderModalData
+    shareFolderModalData,
+
+    deleteFriendModalData,
+    updateChatTitleModalData,
+    deleteChatModalData,
+    addFriendModalData,
+    inviteFriendModalData
 ]
 
 
@@ -117,8 +178,13 @@ class Directory extends React.Component {
         this.state = {
             open: false,
             SubOpen: false,
+            ChatOpen: false,
+            FriendOpen : false,
+            ChatListOpen : false,
+
             public_navigationOpen: false,
             private_navigationOpen: false,
+            friend_navigationOpen: false,
 
             toggle: false,
 
@@ -131,6 +197,8 @@ class Directory extends React.Component {
             oneInputModal: false,
             noticeModal: false,
             selectModal: false,
+            selectFriendModal: false,
+            selectInviteChatroomModal : false,
 
             modal_action:null,
             modal_text:'',
@@ -156,18 +224,33 @@ class Directory extends React.Component {
         this.setState({ open: true });
     };
     handleDrawerClose = () => {
-        this.setState({ open: false });
-        this.setState({ SubOpen: false });
-        this.setState({ private_navigationOpen: false });
-        this.setState({ public_navigationOpen: false });
+        this.setState({
+            open: false,
+            SubOpen: false,
+            FriendOpen: false,
+            ChatOpen: false,
+            ChatListOpen :false,
+            private_navigationOpen: false,
+            public_navigationOpen: false
+        });
     };
     handleSubDrawerOpen = () => {
-        this.setState({ SubOpen: true });
+        this.setState({
+            SubOpen: true,
+            FriendOpen: false,
+            ChatOpen: false,
+            ChatListOpen : false });
     };
     handleSubDrawerClose = () => {
         this.setState({ SubOpen: false });
     };
- /** [main navigation] handling folder modal */
+
+    handleChatDrawerClose = () => {
+        this.setState({ ChatOpen: false });
+    };
+
+
+    /** [main navigation] handling folder modal */
 
 
     handleSetModal=(array,action,id,text)=>{
@@ -187,7 +270,7 @@ class Directory extends React.Component {
         this.setState({
             [type]: false
         });
-    }
+    };
 
     handleFolderData = (folder_id, folder_name,permission) => {
         this.setState({ folder_name: folder_name, folder_id:folder_id, permission:permission });
@@ -199,6 +282,85 @@ class Directory extends React.Component {
         this.setState({note_id: note_id , note_name: note_name });
         this.props.setNote({note_content,note_id});
     };
+
+    handleFriendData(friend_id, friend_name) {
+        this.setState({friend_id: friend_id , friend_name: friend_name });
+    };
+
+    handleFriendDrawerOpen () {
+        this.setState({ SubOpen: false, FriendOpen: true, ChatOpen : false, ChatListOpen : false });
+    };
+    handleFriendDrawerClose () {
+        this.setState({ FriendOpen: false });
+    };
+
+
+    async handleChatDrawerOpen (user_id, friend_id){
+
+        let response =  await api.getSingleChat(user_id, friend_id);
+        let {result} = response.data;
+        let {data} = response.data;
+
+
+        let chatroom_id;
+        if(result === "success"){
+            chatroom_id = data[0].chatroom_id;
+
+        }else if(result === "notExist"){
+            result = await api.initChatroom(user_id, friend_id);
+            chatroom_id = result.data.data.chatroom_id;
+
+        }else {
+            new Error("ERROR! 전달 받은 결과가 유효하지 않습니다.");
+            return;
+        }
+
+
+        response = await api.getChats(chatroom_id, 1, 0);
+
+        let participants = await api.getChatParticipantsInfo(chatroom_id);
+        console.log(participants);
+        participants = participants.data;
+
+        if(response.data.chats){
+            this.props.setChats({chats : response.data.chats, participants : participants.data, chatroom_id : chatroom_id});
+        }
+        this.setState({ SubOpen: false, ChatOpen: true, ChatListOpen : false, FriendOpen: false, chatroom_id : chatroom_id  });
+    };
+
+
+    async handleChatDrawerOpenByChatroomId (chatroom_id){
+
+        let response = await api.getChats(chatroom_id, 1, 0);
+        let participants = await api.getChatParticipantsInfo(chatroom_id);
+        console.log(participants);
+        participants = participants.data;
+
+        if(response.data.chats){
+            this.props.setChats({chats : response.data.chats, participants : participants.data, chatroom_id : chatroom_id});
+        }
+        this.setState({ SubOpen: false, ChatOpen: true, ChatListOpen : false, FriendOpen: false, chatroom_id : chatroom_id });
+    };
+
+
+    handleCloseInviteChatroomModal = () => {
+        this.setState({selectInviteChatroomModal : false});
+    };
+
+
+    handleChatDrawerClose () {
+        this.setState({ ChatOpen: false });
+    }
+
+
+    handleChatListDrawerOpen () {
+        this.setState({ FriendOpen : false, SubOpen : false, ChatOpen : false, ChatListOpen: true });
+    }
+
+    handleChatListDrawerClose () {
+        this.setState({ ChatListOpen: false });
+    }
+
 
     FolderContextmenu = (item) => (
         <div className='context-menu' key={item.folder_id}>
@@ -235,7 +397,7 @@ class Directory extends React.Component {
                 </MenuItem>) : null }
             </ContextMenu>
       </div>
-    )
+    );
 
     FileContextmenu = (item) => (
         <div className='context-menu' key={item.id}>
@@ -267,14 +429,78 @@ class Directory extends React.Component {
                 </MenuItem>
             </ContextMenu>
       </div>
-    )
+    );
+
+    FriendContextmenu (item) {return (
+        <div className='context-menu' key={item.get("id")}>
+            <ContextMenuTrigger id={item.get("id")}>
+                <ListItem onAuxClick={(e)=>this.handleFriendData(this, item.get("id"), item.get("name"))}>
+                    {item.get("joined") ?
+                        <Brightness1 style={{color : "orange", width : "10"}}/>
+                        : <Brightness1 style={{color : "green", width : "10"}}/>}
+                    <ListItemText inset />
+                    <span style={{width : "30%", textAlign : "left"}}>
+                   <img style={{width : 40, height : 40, borderStyle : "groove", borderRadius : "100%"}} src={item.get("profile")} alt="profile"/>
+                   </span>
+                    <span style={{width: "60%", textAlign : "left"}}>{item.get("name")}</span></ListItem>
+                <Divider />
+            </ContextMenuTrigger>
+            <ContextMenu id={item.get("id")}>
+                <MenuItem onClick={(e)=>{ this.handleSetModal(modalList[9],this.props.deleteFriend, {user_id : this.props.user_id, friend_id : item.get("id")}, '')}}>
+                    친구삭제
+                </MenuItem>
+                <MenuItem onClick={ (e)=>{ this.handleChatDrawerOpen(this.props.user_id, item.get("id")) }}>
+                    채팅하기
+                </MenuItem>
+            </ContextMenu>
+        </div>
+    )};
+
+
+    ChatContextmenu (hasNew, item) {
+        let timeObj = new Date(item.get("last_update"));
+        let timeStr = (timeObj.getMonth()+1) + "/" +timeObj.getDate() + " " + timeObj.getHours() + ":" + timeObj.getMinutes();
+        return (
+            <div className='context-menu' key={item.get("chatroom_id")}>
+
+                <ContextMenuTrigger id={item.get("chatroom_id")}>
+
+                    <Grid container direction="row" spacing={3}  style={{padding : "10px", cursor : "pointer"}} onClick = {(e)=>this.handleChatDrawerOpenByChatroomId(item.get("chatroom_id"))}>
+                        <Grid container direction="row" xs={10} alignItems="center"  spacing={0}>
+                            {hasNew ?
+                                <Grid item xs={3} sm={2} style={{textAlign:"center"}}> <AddAlert style={{color : "red", width : "20"}}/></Grid>
+                                :  <Grid item xs={3} sm={2}></Grid>}
+                            <Grid item xs={9} sm={10} ><span style={{fontSize : "10pt", marginRight : "3px", fontWeight : "bold"}}>{item.get("chatroom_title") && item.get("chatroom_title").length > 0 ? item.get("chatroom_title") : "이름 없는 채팅방"}</span>
+                                <span style={{fontSize : "6pt"}}>{timeStr}</span>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={2}><KeyboardArrowRight/></Grid>
+                    </Grid>
+
+                    <Divider />
+                </ContextMenuTrigger>
+
+                <ContextMenu id={item.get("chatroom_id")}>
+                    <MenuItem onClick={(e)=>this.handleSetModal(modalList[11],this.props.deleteChatroom,{user_id : item.get("user_id"), chatroom_id: item.get("chatroom_id")}, '')}>
+                        나가기
+                    </MenuItem>
+                    <MenuItem onClick={(e)=>this.handleSetModal(modalList[10],this.props.updateChatroomTitle,{user_id : item.get("user_id"), chatroom_id: item.get("chatroom_id")}, item.get("chatroom_title"))}>
+                        이름 변경
+                    </MenuItem>
+                </ContextMenu>
+
+            </div>
+        )};
 
     render() {
         const { classes, theme,
              sharedList = [], privateList = [], noteList = [],
              user_id = 0,
-             createFolder, sharedFolder,unsharedFolder, deleteFolder, updateFolder,
-             createNote, updateNote, deleteNote } = this.props;
+             createFolder, sharedFolder,
+             unsharedFolder, deleteFolder,
+             updateFolder,
+             addFriend, deleteFriend,
+             createNote, updateNote, deleteNote, friends } = this.props;
         
         return (
             <div className={classes.root}>
@@ -313,7 +539,36 @@ class Directory extends React.Component {
                                             id={this.state.modal_id}
                                             text={this.state.modal_text}
                                            />
-                            
+
+                                <AskInviteModal
+                                    key={this.state.modal_id}
+                                    visible={this.state.selectFriendModal}
+                                    onCancel={(e)=>this.handleUnSetModal('selectFriendModal')}
+                                    onConfirm={this.state.modal_action}
+                                    modal_icon={this.state.modal_icon}
+                                    modal_title={this.state.modal_title}
+                                    modal_content={this.state.modal_content}
+                                    btn_name={this.state.btn_name}
+                                    id={this.state.modal_id}
+                                    text={this.state.modal_text}
+                                />
+
+
+                                <AskInviteChatroomModal
+                                    key={this.state.modal_id}
+                                    visible={this.state.selectInviteChatroomModal}
+                                    onCancel={(e)=>this.handleUnSetModal('selectInviteChatroomModal')}
+                                    onConfirm={this.state.modal_action}
+                                    modal_icon={this.state.modal_icon}
+                                    modal_title={this.state.modal_title}
+                                    modal_content={this.state.modal_content}
+                                    btn_name={this.state.btn_name}
+                                    id={this.state.modal_id}
+                                    text={this.state.modal_text}
+                                    handleCloseInviteChatroomModal = {this.handleCloseInviteChatroomModal}
+                                />
+
+
                 <Drawer 
                     variant="permanent"
                     className={classNames(classes.drawer, {
@@ -424,6 +679,42 @@ class Directory extends React.Component {
                             </Collapse>
                         ))}
                     </List>
+
+                    <List className={classes.list} >
+
+                        <ListItem
+                            button
+                            onClick={event => {
+                                this.handleDrawerOpen();
+                                this.handleFriendDrawerOpen();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <People />
+                            </ListItemIcon>
+                            <ListItemText primary="Friends" />
+                        </ListItem>
+                    </List>
+
+                    <Divider />
+
+                    <List className={classes.list} >
+                        <ListItem
+                            button
+                            onClick={event => {
+
+                                this.handleChatListDrawerOpen();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <Chat />
+                            </ListItemIcon>
+                            <ListItemText primary="Chats" />
+                        </ListItem>
+
+                    </List>
+
+
                 </Drawer>
                 <Drawer
                     variant="permanent"
@@ -470,6 +761,143 @@ class Directory extends React.Component {
                         {noteList.map((item) => (this.FileContextmenu(item)))}
                     </List>
                     </div>
+
+                </Drawer>
+
+
+
+                <Drawer
+                    variant="permanent"
+                    className={classNames(classes.drawer, {
+                        [classes.FriendDrawerClose]: !this.state.FriendOpen
+                    })}
+                    classes={{
+                        paper: classNames( {
+                            [classes.FriendDrawerOpen]: this.state.FriendOpen,
+                            [classes.FriendDrawerClose]: !this.state.FriendOpen
+                        }),
+                    }}
+                    open={this.state.FriendOpen}>
+                    <div className={classes.toolbar} style={{marginRight: 6}}>
+
+                        <div>
+                            <IconButton>
+                                <PersonAdd color="primary" onClick={(e)=>{this.handleSetModal(modalList[12], [addFriend, deleteFriend], user_id, '', false)}} />
+                            </IconButton>
+
+                            <IconButton
+                                onClick={(e)=>this.handleFriendDrawerClose()}
+                            >
+                                {theme.direction === "rtl" ? (
+                                    <ChevronRight />
+                                ) : (
+                                    <ChevronLeft />
+                                )}
+                            </IconButton>
+                        </div>
+                    </div>
+                    <Divider />
+                    <div className={classes.drawerOverflow}>
+
+                        {friends.map((item, index) => (
+                            <List component="div" disablePadding style = {{cursor : "pointer"}}>
+                                {this.FriendContextmenu.call(this, item)}
+                            </List>
+                        ))}
+
+                    </div>
+
+                </Drawer>
+
+
+                <Drawer
+                    variant="permanent"
+                    className={classNames(classes.drawer, {
+                        [classes.ChatListDrawerClose]: !this.state.ChatListOpen
+                    })}
+                    classes={{
+                        paper: classNames( {
+                            [classes.ChatListDrawerOpen]: this.state.ChatListOpen,
+                            [classes.ChatListDrawerClose]: !this.state.ChatListOpen
+                        }),
+                    }}
+                    open={this.state.FriendOpen}>
+
+                    {
+                        this.hasNotReadChat = (myViewTime, lastUpdateTime) => {
+                            return Date.parse(myViewTime) < Date.parse(lastUpdateTime) ? true : false;
+                        }}
+
+                    <div className={classes.toolbar} style={{marginRight: 6}}>
+
+                        <div>
+
+                            <IconButton
+                                onClick={(e)=>this.handleChatListDrawerClose()}
+                            >
+                                {theme.direction === "rtl" ? (
+                                    <ChevronRight />
+                                ) : (
+                                    <ChevronLeft />
+                                )}
+                            </IconButton>
+                        </div>
+                    </div>
+                    <Divider />
+                    <div className={classes.drawerOverflow}>
+
+                        {this.props.privateChatList.map((item, index) => (
+                            this.ChatContextmenu.call(this, this.hasNotReadChat(item.get("view_time"), item.get("last_update")), item)
+                        ))}
+
+                    </div>
+
+                </Drawer>
+
+
+
+                <Drawer
+                    variant="permanent"
+                    className={classNames(classes.drawer, {
+                        [classes.ChatDrawerClose]: !this.state.ChatOpen
+                    })}
+                    classes={{
+                        paper: classNames( {
+                            [classes.ChatDrawerOpen]: this.state.ChatOpen,
+                            [classes.ChatDrawerClose]: !this.state.ChatOpen
+                        }),
+                    }}
+                    open={this.state.ChatOpen}>
+                    <div className={classes.toolbar} style={{marginRight: 6}}>
+
+                        <div>
+                            <IconButton onClick={(e)=>{this.handleSetModal(modalList[13], [addFriend, deleteFriend], {user_id : user_id, chatroom_id : this.state.chatroom_id}, '', false)}}>
+                                <PersonAdd color="primary"/>
+                            </IconButton>
+
+                            <IconButton
+                                onClick={(e)=>this.handleChatDrawerClose()}
+                            >
+                                {theme.direction === "rtl" ? (
+                                    <ChevronRight />
+                                ) : (
+                                    <ChevronLeft />
+                                )}
+                            </IconButton>
+                        </div>
+                    </div>
+                    <Divider />
+                    <div className={classes.drawerOverflow}>
+                        <ChatBox
+                            chats = {this.props.chats}
+                            userId = {this.props.user_id}
+                            sendChat = {this.props.sendChat}
+                            joinChatRoom = {this.props.joinChatRoom}
+                            leaveChatRoom = {this.props.leaveChatRoom}
+
+                        />
+                    </div>
+
                 </Drawer>
             </div>
         );

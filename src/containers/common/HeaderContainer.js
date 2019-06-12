@@ -11,30 +11,30 @@ let flag = false;
 
 class HeaderContainer extends Component {
 
-  componentDidMount= async () => {
-    await autoLogin()
-    .then(async res =>{
-      if(!flag) {
-        const {autoLogin, email, password,  authorizated } = res.data.data;
-        if(autoLogin) {
-          const { UserActions } = this.props;
-          await UserActions.login(email, password, true);
-          flag = true;
-          
-          if(authorizated){
-          this.props.history.push('/admin');
-          }else{
-          this.props.history.push('/note');
-          }
-        }
-        else {
-          flag = false;
-        }
-      }
-    }
-    );
-
-  }
+  // componentDidMount= async () => {
+  //   await autoLogin()
+  //   .then(async res =>{
+  //   //     if(!flag) {
+  //       const {autoLogin, email, password,  authorizated } = res.data.data;
+  //       if(autoLogin) {
+  //         const { UserActions } = this.props;
+  //         await UserActions.login(email, password, true);
+  //         flag = true;
+  //
+  //         if(authorizated){
+  //         this.props.history.push('/admin');
+  //         }else{
+  //         this.props.history.push('/note');
+  //         }
+  //       }
+  //       else {
+  //         flag = false;
+  //       }
+  //     }
+  //   }
+  //   );
+  //
+  // }
 
   logout = async () => {
     const { UserActions } = this.props;

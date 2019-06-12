@@ -1,0 +1,101 @@
+.chat-box {
+    height : 80vh;
+    overflow : hidden;
+    position : relative;
+    z-index : 2;
+
+}
+
+.message-container {
+    img{
+        width : 15%;
+        height : 15%;
+        border-radius : 100%;
+    }
+    width : 100%;
+    display : inline-block;
+    vertical-align: middle;
+    padding : 10px;
+    position : relative;
+    z-index : 10;
+}
+
+.messages-wrapper {
+    overflow-y: auto;
+    height: calc(80%);
+    padding : 15px;
+    min-height : 400px;
+    position : relative;
+    z-index: 20;
+ }
+
+ .time-wrapper {
+     font-size : 8pt;
+     
+     &.left {
+        text-align : left;
+    }
+     
+     &.right {
+         text-align : right;
+     }
+ }
+
+.message {
+    padding: 10px;
+    font-size: 10pt;
+}
+               
+.bubble {       
+    display: inline-block;
+    padding: 8px 18px;       
+    border-radius: 10px;   
+    word-break:break-all;
+       
+     
+               
+    &.left {     
+        min-width: 100px;
+        max-width : 70%;     
+        float: left;
+        background-color: rgb(15, 219, 76);        
+
+    }   
+            
+    &.right {     
+        min-width: 120px;
+        max-width : 80%;     
+        float: right;
+        background-color: skyblue;    
+       
+    }
+}
+.from {
+    font-size: 10pt;
+    padding: 5px;
+    color: #000;
+} 
+
+.message-input-wrapper{
+    width: 100%;
+    height: calc(20%);
+    text-align : center;
+    z-index : 50;
+    padding-bottom : 20px;
+
+   
+    
+}
+       
+.message-input {
+    width: 90%;
+    height: 100%;
+    z-index : 70;
+    padding : 8px;
+    margin : 8px;
+    overflow : hidden;
+    resize : none;
+    background-color: #fff;
+
+}
+   
