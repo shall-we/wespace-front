@@ -3,12 +3,19 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as userActions from "../../store/modules/user";
 import Login from "../../components/user/login/Login";
+import {withRouter} from 'react-router-dom';
 
 class LoginContainer extends Component {
     
     login = async(email, password, autoLogin) => {
         const { UserActions} = this.props;
-        await UserActions.login(email, password, autoLogin);
+        await UserActions.login(email, password, autoLogin); 
+        console.log('authorizated : '+ this.props.authorizated);
+        if(this.props.authorizated){
+            this.props.history.push('/admin');
+        }else{
+        this.props.history.push('/note');
+        }
     };
 
     render() {
@@ -18,8 +25,10 @@ class LoginContainer extends Component {
 }
 
 export default connect(
-    null,
+   state =>({
+    authorizated : state.user.get("authorizated"),
+   }),
     dispatch => ({
         UserActions: bindActionCreators(userActions, dispatch)
     })
-)(LoginContainer);
+)(withRouter(LoginContainer));

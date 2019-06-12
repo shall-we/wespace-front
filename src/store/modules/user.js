@@ -27,19 +27,18 @@ const initialState = Map({
     name: '',
     profile: '',
     user_list: [],
+    authorizated :false,
 });
 
 // reducer
 export default handleActions({
-  [LOGOUT]: (state, action) => {
-    return initialState;
-  },
+  [LOGOUT]: (state, action) => initialState,
   ...pender({
     type: [LOGIN],
     onSuccess: (state, action) => {
-      const { name,profile,id} = action.payload.data.data;
+      const { name,profile,id, authorizated} = action.payload.data.data;
 
-        return state.set('name', name).set('profile',profile).set('id', id).set('note',);
+        return state.set('name', name).set('profile',profile).set('id', id).set('authorizated',authorizated);
     }
   }),
   ...pender({

@@ -5,28 +5,36 @@ import { bindActionCreators } from 'redux';
 import * as userActions from '../../store/modules/user';
 import {withRouter} from 'react-router-dom';
 import {autoLogin, logout} from '../../lib/api';
+import defaultProfile from '../../image/User/default_profile.png';
 
 let flag = false;
 
 class HeaderContainer extends Component {
 
-  componentDidMount= async () => {
-    await autoLogin()
-    .then(async res =>{
-      if(!flag) {
-        if(res.data.data.autoLogin) {
-          const { UserActions } = this.props;
-          await UserActions.login(res.data.data.email, res.data.data.password, true);
-          flag = true;
-          this.props.history.push('/note');
-        }
-        else {
-          flag = false;
-        }
-      }
-    }
-    )
-  }
+  // componentDidMount= async () => {
+  //   await autoLogin()
+  //   .then(async res =>{
+  //     if(!flag) {
+  //       const {autoLogin, email, password,  authorizated } = res.data.data;
+  //       if(autoLogin) {
+  //         const { UserActions } = this.props;
+  //         await UserActions.login(email, password, true);
+  //         flag = true;
+          
+  //         if(authorizated){
+  //         this.props.history.push('/admin');
+  //         }else{
+  //         this.props.history.push('/note');
+  //         }
+  //       }
+  //       else {
+  //         flag = false;
+  //       }
+  //     }
+  //   }
+  //   );
+
+  // }
 
   logout = async () => {
     const { UserActions } = this.props;
@@ -36,11 +44,12 @@ class HeaderContainer extends Component {
 
   render() {
     const { name,profile } = this.props;
+    // update image if image url includes 'static' , it change default_profile.png
     const { logout } = this;
     return (
       <Header
         name={name}
-        profile={profile}
+        profile={(profile ==="defaultProfile")?defaultProfile:profile}
         logout={logout}
       />
     );

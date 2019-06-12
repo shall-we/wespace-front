@@ -115,6 +115,7 @@ class Directory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            count : 0,
             open: false,
             SubOpen: false,
             public_navigationOpen: false,
@@ -143,7 +144,6 @@ class Directory extends React.Component {
             btn_name: '',
         };
     }
-    
     handlePublicClick = () => {
         this.setState(state => ({
             public_navigationOpen: !state.public_navigationOpen
@@ -158,10 +158,12 @@ class Directory extends React.Component {
         this.setState({ open: true });
     };
     handleDrawerClose = () => {
-        this.setState({ open: false });
-        this.setState({ SubOpen: false });
-        this.setState({ private_navigationOpen: false });
-        this.setState({ public_navigationOpen: false });
+        this.setState({
+            open: false,
+            SubOpen: false,
+            private_navigationOpen: false,
+            public_navigationOpen: false
+        })
     };
     handleSubDrawerOpen = () => {
         this.setState({ SubOpen: true });
@@ -209,29 +211,29 @@ class Directory extends React.Component {
         this.props.setLock(note, Lock);
     };
 
-    FolderContextmenu = (item) => (
-        <div className='context-menu' key={item.folder_id}>
-            <ContextMenuTrigger id={item.folder_id}>
+    FolderContextmenu = (item,id) => (
+        <div className='context-menu' key={id}>
+            <ContextMenuTrigger id={id}>
                 <ListItem
                     button
                     onClick={event => {
                         this.handleSubDrawerOpen();
                         this.handleFolderData(item.folder_id,item.name, item.permission);
                     }}
-                        selected = {this.state.folder_id === item.folder_id}
+                    selected = {this.state.folder_id === item.folder_id}
 
-                        onDoubleClick={(e)=>this.handleSetModal(modalList[2],this.props.updateFolder,item.folder_id,item.name)}
-                        onAuxClick={(e)=>this.handleFolderData(item.folder_id,item.name)}>
+                    onDoubleClick={(e)=>this.handleSetModal(modalList[2],this.props.updateFolder,item.folder_id,item.name)}
+                    onAuxClick={(e)=>this.handleFolderData(item.folder_id,item.name)}>
                                     
-                        <ListItemText style={{width: 150}} primary={item.name} />
-                        <div className="count">{item.count}</div>
+                    <ListItemText style={{width: 150}} primary={item.name} />
+                    <div className="count">{item.count}</div>
                  </ListItem> 
             </ContextMenuTrigger>
-            <ContextMenu id={item.folder_id}>
+            <ContextMenu id={id}>
                 <MenuItem onClick={(e)=>this.handleSetModal(modalList[2],this.props.updateFolder,item.folder_id,item.name)}>
                     이름 변경
                 </MenuItem>
-                <MenuItem onClick={null}>
+                <MenuItem onClick={(e) => this.handleSetModal(modalList[8], [this.props.sharedFolder,this.props.unsharedFolder], this.state.folder_id, this.state.permission)}>
                     공유 폴더
                 </MenuItem>
                 <MenuItem onClick={(e)=>this.handleSetModal(modalList[3],this.props.createNote, this.state.folder_id, '')}>
@@ -250,9 +252,9 @@ class Directory extends React.Component {
       </div>
     )
 
-    FileContextmenu = (item, index) => (
-        <div className='context-menu' key={item.id}>
-            <ContextMenuTrigger id={item.id}>
+    FileContextmenu = (item, id) => (
+        <div className='context-menu' key={id}>
+            <ContextMenuTrigger id={id}>
                 <div className="file-list"
                     onClick={(e)=>{
                         this.handleNoteData(item.id, item.name,item.content);
@@ -294,7 +296,7 @@ class Directory extends React.Component {
                 </div>
                 <Divider />
             </ContextMenuTrigger>
-            <ContextMenu id={item.id}>
+            <ContextMenu id={id}>
                 <MenuItem onClick={(e)=>this.handleSetModal(modalList[5],this.props.updateNote,{note_id:item.id, folder_id: this.state.folder_id},item.name)}>
                     이름 변경
                 </MenuItem>
@@ -418,7 +420,7 @@ class Directory extends React.Component {
                                 key={item.folder_id}
                             >
                                 <List component="div" disablePadding>
-                                    {this.FolderContextmenu(item)}
+                                    {this.FolderContextmenu(item, "SharedFolder_"+item.folder_id)}
                                 </List>
                             </Collapse>
                         ))}
@@ -453,7 +455,7 @@ class Directory extends React.Component {
                                 unmountOnExit
                             >
                                 <List component="div" disablePadding>
-                                    {this.FolderContextmenu(item)}
+                                    {this.FolderContextmenu(item, "noSharedFolder_"+item.folder_id)}
                                 </List>
                             </Collapse>
                         ))}
@@ -514,7 +516,7 @@ class Directory extends React.Component {
                     <Divider />
                     <div className={classes.drawerOverflow}>
                     <List>
-                        {noteList.map((item,index) => (this.FileContextmenu(item,index)))}
+                        {noteList.map((item) => (this.FileContextmenu(item, "note_"+item.id)))}
                     </List>
                     </div>
                 </Drawer>

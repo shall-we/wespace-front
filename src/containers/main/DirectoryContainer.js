@@ -100,7 +100,7 @@ class DirectoryContainer extends React.Component {
         const {DirectoryActions,NoticeActions,UserActions,folder,id} = this.props;
         await DirectoryActions.getNoteLock(note.note_id);
         await UserActions.getUserList(folder);
-        await DirectoryActions.setNote(note);
+        await DirectoryActions.setNote(note); 
         await NoticeActions.updateNoticeList(id,note.note_id,'COMMENT');
         await NoticeActions.getNoticeList(note.note_id,'COMMENT',id);
         await socket.emit('updateCommentList',{ msg:'setNote'});
@@ -164,6 +164,6 @@ export default connect(
     (dispatch) => ({
         DirectoryActions: bindActionCreators(directoryActions, dispatch),
         UserActions: bindActionCreators(UserActions, dispatch),
-        NoticeActions: bindActionCreators(noticeActions, dispatch)
+        NoticeActions: bindActionCreators(noticeActions, dispatch),
     })
 )(withRouter(DirectoryContainer));

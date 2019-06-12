@@ -6,7 +6,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-
+import defaultProfile from "../../../image/User/default_profile.png";
 import Button from "components/common/Button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -73,7 +73,7 @@ class TablesForUser extends React.Component {
           <TableBody>
             {userList.map((user) => (
               <StyledTableRow key={user.id}>
-                <StyledTableCell align="center"><img className={classes.profile} src={user.profile} alt="profile" /></StyledTableCell>
+                <StyledTableCell align="center"><img className={classes.profile} src={(user.profile ==="defaultProfile")?defaultProfile:user.profile} alt="profile" /></StyledTableCell>
                 <StyledTableCell align="center" component="th" scope="row">
                   {user.email}
                 </StyledTableCell>
