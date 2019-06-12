@@ -17,26 +17,28 @@ class DirectoryContainer extends React.Component {
 
 
     join=(user_id)=>{
-        socket.emit('join', user_id);
-    }
+        socket.emit('join', {id : user_id});
+    };
 
     getFriendList=(user_id)=>{
+        console.log("socket.. getFriendList");
         socket.emit('getFriendList', {id : user_id});
 
-    }
+    };
 
     setFriends=(friends)=>{
+
 
         const {DirectoryActions} = this.props;
         DirectoryActions.setFriends(friends);
 
-    }
+    };
 
     joinFriend = (friendId) =>{
         const {DirectoryActions} = this.props;
         DirectoryActions.setJoinFriend(friendId);
 
-    }
+    };
 
     deleteFriend = async (obj, friend_id)=>{
         const {DirectoryActions} = this.props;
@@ -51,55 +53,55 @@ class DirectoryContainer extends React.Component {
         }
 
 
-    }
+    };
 
     outFriend = (friendId) =>{
         const {DirectoryActions} = this.props;
         DirectoryActions.setOutFriend(friendId);
-    }
+    };
 
     setChats = (chats) => {
         const {ChatActions} = this.props;
         ChatActions.setChats(chats);
-    }
+    };
 
     updateChatroomTitle = async (user_id, chatroom_id, newTitle) => {
         const {ChatActions} = this.props;
         ChatActions.updateChatroomTitle(user_id, chatroom_id, newTitle);
-    }
+    };
 
     addFriend = async (user_id, friend_id) => {
         const {DirectoryActions} = this.props;
         await DirectoryActions.addFriend(user_id, friend_id);
         this.getFriendList(user_id);
 
-    }
+    };
 
     deleteChatroom = async (data) => {
         const {ChatActions} = this.props;
         ChatActions.dropChatroom(data.user_id, data.chatroom_id);
-    }
+    };
 
     joinChatRoom = (chatroom_id) => {
         socket.emit("joinChatroom", chatroom_id);
-    }
+    };
 
     leaveChatRoom = (chatroom_id) => {
         console.log("leaveChatroom", chatroom_id);
         socket.emit("leaveChatroom", chatroom_id);
-    }
+    };
 
     sendChat = (chatObj) => {
         console.log("message fired!", chatObj);
         socket.emit('broadcastChat', chatObj);
-    }
+    };
 
     getChatList = () => {
         const {ChatActions, id} = this.props;
         if(id){
             ChatActions.setPrivateChatList(id);
         }
-    }
+    };
 
 
     updateFolderList=()=>{
@@ -200,7 +202,7 @@ class DirectoryContainer extends React.Component {
             if(this.props.id){
                 this.updateFolderList();
                 this.getChatList();
-                this.join({id : this.props.id});
+                this.join(this.props.id);
                 this.getFriendList(this.props.id);
                 }else{
                     this.props.history.push('/');
@@ -216,6 +218,7 @@ class DirectoryContainer extends React.Component {
             this.updateNoteList();
         });
         socket.on('getFriendList', obj => {
+            console.log("친구 목록 갱신.. ", obj);
             this.setFriends(obj);
         });
         socket.on('friendJoin', friend => {

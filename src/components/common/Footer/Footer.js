@@ -12,7 +12,7 @@ const Footer = () => (
     <div className={cx("brand")}>
 
       <p style={{ alignSelf: "center", justifyContent: "center" }}>
-        Copyright 2019.{" "}<i><strong>Shall-We</strong></i>{" "}Team. All rights reserved.
+        Copyright 2019.{" "}<strong><em>Shall-We</em></strong>{" "}Team.{" "}All rights reserved.
       </p>
     </div>
 

@@ -26,7 +26,7 @@ class ChatInputField extends React.Component{
     render(){
         return(
         <div className="message-input-wrapper">
-            <textArea type="text" id="message" className="message-input" placeholder="Send a message" onKeyDown={(e) => this.handleSendMessage(e)}/>
+            <textarea type="text" id="message" className="message-input" placeholder="Send a message" onKeyDown={(e) => this.handleSendMessage(e)}/>
         </div>
         )
     }

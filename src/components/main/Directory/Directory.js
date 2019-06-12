@@ -363,7 +363,7 @@ class Directory extends React.Component {
 
 
     FolderContextmenu = (item) => (
-        <div className='context-menu' key={item.folder_id}>
+        <div className='context-menu' key={"folder-" + item.folder_id}>
             <ContextMenuTrigger id={item.folder_id}>
                 <ListItem
                     button
@@ -400,7 +400,7 @@ class Directory extends React.Component {
     );
 
     FileContextmenu = (item) => (
-        <div className='context-menu' key={item.id}>
+        <div className='context-menu' key={"file-"+item.id}>
             <ContextMenuTrigger id={item.id}>
                 <ListItem button key={item.id} 
                     onClick={(e)=>this.handleNoteData(item.id, item.name,item.content)}
@@ -432,17 +432,16 @@ class Directory extends React.Component {
     );
 
     FriendContextmenu (item) {return (
-        <div className='context-menu' key={item.get("id")}>
+        <div className='context-menu' key={"friend-" + item.get("id")}>
             <ContextMenuTrigger id={item.get("id")}>
-                <ListItem onAuxClick={(e)=>this.handleFriendData(this, item.get("id"), item.get("name"))}>
+                <ListItem onAuxClick={(e)=>this.handleFriendData(this, item.get("id"), item.get("name"))} style={{wordBreak : "break-all"}}>
                     {item.get("joined") ?
                         <Brightness1 style={{color : "orange", width : "10"}}/>
                         : <Brightness1 style={{color : "green", width : "10"}}/>}
-                    <ListItemText inset />
-                    <span style={{width : "30%", textAlign : "left"}}>
+                    <span style={{width : "20%", textAlign : "left", marginLeft : "18px"}}>
                    <img style={{width : 40, height : 40, borderStyle : "groove", borderRadius : "100%"}} src={item.get("profile")} alt="profile"/>
                    </span>
-                    <span style={{width: "60%", textAlign : "left"}}>{item.get("name")}</span></ListItem>
+                    <span style={{width: "60%", textAlign : "left", paddingLeft : "10px"}}>{item.get("name")}</span></ListItem>
                 <Divider />
             </ContextMenuTrigger>
             <ContextMenu id={item.get("id")}>
@@ -457,11 +456,11 @@ class Directory extends React.Component {
     )};
 
 
-    ChatContextmenu (hasNew, item) {
+    ChatContextmenu (hasNew, item, index) {
         let timeObj = new Date(item.get("last_update"));
         let timeStr = (timeObj.getMonth()+1) + "/" +timeObj.getDate() + " " + timeObj.getHours() + ":" + timeObj.getMinutes();
         return (
-            <div className='context-menu' key={item.get("chatroom_id")}>
+            <div className='context-menu' key={"chat-" + index}>
 
                 <ContextMenuTrigger id={item.get("chatroom_id")}>
 
@@ -504,7 +503,8 @@ class Directory extends React.Component {
         
         return (
             <div className={classes.root}>
-                     <OneInputModal 
+                     <OneInputModal
+                                            key={"modal-pneInputModal"}
                                              visible={this.state.oneInputModal}
                                              onCancel={(e)=>this.handleUnSetModal('oneInputModal')}
                                              onConfirm={this.state.modal_action}
@@ -516,7 +516,8 @@ class Directory extends React.Component {
                                              text={this.state.modal_text}
                                              />
 
-                                <NoticeModal 
+                                <NoticeModal
+                                            key={"modal-noticeModal"}
                                             visible={this.state.noticeModal}
                                             onCancel={(e)=>this.handleUnSetModal('noticeModal')}
                                             onConfirm={this.state.modal_action}
@@ -528,7 +529,7 @@ class Directory extends React.Component {
                                             />
                                 
                                 <AskShareModal
-                                            key={this.state.modal_id}
+                                            key={"modal-askShareModal" }
                                             visible={this.state.selectModal}
                                             onCancel={(e)=>this.handleUnSetModal('selectModal')}
                                             onConfirm={this.state.modal_action}
@@ -541,7 +542,7 @@ class Directory extends React.Component {
                                            />
 
                                 <AskInviteModal
-                                    key={this.state.modal_id}
+                                    key={"modal-askInviteModal"}
                                     visible={this.state.selectFriendModal}
                                     onCancel={(e)=>this.handleUnSetModal('selectFriendModal')}
                                     onConfirm={this.state.modal_action}
@@ -555,7 +556,7 @@ class Directory extends React.Component {
 
 
                                 <AskInviteChatroomModal
-                                    key={this.state.modal_id}
+                                    key={"modal-askInviteChatroomModal"}
                                     visible={this.state.selectInviteChatroomModal}
                                     onCancel={(e)=>this.handleUnSetModal('selectInviteChatroomModal')}
                                     onConfirm={this.state.modal_action}
@@ -636,7 +637,7 @@ class Directory extends React.Component {
                                 in={this.state.public_navigationOpen}
                                 timeout="auto"
                                 unmountOnExit
-                                key={item.folder_id}
+                                key={"share-folder-" + item.folder_id}
                             >
                                 <List component="div" disablePadding>
                                     {this.FolderContextmenu(item)}
@@ -668,7 +669,7 @@ class Directory extends React.Component {
                         {/* Open private of nav */}
                         {privateList.map((item, index) => (
                             <Collapse
-                                key={item.folder_id}
+                                key={"private-folder-" + item.folder_id}
                                 in={this.state.private_navigationOpen}
                                 timeout="auto"
                                 unmountOnExit
@@ -847,7 +848,7 @@ class Directory extends React.Component {
                     <div className={classes.drawerOverflow}>
 
                         {this.props.privateChatList.map((item, index) => (
-                            this.ChatContextmenu.call(this, this.hasNotReadChat(item.get("view_time"), item.get("last_update")), item)
+                            this.ChatContextmenu.call(this, this.hasNotReadChat(item.get("view_time"), item.get("last_update")), item, index)
                         ))}
 
                     </div>

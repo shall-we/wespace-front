@@ -142,8 +142,10 @@ export default handleActions({
     [SET_NOTE]: (state, action) => {
         const { payload} = action;
         console.log('setNote test:::',action.payload);
-        if(action.payload!==null)
+       if(action.payload!==null){
             return state.set('note', payload.note_content).set('note_id',payload.note_id);
+        }
+        return state.set('note', null).set('note_id', null);
     },
     [SET_FOLDER]: (state, action) => {
         const { payload: folder } = action;

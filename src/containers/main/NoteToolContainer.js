@@ -91,9 +91,14 @@ componentDidMount(){
 
 componentWillReceiveProps(nextProps) {
 
+
+  if(this.props.note_id!==nextProps.note_id){
+    this.setState({note_id:nextProps.note_id});
+  }
+
   if(this.props.comment!==nextProps.comment)
   {
-    this.setState({comment:nextProps.comment,note_id:nextProps.note_id, user_id:nextProps.user_id,user_list:nextProps.user_list});
+    this.setState({comment:nextProps.comment, user_id:nextProps.user_id,user_list:nextProps.user_list});
   }else if(this.props.attachmentList !==nextProps.attachmentList){
     this.setState({attachmentList : nextProps.attachmentList, attachment : nextProps.attachment});
   }else if(this.props.attachment !== nextProps.attachment){
