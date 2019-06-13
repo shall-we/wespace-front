@@ -12,6 +12,7 @@ class HeaderContainer extends Component {
     const { UserActions, DirectoryActions } = this.props;
     await logout();
     await UserActions.logout();
+    await DirectoryActions.logout();
     DirectoryActions.setNote(null);
   };
 

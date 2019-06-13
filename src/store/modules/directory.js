@@ -6,6 +6,8 @@ import { pender } from "redux-pender";
 import * as api from "lib/api";
 
 // action types
+const LOGOUT = "directory/LOGOUT";
+
 const SHARED_LIST = "directory/SHARED_LIST";
 const PRIVATE_LIST = "directory/PRIVATE_LIST";
 const NOTE_LIST = "directory/NOTE_LIST";
@@ -34,6 +36,8 @@ const SET_OUT_FRIEND = "directory/SET_OUT_FRIEND";
 
 
 // action creators
+export const logout = createAction(LOGOUT);
+
 export const getSharedList = createAction(SHARED_LIST, api.getSharedList);
 export const getPrivateList = createAction(PRIVATE_LIST, api.getPrivateList);
 export const getNoteList = createAction(NOTE_LIST, api.getNoteList);
@@ -74,6 +78,7 @@ const initialState = Map({
 // reducer
 export default handleActions(
   {
+    [LOGOUT] : (state, action) => initialState,
     ...pender({
       type: [PRIVATE_LIST],
       onSuccess: (state, action) => {
