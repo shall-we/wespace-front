@@ -13,7 +13,7 @@ const socket = socketio.connect("http://localhost:4000");
 
 class DirectoryContainer extends React.Component {
 
-    updateFolderList=()=>{
+    updateFolderList=async ()=>{
         const {DirectoryActions,id}=this.props;
         if(id){
         DirectoryActions.getPrivateList(id);
@@ -31,7 +31,7 @@ class DirectoryContainer extends React.Component {
         await DirectoryActions.sharedFolder(user_id,folder_id,permission);
         await NoticeActions.sendMessage('FOLDER',id,folder_id,'초대','SINGLE',user_id);
         await UserActions.getUserList(folder);
-        socket.emit('updateFolderList',{ msg:'sharedFolder'});
+        socket.emit('shardNoteUpdate',{ msg:'sharedFolder'});
     }
     unsharedFolder=async(folder_id,user_id)=>{
         const {UserActions,DirectoryActions,folder,NoticeActions,id}=this.props;
@@ -130,9 +130,11 @@ class DirectoryContainer extends React.Component {
     }
     componentDidMount(){
         socket.on('updateFolderList',(obj)=>{
+            console.log('폴더 업뎃함');
             this.updateFolderList();
         })
         socket.on('updateNoteList',(obj)=>{
+            console.log('파일 업뎃함');
             this.updateNoteList();
         })
     }

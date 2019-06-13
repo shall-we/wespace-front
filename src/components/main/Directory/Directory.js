@@ -225,7 +225,7 @@ class Directory extends React.Component {
                     onDoubleClick={(e)=>this.handleSetModal(modalList[2],this.props.updateFolder,item.folder_id,item.name)}
                     onAuxClick={(e)=>this.handleFolderData(item.folder_id,item.name)}>
                                     
-                    <ListItemText style={{width: 150}} primary={item.name} />
+                    <ListItemText style={{width: 150}} primary={item.name} key={id}/>
                     <div className="count">{item.count}</div>
                  </ListItem> 
             </ContextMenuTrigger>
@@ -261,7 +261,7 @@ class Directory extends React.Component {
                     }}
                     onDoubleClick={(e)=>this.handleSetModal(modalList[5],this.props.updateNote,{note_id:item.id, folder_id: this.state.folder_id},item.name)}
                     onAuxClick={(e)=>this.handleNoteData(item.id, item.name,item.content)}>
-                    <ListItemText primary={item.name}/>
+                    <ListItemText primary={item.name} key={id}/>
                     {/* <Statebutton/> */}
                     <div className="stateButton">
 
