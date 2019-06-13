@@ -12,7 +12,7 @@ class ContextContainer extends Component {
   state={
     noteNotice:this.props.noteNotice,
     folderNotice:this.props.folderNotice,
-    chatNotice:this.props.chatNotice
+    chatNotice:this.props.chatNotice,
   }
 
   componentWillMount(){
@@ -22,9 +22,9 @@ class ContextContainer extends Component {
         this.props.NoticeActions.getNoticeList(this.props.user_id,'NOTE');
         this.props.NoticeActions.getNoticeList(this.props.user_id,'FOLDER');
        
-          }else{
-              this.props.history.push('/');
-          }
+      }else{
+        this.props.history.push('/');
+      }
   }, 1000);
  
 }
@@ -34,17 +34,17 @@ componentWillReceiveProps(nextProps) {
   {
     this.setState({noteNotice:nextProps.noteNotice,folderNotice:nextProps.folderNotice,chatNotice:nextProps.chatNotice});
   }
-
 }
 
     render() {
-      const { note,name,profile} = this.props;
+      const { note,name,profile,lock} = this.props;
       const {noteNotice=[],folderNotice=[],chatNotice=[]}=this.state;
       console.log('noteNotice',noteNotice);
+
       if(note){
       return (
-          <Editor  key={note} note={note} name={name} profile={profile} />
-    );
+          <Editor  key={note} note={note} name={name} profile={profile} lock={lock}/>
+      );
       }else{
         return(
              <Context noteNotice={noteNotice} folderNotice={folderNotice} chatNotice={chatNotice}/>
@@ -56,6 +56,7 @@ componentWillReceiveProps(nextProps) {
 export default connect(
   (state) => ({
     note: state.directory.get("note"),
+    lock: state.directory.get("note_lock"),
     name: state.user.get("name"),
     user_id: state.user.get("id"),
     profile:state.user.get("profile"),

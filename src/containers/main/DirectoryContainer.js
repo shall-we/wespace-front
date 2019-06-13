@@ -123,7 +123,7 @@ class DirectoryContainer extends React.Component {
         await DirectoryActions.sharedFolder(user_id,folder_id,permission);
         await NoticeActions.sendMessage('FOLDER',id,folder_id,'초대','SINGLE',user_id);
         await UserActions.getUserList(folder);
-        socket.emit('updateFolderList',{ msg:'sharedFolder'});
+        socket.emit('shardNoteUpdate',{ msg:'sharedFolder'});
     }
     unsharedFolder=async(folder_id,user_id)=>{
         const {UserActions,DirectoryActions,folder,NoticeActions,id}=this.props;
@@ -154,6 +154,13 @@ class DirectoryContainer extends React.Component {
         DirectoryActions.getNoteList(folder);
     }
 
+    updateSearchNoteList=async (search)=>{
+        const {DirectoryActions,folder}=this.props;
+        console.log('updateSearchNoteList::',folder);
+        if(folder)
+        await DirectoryActions.getSearchNoteList(folder, '%'+search+'%');
+    }
+
     createNote=async(folder_id,note_name)=>{
         const {DirectoryActions}=this.props;
         await DirectoryActions.createNote(folder_id,note_name);
@@ -171,19 +178,19 @@ class DirectoryContainer extends React.Component {
     }
 
     deleteNote=async(ids) => {
-        const {DirectoryActions,NoticeActions,NoteToolActions,id} = this.props;
+        const {DirectoryActions,NoticeActions,id} = this.props;
         await DirectoryActions.deleteNote(ids.note_id);
         await NoticeActions.sendMessage('NOTE',id,ids.note_id,'삭제','MULTI',null);
         socket.emit('updateFolderList',{ msg:'deleteNote'});
         socket.emit('updateNoteList',{ msg:'deleteNote'});
 
         DirectoryActions.setNote(null);
-        
     }
 
 
     setNote=async(note)=>{
         const {DirectoryActions,NoticeActions,UserActions,folder,id} = this.props;
+        await DirectoryActions.getNoteLock(note.note_id);
         await UserActions.getUserList(folder);
         await DirectoryActions.setNote(note); 
         await NoticeActions.updateNoticeList(id,note.note_id,'COMMENT');
@@ -194,9 +201,14 @@ class DirectoryContainer extends React.Component {
         const {DirectoryActions} = this.props;
         await DirectoryActions.setFolder(folder_id);
         await DirectoryActions.getNoteList(folder_id);
-        
     }
 
+    setLock= async (note, Lock)=>{
+        const {DirectoryActions} = this.props;
+        console.log("result : ", note.note_id, Lock);
+        await DirectoryActions.setNoteLock(note.note_id, Lock);
+        await DirectoryActions.getNoteList(note.folder_id);
+    }
 
     componentWillMount(){
         setTimeout(()=>{
@@ -213,9 +225,11 @@ class DirectoryContainer extends React.Component {
     }
     componentDidMount(){
         socket.on('updateFolderList',(obj)=>{
+            console.log('폴더 업뎃함');
             this.updateFolderList();
         });
         socket.on('updateNoteList',(obj)=>{
+            console.log('파일 업뎃함');
             this.updateNoteList();
         });
         socket.on('getFriendList', obj => {
@@ -239,28 +253,24 @@ class DirectoryContainer extends React.Component {
     }
 
     render() {
-        const { sharedList,privateList, noteList, id,friends, chats, privateChatList} = this.props;
-        const { createFolder,sharedFolder,unsharedFolder,
-            deleteFolder, updateFolder, updateNote,
-            createNote, deleteNote, setNote,setFolder,
-            joinChatRoom, leaveChatRoom, deleteFriend, addFriend,
-            setChats, sendChat, updateChatroomTitle, deleteChatroom, getFriendList
-        } = this;
+        const { sharedList,privateList, noteList, id, friends, chats, privateChatList} = this.props;
+        const { createFolder,sharedFolder,unsharedFolder, deleteFolder, updateFolder, setFolder,
+                updateNote, createNote, deleteNote, setNote, setLock, updateSearchNoteList,
+                joinChatRoom, leaveChatRoom, deleteFriend, addFriend,
+                setChats, sendChat, updateChatroomTitle, deleteChatroom, getFriendList, } = this;
 
         return (
             <div style={{ display: "flex" }}>
                 <Directory
-                    sharedList={sharedList} privateList={privateList}  noteList={noteList} user_id={id}
+                    sharedList={sharedList} privateList={privateList} noteList={noteList} user_id={id}
                     createFolder={createFolder} updateFolder={updateFolder} deleteFolder={deleteFolder}
-                    sharedFolder={sharedFolder} unsharedFolder={unsharedFolder} deleteFriend = {deleteFriend}
-                    addFriend = {addFriend}
-                    createNote={createNote} updateNote={updateNote}  deleteNote={deleteNote}
+                    sharedFolder={sharedFolder} unsharedFolder={unsharedFolder}
+                    createNote={createNote} updateNote={updateNote}  deleteNote={deleteNote} setLock={setLock} updateSearchNoteList={updateSearchNoteList}
                     setNote={setNote} setFolder={setFolder} setChats={setChats} sendChat = {sendChat}
-                    friends = {friends} joinChatRoom = {joinChatRoom}
-                    getFriendList = {getFriendList}
-                    leaveChatRoom = {leaveChatRoom} chats = {chats}
+                    friends = {friends} joinChatRoom = {joinChatRoom} deleteChatroom = {deleteChatroom}
+                    getFriendList = {getFriendList} deleteFriend = {deleteFriend}
+                    addFriend = {addFriend} leaveChatRoom = {leaveChatRoom} chats = {chats}
                     privateChatList = {privateChatList} updateChatroomTitle = {updateChatroomTitle}
-                    deleteChatroom = {deleteChatroom}
                 />
             </div>
         );

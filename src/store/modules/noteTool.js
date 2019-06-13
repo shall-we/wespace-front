@@ -20,6 +20,7 @@ const initialState = Map({
     note_id : null,
     attachment_id :null,
     attachment : null,
+    note_lock : null,
 });
 
 export default handleActions({
