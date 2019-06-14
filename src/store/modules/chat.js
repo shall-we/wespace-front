@@ -39,7 +39,7 @@ export default handleActions({
             }
             chats = chats.set("chats", chatList);
            
-            console.log(chats);
+         
 
         return state.set("chats", chats);
     },

@@ -8,11 +8,13 @@ import { logout } from "../../lib/api";
 import * as directoryActions from "store/modules/directory";
 
 class HeaderContainer extends Component {
+
   logout = async () => {
-    const { UserActions, DirectoryActions } = this.props;
+    const { UserActions, DirectoryActions} = this.props;
     await logout();
     await UserActions.logout();
     await DirectoryActions.logout();
+
     DirectoryActions.setNote(null);
   };
 
@@ -28,7 +30,7 @@ class HeaderContainer extends Component {
 export default connect(
   state => ({
     name: state.user.get("name"),
-    profile: state.user.get("profile")
+    profile: state.user.get("profile"),
   }),
   dispatch => ({
     UserActions: bindActionCreators(userActions, dispatch),

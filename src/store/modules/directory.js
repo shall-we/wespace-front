@@ -26,7 +26,7 @@ const CREATE_NOTE = "directroy/CREATE_NOTE";
 const UPDATE_NOTE = "directory/UPDATE_NOTE";
 const DELETE_NOTE = "directory/DELETE_NOTE";
 const SET_NOTE_LOCK = "directory/SET_LOCK";
-const GET_NOTE_LOCK = "directory/GET_LOCK";
+const SET_NOTE_LOCK_STATE = "directory/SET_NOTE_LOCK_STATE"
 
 const SET_FRIENDS = "directory/SET_FRIENDS";
 const SET_JOIN_FRIEND = "directory/SET_JOIN_FRIEND";
@@ -54,8 +54,9 @@ export const setNote = createAction(SET_NOTE);
 export const createNote = createAction(CREATE_NOTE, api.createNote);
 export const updateNote = createAction(UPDATE_NOTE, api.updateNote);
 export const deleteNote = createAction(DELETE_NOTE, api.updateNoteStatusDeleted);
+
 export const setNoteLock = createAction(SET_NOTE_LOCK, api.setLock);
-export const getNoteLock = createAction(GET_NOTE_LOCK, api.getLock);
+export const setNoteLockState = createAction(SET_NOTE_LOCK_STATE);
 
 export const setFriends = createAction(SET_FRIENDS);
 export const setJoinFriend = createAction(SET_JOIN_FRIEND);
@@ -72,13 +73,14 @@ const initialState = Map({
   folder: null,
   note: null,
   friends: [],
-  note_id: null
+  note_id: null,
+  note_lock: null,
 });
 
 // reducer
 export default handleActions(
   {
-    [LOGOUT] : (state, action) => initialState,
+    [LOGOUT]: (state, action) => initialState,
     ...pender({
       type: [PRIVATE_LIST],
       onSuccess: (state, action) => {
@@ -114,7 +116,6 @@ export default handleActions(
     }),
     [SET_FRIENDS]: (state, action) => {
       const { payload: friends } = action;
-      console.log("SET_FRIENDS", friends);
       return state.set("friends", fromJS(friends));
     },
     [SET_JOIN_FRIEND]: (state, action) => {
@@ -146,29 +147,26 @@ export default handleActions(
         return state.set("noteList", noteList);
       }
     }),
-    ...pender({
-      type: [GET_NOTE_LOCK],
-      onSuccess: (state, action) => {
-        const { data: lock } = action.payload.data;
-        console.log("note_lock data :", lock);
-        return state.set("note_lock", lock[0].lock);
-      }
-    }),
     [SET_NOTE]: (state, action) => {
       const { payload } = action;
-      console.log("setNote test:::", action.payload);
       if (action.payload !== null) {
         return state
           .set("note", payload.note_content)
-          .set("note_id", payload.note_id);
+          .set("note_id", payload.note_id)
+          .set("note_lock", payload.note_lock);
       }
       return state.set("note", null).set("note_id", null);
     },
+    [SET_NOTE_LOCK_STATE]: (state, action) => {
+      const { payload } = action;
+      console.log("setNote :::::", action.payload);
+      return state.set("note_lock", payload);
+    },
     [SET_FOLDER]: (state, action) => {
       const { payload: folder } = action;
-      console.log("SET_FOLDER", folder);
       return state.set("folder", folder);
-    }
+    },
+    
   },
   initialState
 );

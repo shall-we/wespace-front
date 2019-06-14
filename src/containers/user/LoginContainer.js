@@ -8,7 +8,7 @@ import {withRouter} from 'react-router-dom';
 class LoginContainer extends Component {
     
     login = async(email, password, autoLogin) => {
-        const { UserActions} = this.props;
+        const { UserActions } = this.props;
         await UserActions.login(email, password, autoLogin); 
         console.log('authorizated : '+ this.props.authorizated);
         if(this.props.authorizated){

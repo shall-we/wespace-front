@@ -6,15 +6,12 @@ import * as UserActions from "store/modules/user";
 import * as noticeActions from "store/modules/notice";
 import * as ChatActions from "store/modules/chat";
 
-
 import Directory from "components/main/Directory";
 import { withRouter } from "react-router-dom";
 
-import socketio from "socket.io-client";
-const socket = socketio.connect("http://localhost:4000");
+import socket from './socket';
 
 class DirectoryContainer extends React.Component {
-
 
     join=(user_id)=>{
         socket.emit('join', {id : user_id});
@@ -23,12 +20,9 @@ class DirectoryContainer extends React.Component {
     getFriendList=(user_id)=>{
         console.log("socket.. getFriendList");
         socket.emit('getFriendList', {id : user_id});
-
     };
 
     setFriends=(friends)=>{
-
-
         const {DirectoryActions} = this.props;
         DirectoryActions.setFriends(friends);
 
@@ -37,7 +31,6 @@ class DirectoryContainer extends React.Component {
     joinFriend = (friendId) =>{
         const {DirectoryActions} = this.props;
         DirectoryActions.setJoinFriend(friendId);
-
     };
 
     deleteFriend = async (obj, friend_id)=>{
@@ -111,19 +104,20 @@ class DirectoryContainer extends React.Component {
         DirectoryActions.getPrivateList(id);
         DirectoryActions.getSharedList(id);
         }
+        console.log('== debug ==', id);
+
     }
 
     createFolder=async(user_id,folder_name)=>{
         await this.props.DirectoryActions.createFolder(user_id, folder_name);
-        socket.emit('updateFolderList',{ msg:'createFolder'});
-
+        await socket.emit('updateFolderList',{ msg:'createFolder'});
     }
     sharedFolder=async(user_id,folder_id,permission)=>{
         const {UserActions,DirectoryActions,folder,NoticeActions,id}=this.props;
         await DirectoryActions.sharedFolder(user_id,folder_id,permission);
         await NoticeActions.sendMessage('FOLDER',id,folder_id,'초대','SINGLE',user_id);
         await UserActions.getUserList(folder);
-        socket.emit('shardNoteUpdate',{ msg:'sharedFolder'});
+        socket.emit('updateFolderList',{ msg:'sharedFolder'});
     }
     unsharedFolder=async(folder_id,user_id)=>{
         const {UserActions,DirectoryActions,folder,NoticeActions,id}=this.props;
@@ -137,12 +131,13 @@ class DirectoryContainer extends React.Component {
         await this.props.DirectoryActions.deleteFolder(folder_id);
         await this.props.DirectoryActions.getNoteList(0);
         socket.emit('updateFolderList',{ msg:'deleteFolder'});
+        socket.emit('updateNoteList',{ msg:'deleteFolder'});
     }
 
     updateFolder=async(folder_id, folder_name) => {
         await this.props.DirectoryActions.updateFolder(folder_id, folder_name);
         await this.props.NoticeActions.sendMessage('FOLDER',this.props.id,folder_id,'이름변경','MULTI',null);
-        socket.emit('updateFolderList',{ msg:'updateFolder'});
+        await socket.emit('updateFolderList',{ msg:'updateFolder'});
     }
 ///////////////////////////////---------------------NOTE----------------------//////////////////////////////
 
@@ -166,7 +161,6 @@ class DirectoryContainer extends React.Component {
         await DirectoryActions.createNote(folder_id,note_name);
         socket.emit('updateFolderList',{ msg:'createNote'});
         socket.emit('updateNoteList',{ msg:'createNote'});
-       
     }
 
     updateNote=async(ids, note_name) => {
@@ -190,11 +184,11 @@ class DirectoryContainer extends React.Component {
 
     setNote=async(note)=>{
         const {DirectoryActions,NoticeActions,UserActions,folder,id} = this.props;
-        await DirectoryActions.getNoteLock(note.note_id);
         await UserActions.getUserList(folder);
         await DirectoryActions.setNote(note); 
         await NoticeActions.updateNoticeList(id,note.note_id,'COMMENT');
         await NoticeActions.getNoticeList(note.note_id,'COMMENT',id);
+        await socket.emit('updateShareBox',{ msg:'setNote'});
         await socket.emit('updateCommentList',{ msg:'setNote'});
     }
     setFolder=async(folder_id)=>{
@@ -203,11 +197,15 @@ class DirectoryContainer extends React.Component {
         await DirectoryActions.getNoteList(folder_id);
     }
 
-    setLock= async (note, Lock)=>{
+    setLock= async (note)=>{
         const {DirectoryActions} = this.props;
-        console.log("result : ", note.note_id, Lock);
-        await DirectoryActions.setNoteLock(note.note_id, Lock);
-        await DirectoryActions.getNoteList(note.folder_id);
+        console.log("result : ", note.note_id, note.lock);
+        await DirectoryActions.setNoteLock(note.note_id, note.lock);
+        await socket.emit('updateNoteList',{msg :'setLock'});
+      
+        setTimeout(()=>{
+             socket.emit('updateNoteLock',{note:note});
+        }, 1000);
     }
 
     componentWillMount(){
@@ -228,8 +226,16 @@ class DirectoryContainer extends React.Component {
             console.log('폴더 업뎃함');
             this.updateFolderList();
         });
+        socket.on('updateNoteLock',(obj)=>{
+          
+            const {note} =obj;
+
+            if(this.props.note_id===note.note_id) {
+                console.log('note data ::::', obj);
+                this.props.DirectoryActions.setNoteLockState(note.lock);
+            }
+        });
         socket.on('updateNoteList',(obj)=>{
-            console.log('파일 업뎃함');
             this.updateNoteList();
         });
         socket.on('getFriendList', obj => {
@@ -248,7 +254,6 @@ class DirectoryContainer extends React.Component {
         socket.on('broadcastChat', (chatObj)=>{
             const {ChatActions} = this.props;
             ChatActions.setChatMessage(chatObj);
-
         });
     }
 
@@ -283,6 +288,7 @@ export default connect(
         privateList: state.directory.get("privateList"),
         noteList: state.directory.get("noteList"),
         folder: state.directory.get("folder"),
+        note_id: state.directory.get("note_id"),
         id: state.user.get("id"),
         chats : state.chat.get("chats"),
         friends: state.directory.get("friends"),

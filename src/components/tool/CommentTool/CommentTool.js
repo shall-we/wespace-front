@@ -196,6 +196,3 @@ class CommentTool extends Component {
 }
 
 export default CommentTool;
-
-
-

@@ -50,18 +50,25 @@ class AskShareModal extends React.Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (prevState.user_list !== nextProps.user_list) {
-            let shared=[];
-            let unshared=[];
-            for(var i=0 ; i < nextProps.user_list.length ; i++){
-                if(nextProps.user_list[i].isShared)
-                shared = shared.concat({value:nextProps.user_list[i].id,label:nextProps.user_list[i].name,permission:nextProps.user_list[i].isShared});
-                else
-                unshared = unshared.concat({value:nextProps.user_list[i].id,label:nextProps.user_list[i].name});   
-            }
-            return { shared:shared,unshared:unshared };
-        } 
-        return null;
+    if (prevState.user_list !== nextProps.user_list) {
+        let shared = [];
+        let unshared = [];
+        for (var i = 0; i < nextProps.user_list.length; i++) {
+            if (nextProps.user_list[i].isShared)
+                shared = shared.concat({
+                    value: nextProps.user_list[i].id,
+                    label: nextProps.user_list[i].name,
+                    permission: nextProps.user_list[i].isShared
+                });
+            else
+                unshared = unshared.concat({
+                    value: nextProps.user_list[i].id,
+                    label: nextProps.user_list[i].name
+                });
+        }
+        return { shared: shared, unshared: unshared };
+    }
+    return null;
     }
   
     handleChange=(selectedOption) => {

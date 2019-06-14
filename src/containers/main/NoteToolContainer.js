@@ -11,8 +11,7 @@ import NoteToolBox from "components/toolbox/NoteToolBox";
 import CommentTool from "components/tool/CommentTool";
 import AttachmentTool from "components/tool/AttachmentTool";
 
-import socketio from "socket.io-client";
-const socket = socketio.connect("http://localhost:4000");
+import socket from './socket';
 
 class NoteToolContainer extends Component {
   state={
@@ -34,24 +33,22 @@ deleteAttachment = async(attachment_id)=>{
   console.log('deleteAttachment');
   const {NoteToolActions}= this.props;
   await NoteToolActions.deleteAttachment(attachment_id);
-  await NoteToolActions.getAttachmentList(this.state.note_id);
   socket.emit('updateShareBox',{ msg:'deleteAttachment'});
-}
+};
 
 addAttachment = async(uploadList)=>{
   console.log('addAttachment');
   const {NoteToolActions} = this.props; //note_id
   await NoteToolActions.addAttachment(this.state.note_id,uploadList);
-  await NoteToolActions.getAttachmentList(this.state.note_id);
   socket.emit('updateShareBox',{ msg:'addAttachment'});
-}
+};
 
 downloadAttachment=async(url)=>{
   console.log('downloadAttachment');
   const {NoteToolActions} =this.props;
   await NoteToolActions.downloadAttachment(url);
   socket.emit('updateShareBox',{ msg:'downloadAttachment'});
-}
+};
 
 /////////////////////////////////////////첨부파일 영역
 
@@ -61,7 +58,7 @@ downloadAttachment=async(url)=>{
     const {NoticeActions,user_id} =this.props;
     await NoticeActions.sendMessage('COMMENT',user_id,this.state.note_id,message,'MULTI',null);
     socket.emit('updateCommentList',{ msg:'handleSendMessage'});
-  }
+  };
 
   handleSelectSendMessage=async(to_list,message)=>{
     const {NoticeActions,user_id} =this.props;
@@ -71,23 +68,32 @@ downloadAttachment=async(url)=>{
       NoticeActions.sendMessage('CHAT',user_id,note_id,message,'SINGLE',user_id);
   });
     socket.emit('updateCommentList',{ msg:'handleSendMessage'});
-  }
+  };
 
   updateCommentList=async()=>{
     await this.props.NoticeActions.updateNoticeList(this.state.user_id,this.state.note_id,'COMMENT');
     await this.props.NoticeActions.getNoticeList(this.state.note_id,'COMMENT',this.state.user_id);
-  }
+  };
 
 
 componentDidMount(){
+
     socket.on('updateCommentList',(obj)=>{
       if(this.props.note_id)
       {
-        this.getAttachmentList();
-        this.updateCommentList();
+        this.updateCommentList(); 
       }
-    })
-}
+    });
+
+    socket.on('updateShareBox',(obj)=>{
+      if(this.props.note_id)
+      {
+        this.getAttachmentList();
+        
+      }
+    });
+
+  }
 
 componentWillReceiveProps(nextProps) {
 
@@ -99,9 +105,13 @@ componentWillReceiveProps(nextProps) {
   if(this.props.comment!==nextProps.comment)
   {
     this.setState({comment:nextProps.comment, user_id:nextProps.user_id,user_list:nextProps.user_list});
-  }else if(this.props.attachmentList !==nextProps.attachmentList){
-    this.setState({attachmentList : nextProps.attachmentList, attachment : nextProps.attachment});
-  }else if(this.props.attachment !== nextProps.attachment){
+  }
+  else if(this.props.attachmentList !==nextProps.attachmentList)
+  {
+    this.setState({attachmentList:nextProps.attachmentList}); 
+  }
+  else if(this.props.attachment !== nextProps.attachment)
+  {
     this.setState({attachment : nextProps.attachment});
   }
 

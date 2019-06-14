@@ -33,8 +33,6 @@ export default handleActions({
         type: [NOTICE_LIST],
         onSuccess: (state, action) => {
             const { data: noticeList,result } = action.payload.data;
-            console.log('noticeList',noticeList);
-            console.log('result',result);
             return state.set(result, noticeList);
         }
     }),

@@ -279,10 +279,10 @@ class Directory extends React.Component {
         this.props.setFolder(folder_id);
     };
 
-    handleNoteData = (note_id, note_name,note_content) => {
+    handleNoteData = (note_id, note_name,note_content, note_lock) => {
         console.log("note_id : ", note_id);
         this.setState({note_id: note_id , note_name: note_name });
-        this.props.setNote({note_content,note_id});
+        this.props.setNote({note_content,note_id,note_lock});
     };
 
     handleFriendData(friend_id, friend_name) {
@@ -366,8 +366,8 @@ class Directory extends React.Component {
     handleSearchChange = () => {
         this.props.updateSearchNoteList(this.state.search);
     };
-    handleSetLock = (note, Lock) => {
-        this.props.setLock(note, Lock);
+    handleSetLock = (note) => {
+        this.props.setLock(note);
     };
 
     FolderContextmenu = (item,id) => (
@@ -415,7 +415,7 @@ class Directory extends React.Component {
         <div className='context-menu' key={id}>
             <ContextMenuTrigger id={id}>
                 <div className="file-list"
-                    onClick={(e)=>{ this.handleNoteData(item.id, item.name,item.content); }}
+                    onClick={(e)=>{ this.handleNoteData(item.id, item.name,item.content,item.lock); }}
                     onDoubleClick={(e)=>this.handleSetModal(modalList[5],this.props.updateNote,{note_id:item.id, folder_id: this.state.folder_id},item.name)}
                     onAuxClick={(e)=>this.handleNoteData(item.id, item.name,item.content)}>
                     <ListItemText primary={item.name} key={id}/>
@@ -432,13 +432,13 @@ class Directory extends React.Component {
                             </div>
                                 {(item.lock === "LOCK")
                                 ? ( <div className="menu__item menu__item--lock" onClick={(e)=>{
-                                    this.handleSetLock({folder_id: this.state.folder_id, note_id:item.id}, "UNLOCK");
+                                    this.handleSetLock({note_id:item.id, lock:"UNLOCK"});
                                     }}>
                                         <i className="fa fa-lock menu__item-icon"/>
                                         <span className="menu__item-text">lock</span>
                                     </div>) 
                                 : ( <div className="menu__item menu__item--unlock" onClick={(e)=>{
-                                    this.handleSetLock({folder_id: this.state.folder_id, note_id:item.id}, "LOCK");
+                                    this.handleSetLock({note_id:item.id, lock:"LOCK"});
                                     }}>
                                         <i className="fa fa-unlock menu__item-icon"/>
                                         <span className="menu__item-text">unlock</span>

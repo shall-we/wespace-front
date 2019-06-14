@@ -31,7 +31,6 @@ class Editor extends React.Component {
     this.reactQuillRef=null;
     this.state={
       users:[],
-      lock: props.lock,
     }
   }
 
@@ -199,7 +198,13 @@ class Editor extends React.Component {
     cursors.localConnection.profile=this.props.profile;
     cursors.localConnection.uuid=this.props.note;
     cursors.update();
-    quillRef.enable();
+
+    console.log('-- 디버깅 --',this.props.note_lock);
+
+    if(this.props.note_lock === "LOCK")
+      quillRef.enable(false);
+    else
+      quillRef.enable();
     }else
     {
       cursors.localConnection.name = 'Guest';
@@ -207,27 +212,22 @@ class Editor extends React.Component {
       cursors.localConnection.profile= 'https://cdn.onlinewebfonts.com/svg/img_83486.png';
     }
 
-    console.log('state lock :',this.state.lock);
-    if(this.state.lock === "LOCK") {
-        quillRef.enable(false);
-    }
-    else {
-      quillRef.enable();
-    }
-
     updateUserList();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const quillRef=this.reactQuillRef.getEditor();
-    if(this.props.lock!==nextProps.lock) {
-      console.log('test :',this.props.lock, nextProps.lock);
-      if(nextProps.lock === "LOCK") {
+  componentWillReceiveProps(NextProps) {
+    console.log('nextProps ::',NextProps);
+    if(this.props.note_lock !== NextProps.note_lock) {
+
+      const quillRef=this.reactQuillRef.getEditor();
+      
+      if(NextProps.note_lock === "LOCK") {
         quillRef.enable(false);
       }
       else {
         quillRef.enable();
       }
+      
     }
   }
 

@@ -4,7 +4,6 @@ import {Map} from 'immutable';
 import {pender} from 'redux-pender';
 import * as api from '../../lib/api';
 
-
 // action types
 const LOGIN = 'user/LOGIN';
 const JOIN = 'user/JOIN';
@@ -13,7 +12,6 @@ const GET_USER_LIST = "user/GET_USER_LIST";
 const GET_ALL_USER_LIST = "user/GET_ALL_USER_LIST";
 const DELETE_USER = "user/DELETE_USER";
 const GET_USER_LIST_EXCEPT_FRIEND = "user/GET_USER_LIST_EXCEPT_FRIEND";
-
 
 // action creators
 export const login = createAction(LOGIN, api.login);
@@ -50,7 +48,6 @@ export default handleActions({
         type: [GET_USER_LIST],
         onSuccess: (state, action) => {
             const {data: user_list} = action.payload.data;
-            console.log("[user.js] ", user_list);
             return state.set("user_list", user_list);
         }
     }),
@@ -58,7 +55,7 @@ export default handleActions({
         type: [GET_ALL_USER_LIST],
         onSuccess: (state, action) => {
             const {data: all_user_list} = action.payload.data;
-            console.log("[GET_ALL_USER_LIST] ", all_user_list);
+      
             return state.set("all_user_list", all_user_list);
         }
     }),
@@ -67,7 +64,7 @@ export default handleActions({
         type: [GET_USER_LIST_EXCEPT_FRIEND],
         onSuccess: (state, action) => {
             const {data: user_list} = action.payload.data;
-            console.log("[not_friend_users.js] ", user_list);
+        
             return state.set("not_friend_users", user_list);
         }
     }),

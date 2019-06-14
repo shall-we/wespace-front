@@ -29,16 +29,12 @@ export default handleActions({
         {
             type: [ADD_ATTACHMENT],
             onSuccess: (state, action) => {
-                console.log('ADD_ATTACHMENT');
-                console.log(action.payload.data.result);
             }
         }),
         ...pender(
             {
                 type: [DELETE_ATTACHMENT],
                 onSuccess: (state, action) => {
-                    console.log('DELETE_ATTACHMENT');
-                    console.log(action.payload.data.result);
                 }
             }),
     ...pender(
@@ -46,9 +42,6 @@ export default handleActions({
             type: [GET_ATTACHMENT_LIST],
             onSuccess: (state, action) => {
                 const { attachmentList } = action.payload.data;
-
-               // console.log(action.payload.data);
-                console.log("GET_ATTACHMENT_LIST", attachmentList);
                 return state.set("attachmentList", attachmentList); 
             }
         }),
@@ -57,7 +50,6 @@ export default handleActions({
         onSuccess : (state, action) => {
             
             const attachment = action.payload.data;
-            console.log('DOWNLOAD_ATTACHMENT', attachment.toString('utf-g'));
             return state.set("attachment", attachment);
         }
     }),
