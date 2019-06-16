@@ -11,8 +11,7 @@ import NoteToolBox from "components/toolbox/NoteToolBox";
 import CommentTool from "components/tool/CommentTool";
 import AttachmentTool from "components/tool/AttachmentTool";
 
-import socketio from "socket.io-client";
-const socket = socketio.connect("http://localhost:4000");
+import socket from './Socket';
 
 class NoteToolContainer extends Component {
   state={
@@ -34,7 +33,6 @@ deleteAttachment = async(attachment_id)=>{
   console.log('deleteAttachment');
   const {NoteToolActions}= this.props;
   await NoteToolActions.deleteAttachment(attachment_id);
-  await NoteToolActions.getAttachmentList(this.state.note_id);
   socket.emit('updateShareBox',{ msg:'deleteAttachment'});
 }
 
@@ -42,7 +40,6 @@ addAttachment = async(uploadList)=>{
   console.log('addAttachment');
   const {NoteToolActions} = this.props; //note_id
   await NoteToolActions.addAttachment(this.state.note_id,uploadList);
-  await NoteToolActions.getAttachmentList(this.state.note_id);
   socket.emit('updateShareBox',{ msg:'addAttachment'});
 }
 
@@ -83,8 +80,14 @@ componentDidMount(){
     socket.on('updateCommentList',(obj)=>{
       if(this.props.note_id)
       {
-        this.getAttachmentList();
         this.updateCommentList();
+      }
+    })
+
+    socket.on('updateShareBox',(obj)=>{
+      if(this.props.note_id)
+      {
+        this.getAttachmentList();
       }
     })
 }

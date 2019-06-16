@@ -22,9 +22,8 @@ import NoticeModal from '../../modal/NoticeModal';
 import AskInviteModal from '../../modal/AskShareModal/AskInviteModal';
 import AskInviteChatroomModal from '../../modal/AskShareModal/AskInviteChatroomModal';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
-import './Contextmenu.css';
+import './Directory.scss';
 
-import ChatBox from '../chat/chat';
 import * as api from "lib/api";
 
 const drawerWidth = 250;
@@ -176,6 +175,7 @@ class Directory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            count : 0,
             open: false,
             SubOpen: false,
             ChatOpen: false,
@@ -187,6 +187,8 @@ class Directory extends React.Component {
             friend_navigationOpen: false,
 
             toggle: false,
+
+            search : '',
 
             folder_id : 0,
             folder_name : '',
@@ -209,7 +211,6 @@ class Directory extends React.Component {
             btn_name: '',
         };
     }
-    
     handlePublicClick = () => {
         this.setState(state => ({
             public_navigationOpen: !state.public_navigationOpen
@@ -277,10 +278,10 @@ class Directory extends React.Component {
         this.props.setFolder(folder_id);
     };
 
-    handleNoteData = (note_id, note_name,note_content) => {
+    handleNoteData = (note_id, note_name,note_content, note_lock) => {
         console.log("note_id : ", note_id);
         this.setState({note_id: note_id , note_name: note_name });
-        this.props.setNote({note_content,note_id});
+        this.props.setNote({note_content,note_id,note_lock});
     };
 
     handleFriendData(friend_id, friend_name) {
@@ -361,59 +362,96 @@ class Directory extends React.Component {
         this.setState({ ChatListOpen: false });
     }
 
+    handleSearchChange = () => {
+        this.props.updateSearchNoteList(this.state.search);
+    };
+    handleSetLock = (note) => {
+        this.props.setLock(note);
+    };
 
-    FolderContextmenu = (item) => (
-        <div className='context-menu' key={"folder-" + item.folder_id}>
-            <ContextMenuTrigger id={item.folder_id}>
+    FolderContextmenu = (item,id) => (
+        <div className='context-menu' key={id}>
+            <ContextMenuTrigger id={id}>
                 <ListItem
                     button
                     onClick={event => {
                         this.handleSubDrawerOpen();
                         this.handleFolderData(item.folder_id,item.name, item.permission);
                     }}
-                        onDoubleClick={(e)=>this.handleSetModal(modalList[2],this.props.updateFolder,item.folder_id,item.name)}
-                        onAuxClick={(e)=>this.handleFolderData(item.folder_id,item.name)}>
-                        {item.permission === 'OWNER' ?
-                            <ListItemIcon>
-                                <Delete onClick={(e)=>this.handleSetModal(modalList[1],this.props.deleteFolder,item.folder_id, null)}/>
-                            </ListItemIcon> 
-                            : null
-                            }
+                    selected = {this.state.folder_id === item.folder_id}
+
+                    onDoubleClick={(e)=>this.handleSetModal(modalList[2],this.props.updateFolder,item.folder_id,item.name)}
+                    onMouseDown={(e)=>this.handleFolderData(item.folder_id,item.name)}>
                                     
-                        <ListItemText inset primary={item.name} />
-                        <div>{item.count}</div>
+                    <ListItemText style={{width: 150}} primary={item.name} key={id}/>
+                    <div className="count">{item.count}</div>
                  </ListItem> 
             </ContextMenuTrigger>
-            <ContextMenu id={item.folder_id}>
-                <MenuItem onClick={(e) => this.handleSetModal(modalList[8], [this.props.sharedFolder,this.props.unsharedFolder], this.state.folder_id, this.state.permission)}>
-                    폴더 공유
-                </MenuItem>
+            <ContextMenu id={id}>
                 <MenuItem onClick={(e)=>this.handleSetModal(modalList[3],this.props.createNote, this.state.folder_id, '')}>
-                    노트 생성
+                    노트 생성하기
                 </MenuItem>
-                {item.permission === 'OWNER' ?(
-                <MenuItem onClick={(e)=>this.handleSetModal(modalList[1],this.props.deleteFolder,item.folder_id, null)}>
-                    폴더 삭제
-                </MenuItem>) : null }
+                <MenuItem onClick={(e) => this.handleSetModal(modalList[8], [this.props.sharedFolder,this.props.unsharedFolder], this.state.folder_id, this.state.permission)}>
+                    공유폴더 설정
+                </MenuItem>
+                <MenuItem onClick={(e)=>this.handleSetModal(modalList[2],this.props.updateFolder,item.folder_id,item.name)}>
+                    폴더이름 변경
+                </MenuItem>
+                {item.permission === 'OWNER' ?
+                    <MenuItem onClick={(e)=>{
+                        this.handleSetModal(modalList[1],this.props.deleteFolder,item.folder_id, null);
+                    }}>
+                        폴더 삭제하기
+                    </MenuItem>
+                    : null
+                }
+                
             </ContextMenu>
       </div>
     );
 
-    FileContextmenu = (item) => (
-        <div className='context-menu' key={"file-"+item.id}>
-            <ContextMenuTrigger id={item.id}>
-                <ListItem button key={item.id} 
-                    onClick={(e)=>this.handleNoteData(item.id, item.name,item.content)}
+    FileContextmenu = (item, id) => (
+        <div className='context-menu' key={id}>
+            <ContextMenuTrigger id={id}>
+                <div className="file-list"
+                    onClick={(e)=>{ this.handleNoteData(item.id, item.name,item.content,item.lock); }}
                     onDoubleClick={(e)=>this.handleSetModal(modalList[5],this.props.updateNote,{note_id:item.id, folder_id: this.state.folder_id},item.name)}
-                    onAuxClick={(e)=>this.handleNoteData(item.id, item.name,item.content)}>
-                    <ListItemText primary={item.name} />
-                    <br/>
-                    {item.reg_date}
-                    
-                </ListItem>
+                    onMouseDown={(e)=>this.handleNoteData(item.id, item.name,item.content)}>
+                    <ListItemText primary={item.name} key={id}/>
+                    {/* <Statebutton/> */}
+                    <div className="stateButton">
+                        <div className="menu menu--button">
+                            <div className="menu__item menu__item--rename" onClick={(e)=>this.handleSetModal(modalList[5],this.props.updateNote,{note_id:item.id, folder_id: this.state.folder_id},item.name)}>
+                                <i className="fa fa-pencil-square-o menu__item-icon"/>
+                                <span className="menu__item-text">rename</span>
+                            </div>
+                            <div className="menu__item menu__item--share" onClick={null}>
+                                <i className="fa fa-share-alt menu__item-icon"/>
+                                <span className="menu__item-text">share</span>
+                            </div>
+                                {(item.lock === "LOCK")
+                                ? ( <div className="menu__item menu__item--lock" onClick={(e)=>{
+                                    this.handleSetLock({note_id:item.id, lock:"UNLOCK"});
+                                    }}>
+                                        <i className="fa fa-lock menu__item-icon"/>
+                                        <span className="menu__item-text">lock</span>
+                                    </div>) 
+                                : ( <div className="menu__item menu__item--unlock" onClick={(e)=>{
+                                    this.handleSetLock({note_id:item.id, lock:"LOCK"});
+                                    }}>
+                                        <i className="fa fa-unlock menu__item-icon"/>
+                                        <span className="menu__item-text">unlock</span>
+                                    </div>)}
+                            <div className="menu__item menu__item--delete" onClick={(e)=>this.handleSetModal(modalList[4],this.props.deleteNote,{note_id:item.id, folder_id: this.state.folder_id}, '')}>
+                                <i className="fa fa-trash-o menu__item-icon"/>
+                                <span className="menu__item-text">Delete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <Divider />
             </ContextMenuTrigger>
-            <ContextMenu id={item.id}>
+            <ContextMenu id={id}>
                 <MenuItem onClick={(e)=>this.handleSetModal(modalList[5],this.props.updateNote,{note_id:item.id, folder_id: this.state.folder_id},item.name)}>
                     이름 변경
                 </MenuItem>
@@ -422,7 +460,6 @@ class Directory extends React.Component {
                 </MenuItem>
                 <MenuItem onClick={null} >
                     잠금
-                    <Switch checked={this.state.toggle} onChange={null} value="checkedA" />
                 </MenuItem>
                 <MenuItem onClick={(e)=>this.handleSetModal(modalList[4],this.props.deleteNote,{note_id:item.id, folder_id: this.state.folder_id}, '')}>
                     삭제
@@ -431,80 +468,18 @@ class Directory extends React.Component {
       </div>
     );
 
-    FriendContextmenu (item) {return (
-        <div className='context-menu' key={"friend-" + item.get("id")}>
-            <ContextMenuTrigger id={item.get("id")}>
-                <ListItem onAuxClick={(e)=>this.handleFriendData(this, item.get("id"), item.get("name"))} style={{wordBreak : "break-all"}}>
-                    {item.get("joined") ?
-                        <Brightness1 style={{color : "orange", width : "10"}}/>
-                        : <Brightness1 style={{color : "green", width : "10"}}/>}
-                    <span style={{width : "20%", textAlign : "left", marginLeft : "18px"}}>
-                   <img style={{width : 40, height : 40, borderStyle : "groove", borderRadius : "100%"}} src={item.get("profile")} alt="profile"/>
-                   </span>
-                    <span style={{width: "60%", textAlign : "left", paddingLeft : "10px"}}>{item.get("name")}</span></ListItem>
-                <Divider />
-            </ContextMenuTrigger>
-            <ContextMenu id={item.get("id")}>
-                <MenuItem onClick={(e)=>{ this.handleSetModal(modalList[9],this.props.deleteFriend, {user_id : this.props.user_id, friend_id : item.get("id")}, '')}}>
-                    친구삭제
-                </MenuItem>
-                <MenuItem onClick={ (e)=>{ this.handleChatDrawerOpen(this.props.user_id, item.get("id")) }}>
-                    채팅하기
-                </MenuItem>
-            </ContextMenu>
-        </div>
-    )};
 
-
-    ChatContextmenu (hasNew, item, index) {
-        let timeObj = new Date(item.get("last_update"));
-        let timeStr = (timeObj.getMonth()+1) + "/" +timeObj.getDate() + " " + timeObj.getHours() + ":" + timeObj.getMinutes();
-        return (
-            <div className='context-menu' key={"chat-" + index}>
-
-                <ContextMenuTrigger id={item.get("chatroom_id")}>
-
-                    <Grid container direction="row" spacing={3}  style={{padding : "10px", cursor : "pointer"}} onClick = {(e)=>this.handleChatDrawerOpenByChatroomId(item.get("chatroom_id"))}>
-                        <Grid container direction="row" xs={10} alignItems="center"  spacing={0}>
-                            {hasNew ?
-                                <Grid item xs={3} sm={2} style={{textAlign:"center"}}> <AddAlert style={{color : "red", width : "20"}}/></Grid>
-                                :  <Grid item xs={3} sm={2}></Grid>}
-                            <Grid item xs={9} sm={10} ><span style={{fontSize : "10pt", marginRight : "3px", fontWeight : "bold"}}>{item.get("chatroom_title") && item.get("chatroom_title").length > 0 ? item.get("chatroom_title") : "이름 없는 채팅방"}</span>
-                                <span style={{fontSize : "6pt"}}>{timeStr}</span>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={2}><KeyboardArrowRight/></Grid>
-                    </Grid>
-
-                    <Divider />
-                </ContextMenuTrigger>
-
-                <ContextMenu id={item.get("chatroom_id")}>
-                    <MenuItem onClick={(e)=>this.handleSetModal(modalList[11],this.props.deleteChatroom,{user_id : item.get("user_id"), chatroom_id: item.get("chatroom_id")}, '')}>
-                        나가기
-                    </MenuItem>
-                    <MenuItem onClick={(e)=>this.handleSetModal(modalList[10],this.props.updateChatroomTitle,{user_id : item.get("user_id"), chatroom_id: item.get("chatroom_id")}, item.get("chatroom_title"))}>
-                        이름 변경
-                    </MenuItem>
-                </ContextMenu>
-
-            </div>
-        )};
 
     render() {
         const { classes, theme,
              sharedList = [], privateList = [], noteList = [],
              user_id = 0,
-             createFolder, sharedFolder,
-             unsharedFolder, deleteFolder,
-             updateFolder,
-             addFriend, deleteFriend,
-             createNote, updateNote, deleteNote, friends } = this.props;
+             createFolder, sharedFolder,unsharedFolder, deleteFolder, updateFolder,
+             createNote, updateNote, deleteNote } = this.props;
         
         return (
             <div className={classes.root}>
-                     <OneInputModal
-                                            key={"modal-pneInputModal"}
+                     <OneInputModal 
                                              visible={this.state.oneInputModal}
                                              onCancel={(e)=>this.handleUnSetModal('oneInputModal')}
                                              onConfirm={this.state.modal_action}
@@ -516,8 +491,7 @@ class Directory extends React.Component {
                                              text={this.state.modal_text}
                                              />
 
-                                <NoticeModal
-                                            key={"modal-noticeModal"}
+                                <NoticeModal 
                                             visible={this.state.noticeModal}
                                             onCancel={(e)=>this.handleUnSetModal('noticeModal')}
                                             onConfirm={this.state.modal_action}
@@ -529,7 +503,7 @@ class Directory extends React.Component {
                                             />
                                 
                                 <AskShareModal
-                                            key={"modal-askShareModal" }
+                                            key={this.state.modal_id}
                                             visible={this.state.selectModal}
                                             onCancel={(e)=>this.handleUnSetModal('selectModal')}
                                             onConfirm={this.state.modal_action}
@@ -540,36 +514,7 @@ class Directory extends React.Component {
                                             id={this.state.modal_id}
                                             text={this.state.modal_text}
                                            />
-
-                                <AskInviteModal
-                                    key={"modal-askInviteModal"}
-                                    visible={this.state.selectFriendModal}
-                                    onCancel={(e)=>this.handleUnSetModal('selectFriendModal')}
-                                    onConfirm={this.state.modal_action}
-                                    modal_icon={this.state.modal_icon}
-                                    modal_title={this.state.modal_title}
-                                    modal_content={this.state.modal_content}
-                                    btn_name={this.state.btn_name}
-                                    id={this.state.modal_id}
-                                    text={this.state.modal_text}
-                                />
-
-
-                                <AskInviteChatroomModal
-                                    key={"modal-askInviteChatroomModal"}
-                                    visible={this.state.selectInviteChatroomModal}
-                                    onCancel={(e)=>this.handleUnSetModal('selectInviteChatroomModal')}
-                                    onConfirm={this.state.modal_action}
-                                    modal_icon={this.state.modal_icon}
-                                    modal_title={this.state.modal_title}
-                                    modal_content={this.state.modal_content}
-                                    btn_name={this.state.btn_name}
-                                    id={this.state.modal_id}
-                                    text={this.state.modal_text}
-                                    handleCloseInviteChatroomModal = {this.handleCloseInviteChatroomModal}
-                                />
-
-
+                            
                 <Drawer 
                     variant="permanent"
                     className={classNames(classes.drawer, {
@@ -586,22 +531,14 @@ class Directory extends React.Component {
                     <div className={classes.toolbar}>
                         {this.state.open ? (
                             <div>
-                                <IconButton onClick={(e)=>this.handleSetModal(modalList[0],createFolder,user_id, '')}>
-                                    <CreateNewFolder color="primary"/>
-
-                                </IconButton>
-
-                         
-                                <IconButton onClick={(e) => this.handleSetModal(modalList[8], [sharedFolder,unsharedFolder], this.state.folder_id, this.state.permission)}>
-                                    <GroupAdd color="primary" />
-                                </IconButton>
-                              
-                                <IconButton
-                                    onClick={this.handleDrawerClose}
-                                    className={classNames(classes.menuButton)}
-                                >
-                                <ChevronLeft />
-                                </IconButton>
+                            <button className="create-folder" onClick={(e)=>this.handleSetModal(modalList[0],createFolder,user_id, '')}>New Folder</button>
+    
+                            <IconButton
+                                onClick={this.handleDrawerClose}
+                                className={classNames(classes.menuButton)}
+                            >
+                            <ChevronLeft />
+                            </IconButton>
                             </div>
                         ) : (
                             <IconButton
@@ -637,10 +574,10 @@ class Directory extends React.Component {
                                 in={this.state.public_navigationOpen}
                                 timeout="auto"
                                 unmountOnExit
-                                key={"share-folder-" + item.folder_id}
+                                key={item.folder_id}
                             >
                                 <List component="div" disablePadding>
-                                    {this.FolderContextmenu(item)}
+                                    {this.FolderContextmenu(item, "SharedFoler_"+item.folder_id)}
                                 </List>
                             </Collapse>
                         ))}
@@ -669,53 +606,17 @@ class Directory extends React.Component {
                         {/* Open private of nav */}
                         {privateList.map((item, index) => (
                             <Collapse
-                                key={"private-folder-" + item.folder_id}
+                                key={item.folder_id}
                                 in={this.state.private_navigationOpen}
                                 timeout="auto"
                                 unmountOnExit
                             >
                                 <List component="div" disablePadding>
-                                    {this.FolderContextmenu(item)}
+                                    {this.FolderContextmenu(item, "privateFolder_"+item.folder_id)}
                                 </List>
                             </Collapse>
                         ))}
                     </List>
-
-                    <List className={classes.list} >
-
-                        <ListItem
-                            button
-                            onClick={event => {
-                                this.handleDrawerOpen();
-                                this.handleFriendDrawerOpen();
-                            }}
-                        >
-                            <ListItemIcon>
-                                <People />
-                            </ListItemIcon>
-                            <ListItemText primary="Friends" />
-                        </ListItem>
-                    </List>
-
-                    <Divider />
-
-                    <List className={classes.list} >
-                        <ListItem
-                            button
-                            onClick={event => {
-
-                                this.handleChatListDrawerOpen();
-                            }}
-                        >
-                            <ListItemIcon>
-                                <Chat />
-                            </ListItemIcon>
-                            <ListItemText primary="Chats" />
-                        </ListItem>
-
-                    </List>
-
-
                 </Drawer>
                 <Drawer
                     variant="permanent"
@@ -731,174 +632,50 @@ class Directory extends React.Component {
                     open={this.state.SubOpen}>
 
                     <div className={classes.toolbar}>
-                        <div>                                                            
-                            <IconButton onClick={(e)=>this.handleSetModal(modalList[3],createNote, this.state.folder_id, '')}>   
-                                <NoteAdd color="primary" />
-                            </IconButton>
-                            
-{/*                            <IconButton>
-                                <Share color="primary" onClick={this.handleNoteExportPdf} />
-                            </IconButton>
+                    <div>
+                    <input type="text" 
+                    className="search-input" placeholder="Search" value={this.state.search}
+                    onChange={e => {
+                        this.setState({
+                            search: e.target.value
+                        });
+                        setTimeout(() => {
+                            this.handleSearchChange(this.state.search);
+                        }, 100);
+                    }}
+                    onKeyDown={e => {
+                        if(e.key === 'Enter')
+                        this.handleSearchChange(this.state.search);
 
-                            <IconButton>   
-                                <Lock color="primary" onClick={this.handleAccessToFile} />
-                            </IconButton>*/}
-
-                            <IconButton
-                                onClick={this.handleSubDrawerClose}
-                                className={classNames(classes.menuButton)}
-                            >
-                                {theme.direction === "rtl" ? (
-                                    <ChevronRight />
-                                ) : (
-                                    <ChevronLeft />
-                                )}
-                            </IconButton>
-                        </div>
+                        if(e.keyCode === 27) {
+                            this.setState({
+                                search: '',
+                            });
+                            setTimeout(() => {
+                                this.handleSearchChange('');
+                            }, 100);
+                        }
+                    }}
+                    />
+                </div>
+                <div>                         
+                    <IconButton
+                        onClick={this.handleSubDrawerClose}
+                    >
+                        {theme.direction === "rtl" ? (
+                            <ChevronRight />
+                        ) : (
+                            <ChevronLeft />
+                        )}
+                    </IconButton>
+                </div>
                     </div>
                     <Divider />
                     <div className={classes.drawerOverflow}>
                     <List>
-                        {noteList.map((item) => (this.FileContextmenu(item)))}
+                        {noteList.map((item) => (this.FileContextmenu(item, "note_"+item.id)))}
                     </List>
                     </div>
-
-                </Drawer>
-
-
-
-                <Drawer
-                    variant="permanent"
-                    className={classNames(classes.drawer, {
-                        [classes.FriendDrawerClose]: !this.state.FriendOpen
-                    })}
-                    classes={{
-                        paper: classNames( {
-                            [classes.FriendDrawerOpen]: this.state.FriendOpen,
-                            [classes.FriendDrawerClose]: !this.state.FriendOpen
-                        }),
-                    }}
-                    open={this.state.FriendOpen}>
-                    <div className={classes.toolbar} style={{marginRight: 6}}>
-
-                        <div>
-                            <IconButton>
-                                <PersonAdd color="primary" onClick={(e)=>{this.handleSetModal(modalList[12], [addFriend, deleteFriend], user_id, '', false)}} />
-                            </IconButton>
-
-                            <IconButton
-                                onClick={(e)=>this.handleFriendDrawerClose()}
-                            >
-                                {theme.direction === "rtl" ? (
-                                    <ChevronRight />
-                                ) : (
-                                    <ChevronLeft />
-                                )}
-                            </IconButton>
-                        </div>
-                    </div>
-                    <Divider />
-                    <div className={classes.drawerOverflow}>
-
-                        {friends.map((item, index) => (
-                            <List component="div" disablePadding style = {{cursor : "pointer"}}>
-                                {this.FriendContextmenu.call(this, item)}
-                            </List>
-                        ))}
-
-                    </div>
-
-                </Drawer>
-
-
-                <Drawer
-                    variant="permanent"
-                    className={classNames(classes.drawer, {
-                        [classes.ChatListDrawerClose]: !this.state.ChatListOpen
-                    })}
-                    classes={{
-                        paper: classNames( {
-                            [classes.ChatListDrawerOpen]: this.state.ChatListOpen,
-                            [classes.ChatListDrawerClose]: !this.state.ChatListOpen
-                        }),
-                    }}
-                    open={this.state.FriendOpen}>
-
-                    {
-                        this.hasNotReadChat = (myViewTime, lastUpdateTime) => {
-                            return Date.parse(myViewTime) < Date.parse(lastUpdateTime) ? true : false;
-                        }}
-
-                    <div className={classes.toolbar} style={{marginRight: 6}}>
-
-                        <div>
-
-                            <IconButton
-                                onClick={(e)=>this.handleChatListDrawerClose()}
-                            >
-                                {theme.direction === "rtl" ? (
-                                    <ChevronRight />
-                                ) : (
-                                    <ChevronLeft />
-                                )}
-                            </IconButton>
-                        </div>
-                    </div>
-                    <Divider />
-                    <div className={classes.drawerOverflow}>
-
-                        {this.props.privateChatList.map((item, index) => (
-                            this.ChatContextmenu.call(this, this.hasNotReadChat(item.get("view_time"), item.get("last_update")), item, index)
-                        ))}
-
-                    </div>
-
-                </Drawer>
-
-
-
-                <Drawer
-                    variant="permanent"
-                    className={classNames(classes.drawer, {
-                        [classes.ChatDrawerClose]: !this.state.ChatOpen
-                    })}
-                    classes={{
-                        paper: classNames( {
-                            [classes.ChatDrawerOpen]: this.state.ChatOpen,
-                            [classes.ChatDrawerClose]: !this.state.ChatOpen
-                        }),
-                    }}
-                    open={this.state.ChatOpen}>
-                    <div className={classes.toolbar} style={{marginRight: 6}}>
-
-                        <div>
-                            <IconButton onClick={(e)=>{this.handleSetModal(modalList[13], [addFriend, deleteFriend], {user_id : user_id, chatroom_id : this.state.chatroom_id}, '', false)}}>
-                                <PersonAdd color="primary"/>
-                            </IconButton>
-
-                            <IconButton
-                                onClick={(e)=>this.handleChatDrawerClose()}
-                            >
-                                {theme.direction === "rtl" ? (
-                                    <ChevronRight />
-                                ) : (
-                                    <ChevronLeft />
-                                )}
-                            </IconButton>
-                        </div>
-                    </div>
-                    <Divider />
-                    <div className={classes.drawerOverflow}>
-                        <ChatBox
-                            chats = {this.props.chats}
-                            userId = {this.props.user_id}
-                            sendChat = {this.props.sendChat}
-                            joinChatRoom = {this.props.joinChatRoom}
-                            leaveChatRoom = {this.props.leaveChatRoom}
-
-                        />
-                    </div>
-
                 </Drawer>
             </div>
         );

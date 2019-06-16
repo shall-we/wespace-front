@@ -30,7 +30,7 @@ class Editor extends React.Component {
     super(props);
     this.reactQuillRef=null;
     this.state={
-      users:[]
+      users:[],
     }
   }
 
@@ -40,7 +40,6 @@ class Editor extends React.Component {
     const doc = shareDBConnection.get('documents', this.props.note);
     const quillRef=this.reactQuillRef.getEditor();
     const cursorsModule = quillRef.getModule('cursors');
-
 
     const uuid=this.props.note;
     const updateUserList=()=>{
@@ -199,21 +198,38 @@ class Editor extends React.Component {
     cursors.localConnection.profile=this.props.profile;
     cursors.localConnection.uuid=this.props.note;
     cursors.update();
-    quillRef.enable();
+
+    console.log('-- 디버깅 --',this.props.note_lock);
+
+    if(this.props.note_lock === "LOCK")
+      quillRef.enable(false);
+    else
+      quillRef.enable();
     }else
     {
       cursors.localConnection.name = 'Guest';
       cursors.localConnection.uuid=this.props.note;
       cursors.localConnection.profile= 'https://cdn.onlinewebfonts.com/svg/img_83486.png';
-    };
+    }
 
     updateUserList();
+  }
 
+  componentWillReceiveProps(NextProps) {
+    console.log('nextProps ::',NextProps);
+    if(this.props.note_lock !== NextProps.note_lock) {
 
-
-}
-
-  
+      const quillRef=this.reactQuillRef.getEditor();
+      
+      if(NextProps.note_lock === "LOCK") {
+        quillRef.enable(false);
+      }
+      else {
+        quillRef.enable();
+      }
+      
+    }
+  }
 
   render() {
 
