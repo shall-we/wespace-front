@@ -38,11 +38,12 @@ class OutlinedTextFields extends Component {
     }
 
     render() {
-        const { classes,handleText } = this.props;
+        const { classes,handleText, readonly } = this.props;
 
         return (
             <form className={classes.container} noValidate autoComplete="off">
                 <TextField
+                    disabled = {readonly}
                     id="outlined-bare"
                     className={classes.textField}
                     placeholderStyle={classes.placeholderText}
@@ -52,6 +53,7 @@ class OutlinedTextFields extends Component {
 
                     InputProps={{
                         classes: {
+                            width : 100,
                             notchedOutline: classes.notchedOutline
                         },
                         value: this.state.name

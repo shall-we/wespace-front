@@ -6,7 +6,7 @@ import { pender } from "redux-pender";
 import * as api from "lib/api";
 
 // action types
-const LOGOUT = "directory/LOGOUT";
+const LOGOUT  = 'directory/LOGOUT';
 
 const SHARED_LIST = "directory/SHARED_LIST";
 const PRIVATE_LIST = "directory/PRIVATE_LIST";
@@ -22,11 +22,14 @@ const UNSHARED_FOLDER = "directory/UNSHARED_FOLDER";
 
 const SET_NOTE = "directory/SET_NOTE";
 const SEARCH_NOTE_LIST = "directory/SEARCH_NOTE_LIST";
+const DELETED_NOTE_LIST = "directory/DELETED_NOTE_LIST";
 const CREATE_NOTE = "directroy/CREATE_NOTE";
 const UPDATE_NOTE = "directory/UPDATE_NOTE";
 const DELETE_NOTE = "directory/DELETE_NOTE";
+const PUBLISH_NOTE="directory/PUBLISH_NOTE";
+const ACTIVED_NOTE="directory/ACTIVED_NOTE";
 const SET_NOTE_LOCK = "directory/SET_LOCK";
-const SET_NOTE_LOCK_STATE = "directory/SET_NOTE_LOCK_STATE"
+const SET_NOTE_LOCK_STATE = "directory/SET_NOTE_LOCK_STATE";
 
 const SET_FRIENDS = "directory/SET_FRIENDS";
 const SET_JOIN_FRIEND = "directory/SET_JOIN_FRIEND";
@@ -34,6 +37,7 @@ const ADD_FRIEND = "directory/ADD_FRIEND";
 const DEL_FRIEND = "directory/DEL_FRIEND";
 const SET_OUT_FRIEND = "directory/SET_OUT_FRIEND";
 
+const NOTE_STATE_CHECK = "directory/NOTE_STATE_CHECK";
 
 // action creators
 export const logout = createAction(LOGOUT);
@@ -42,6 +46,7 @@ export const getSharedList = createAction(SHARED_LIST, api.getSharedList);
 export const getPrivateList = createAction(PRIVATE_LIST, api.getPrivateList);
 export const getNoteList = createAction(NOTE_LIST, api.getNoteList);
 export const getSearchNoteList = createAction(SEARCH_NOTE_LIST, api.getSearchNoteList);
+export const getDeletedNoteList = createAction(DELETED_NOTE_LIST, api.getDeletedNoteList);
 
 export const setFolder = createAction(SET_FOLDER);
 export const createFolder = createAction(CREATE_FOLDER, api.createFolder);
@@ -54,6 +59,8 @@ export const setNote = createAction(SET_NOTE);
 export const createNote = createAction(CREATE_NOTE, api.createNote);
 export const updateNote = createAction(UPDATE_NOTE, api.updateNote);
 export const deleteNote = createAction(DELETE_NOTE, api.updateNoteStatusDeleted);
+export const publishNote = createAction(PUBLISH_NOTE, api.updateNoteStatusPublished);
+export const activedNote = createAction(ACTIVED_NOTE, api.updateNoteStatusActived);
 
 export const setNoteLock = createAction(SET_NOTE_LOCK, api.setLock);
 export const setNoteLockState = createAction(SET_NOTE_LOCK_STATE);
@@ -64,6 +71,7 @@ export const addFriend = createAction(ADD_FRIEND, api.addFriend);
 export const deleteFriend = createAction(DEL_FRIEND, api.deleteFriend);
 export const setOutFriend = createAction(SET_OUT_FRIEND);
 
+export const noteStateCheck = createAction(NOTE_STATE_CHECK, api.noteStateCheck);
 
 // initial state
 const initialState = Map({
@@ -75,6 +83,7 @@ const initialState = Map({
   friends: [],
   note_id: null,
   note_lock: null,
+  note_status: null,
 });
 
 // reducer
@@ -103,6 +112,20 @@ export default handleActions(
       }
     }),
     ...pender({
+      type: [SEARCH_NOTE_LIST],
+      onSuccess: (state, action) => {
+        const { data: noteList } = action.payload.data;
+        return state.set("noteList", noteList);
+      }
+    }),
+    ...pender({
+      type: [DELETED_NOTE_LIST],
+      onSuccess: (state, action) => {
+        const { data: noteList } = action.payload.data;
+        return state.set("noteList", noteList);
+      }
+    }),
+    ...pender({
       type: [DEL_FRIEND],
       onSuccess: (state, action) => {
         return state.set("friends", state.get("friends"));
@@ -112,6 +135,13 @@ export default handleActions(
       type: [ADD_FRIEND],
       onSuccess: (state, action) => {
         return state.set("friends", state.get("friends"));
+      }
+    }),
+    ...pender({
+      type: [NOTE_STATE_CHECK],
+      onSuccess: (state, action) => {
+        const { data } = action.payload.data;
+        return state.set("note_status", data[0].status).set("note_lock", data[0].lock);
       }
     }),
     [SET_FRIENDS]: (state, action) => {
@@ -140,13 +170,6 @@ export default handleActions(
       });
       return state.set("friends", friends);
     },
-    ...pender({
-      type: [SEARCH_NOTE_LIST],
-      onSuccess: (state, action) => {
-        const { data: noteList } = action.payload.data;
-        return state.set("noteList", noteList);
-      }
-    }),
     [SET_NOTE]: (state, action) => {
       const { payload } = action;
       if (action.payload !== null) {

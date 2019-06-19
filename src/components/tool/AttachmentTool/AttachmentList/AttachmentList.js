@@ -52,7 +52,7 @@ class AttachmentItem extends React.Component {
     
     render() {
 
-    const { id ,title, type } =this.props.data;
+    const { id ,title, type,url } =this.props.data;
 
         console.log('type : '+ type);
 
@@ -60,7 +60,7 @@ class AttachmentItem extends React.Component {
         <div className={cx("fileItem")} key={id} >
             <img className={cx("ItemDelete")} src={images['close.svg']} data-src={images['close.svg']} onClick={this.onItemDelete} alt=""/>
             <div  className={cx("fileImage")}onClick={this.fileDownload}>
-                <img className={cx("img")}src={images[type+'.svg']} data-src={images[type+'.svg']} alt="" />
+                <img className={cx("img")}src={(type.match(/png|jpg|jpeg/))?url:images[type+'.svg']} alt="" />
                 <label className={cx("label")}>{title}</label>
             </div>
         </div>

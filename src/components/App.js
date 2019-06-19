@@ -13,6 +13,7 @@ class App extends React.Component {
         <Route path='/join' component={JoinPage}/>
         <Route exact path='/note' component={MainPage} />
         <Route path='/note/public/:uuid' component={PublicPage} />
+        <Route path='/note/:uuid' component={MainPage} />
         <Route exact path="/admin" component={AdminPage} />
         <Route component={NotFoundPage}/>
       </Switch>

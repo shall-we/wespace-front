@@ -60,6 +60,8 @@
     "postcss-safe-parser": "4.0.1",
     "prismjs": "^1.16.0",
     "query-string": "5",
+    "quill-blot-formatter": "^1.0.5",
+    "quill-image-drop-module": "^1.0.3",
     "quill-image-upload": "^0.1.3",
     "rangefix": "^0.2.7",
     "react": "^16.8.6",

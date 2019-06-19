@@ -6,11 +6,13 @@ import { pender } from "redux-pender";
 import * as api from "lib/api";
 
 // action types
+const LOGOUT  = 'notice/LOGOUT';
 const SEND_MESSAGE = "notice/SEND_MESSAGE";
 const NOTICE_LIST = "notice/NOTICE_LIST";
 const UPDATE_NOTICE_LIST = "notice/UPDATE_NOTICE_LIST";
 
 // action creators
+export const logout = createAction(LOGOUT);
 export const sendMessage = createAction(SEND_MESSAGE, api.sendMessage);
 export const getNoticeList = createAction(NOTICE_LIST, api.getNoticeList);
 export const updateNoticeList = createAction(UPDATE_NOTICE_LIST, api.updateNoticeList);
@@ -28,6 +30,7 @@ const initialState = Map({
 
 // reducer
 export default handleActions({
+    [LOGOUT]: (state, action) => initialState,
     ...pender(
     {
         type: [NOTICE_LIST],

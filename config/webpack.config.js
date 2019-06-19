@@ -525,6 +525,9 @@ module.exports = function(webpackEnv) {
       // In production, it will be an empty string unless you specify "homepage"
       // in `package.json`, in which case it will be the pathname of that URL.
       // In development, this will be an empty string.
+      new webpack.ProvidePlugin({
+        'window.Quill': 'quill'
+      }),
       new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.

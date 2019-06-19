@@ -4,12 +4,15 @@ import { Map } from "immutable";
 import { pender } from "redux-pender";
 import * as api from "lib/api";
 
+const LOGOUT  = 'noteTool/LOGOUT';
 const ADD_ATTACHMENT="directory/ADD_ATTACHMENT";
 const DELETE_ATTACHMENT="directory/DELETE_ATTACHMENT";
 const GET_ATTACHMENT_LIST="directory/GET_ATTACHMENT_LIST";
 const DOWNLOAD_ATTACHMENT="directory/DOWNLOAD_ATTACHMENT";
 
+
 // action creators
+export const logout = createAction(LOGOUT);
 export const addAttachment = createAction(ADD_ATTACHMENT, api.addAttachment);
 export const deleteAttachment = createAction(DELETE_ATTACHMENT, api.deleteAttachment);
 export const getAttachmentList = createAction(GET_ATTACHMENT_LIST, api.getAttachmentList);
@@ -24,6 +27,7 @@ const initialState = Map({
 
 export default handleActions({
     //shareBox
+    [LOGOUT]: (state, action) => initialState,
     ...pender(
         {
             type: [ADD_ATTACHMENT],

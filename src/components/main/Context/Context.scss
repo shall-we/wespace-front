@@ -15,29 +15,26 @@
         margin: 2rem;
     }
 
-    .notice{
-        flex:0.9;
+    .notice{ 
         display: flex;
-        .comment{
-            flex:1;
-            height: 30rem;
-            overflow-y: auto;
-            margin: 2rem;
-        }
+        flex-direction: column;
         .directory{
-            flex:1;
             display: flex;
-            flex-direction: column;
-            margin-right: 2rem;
+            margin-left: 2rem;
             .folder{
-                flex:1;
-               
+                min-width : 30rem;
             }
-            .note{
-                flex:1;
-                
-            }
+            .comment{
+                overflow-y: auto;
+                margin: 2rem;
+                min-width : 20rem;
+                margin-left: 2rem;
+            }     
         }
-       
+        .note{
+            margin-left: 2rem;
+            width : 52rem;
+        }
+           
     }
 }

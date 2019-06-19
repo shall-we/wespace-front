@@ -29,9 +29,11 @@ export const getNoteList = (folder_id) => axios.get(`/note/list?${queryString.st
 export const updateNote = (note_id, note_name) => axios.patch(`note/${note_id}/${note_name}`);
 export const updateNoteStatusDeleted = (note_id) => axios.patch(`/note/status/${note_id}/DELETED`);
 export const getSearchNoteList = (folder_id, search) => axios.get(`/note/searchlist?${queryString.stringify({folder_id, search})}`);
+export const getDeletedNoteList = (folder_id) => axios.get(`/note/deletedlist?${queryString.stringify({folder_id})}`);
 export const setLock = (note_id, note_lock) => axios.patch(`/note/lock/${note_id}/${note_lock}`);
-export const getLock = (note_id) => axios.get(`/note/lock?${queryString.stringify({note_id})}`);
-// export const getNoteCount = () => axios.get('/admin/note');
+export const noteStateCheck = (uuid) => axios.get(`/note/status?${queryString.stringify({uuid})}`);
+export const updateNoteStatusPublished = (note_id) => axios.patch(`/note/status/${note_id}/PUBLISHED`);
+export const updateNoteStatusActived= (note_id) => axios.patch(`/note/status/${note_id}/ACTIVED`);
 
 // Notice API
 export const sendMessage = (type,from,object,message,option,to) => axios.post('/notice',{type,from,object,message,option,to});

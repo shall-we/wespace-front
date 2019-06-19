@@ -2,51 +2,53 @@ import React, { Component } from 'react';
 import Header from '../../components/common/Header';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as userActions from '../../store/modules/user';
+import * as directoryActions from "store/modules/directory";
+import * as UserActions from "store/modules/user";
+import * as noticeActions from 'store/modules/notice';
+import * as noteToolActions from 'store/modules/noteTool';
 import {withRouter} from 'react-router-dom';
 import {autoLogin, logout} from '../../lib/api';
-import * as directoryActions from "store/modules/directory";
 
 let flag = false;
 
 class HeaderContainer extends Component {
 
-  // componentDidMount= async () => {
-  //   await autoLogin()
-  //   .then(async res =>{
-  //     if(!flag) {
-  //       const {autoLogin, email, password,  authorizated } = res.data.data;
-  //       if(autoLogin) {
-  //         const { UserActions } = this.props;
-  //         await UserActions.login(email, password, true);
-  //         flag = true;
+  componentDidMount= async () => {
+    await autoLogin()
+    .then(async res =>{
+      if(!flag) {
+        const {autoLogin, email, password,  authorizated } = res.data.data;
+        if(autoLogin) {
+          const { UserActions } = this.props;
+          await UserActions.login(email, password, true);
+          flag = true;
 
-  //         if(authorizated){
-  //         this.props.history.push('/admin');
-  //         }else{
-  //         this.props.history.push('/note');
-  //         }
-  //       }
-  //       else {
-  //         flag = false;
-  //       }
-  //     }
-  //   }
-  //   );
-//
-  // }
+          if(authorizated){
+          this.props.history.push('/admin');
+          }else{
+          this.props.history.push('/note');
+          }
+        }
+        else {
+          flag = false;
+        }
+      }
+    }
+    );
+  }
 
-    logout = async () => {
-    const { UserActions, DirectoryActions } = this.props;
+  logout = async () => {
     await logout();
-    await UserActions.logout();
-    DirectoryActions.setNote(null);
+    const { UserActions,DirectoryActions,NoticeActions ,NoteToolActions } = this.props;
+    UserActions.logout();
+    DirectoryActions.logout();
+    NoticeActions.logout();
+    NoteToolActions.logout();
+    this.props.history.push('/');
   }
 
   render() {
     const { name,profile } = this.props;
-    // update image if image url includes 'static' , it change default_profile.png
-      console.log("확인!!", name, profile);
     const { logout } = this;
     return (
       <Header
@@ -64,7 +66,9 @@ class HeaderContainer extends Component {
       profile: state.user.get('profile'),
     }),
     (dispatch) => ({
-      UserActions: bindActionCreators(userActions, dispatch),
-      DirectoryActions: bindActionCreators(directoryActions, dispatch),
+        DirectoryActions: bindActionCreators(directoryActions, dispatch),
+        UserActions: bindActionCreators(UserActions, dispatch),
+        NoticeActions: bindActionCreators(noticeActions, dispatch),
+        NoteToolActions : bindActionCreators(noteToolActions, dispatch)
     })
   )(withRouter(HeaderContainer));

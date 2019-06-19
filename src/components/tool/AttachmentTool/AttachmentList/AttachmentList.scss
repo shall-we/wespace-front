@@ -30,7 +30,7 @@
 
           .ItemDelete{
             flex:0.01;
-            width: 1rem;
+            width: 1vw;
             margin-left:auto; 
             margin-bottom: auto;
             cursor: pointer;
@@ -39,9 +39,13 @@
             flex:0.99;
             display: flex;
             flex-direction: column;
+            align-items: center;
             cursor : pointer;
               .img{
                 flex:0.9;
+                width : 5vw;
+                border-radius: 10px;
+                padding-top:.3rem;
               }
               .label{
                 flex: 0.1;
@@ -55,7 +59,7 @@
                 overflow: hidden;
                 white-space: nowrap;
                 word-wrap: normal !important;
-                min-height: 1rem;
+                min-height: 1.2rem;
                 &:hover{
                   word-wrap:break-word; 
                   white-space:pre-wrap;
@@ -71,8 +75,3 @@
   }
 
 }
-
-
- 
-
-   

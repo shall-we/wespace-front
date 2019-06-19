@@ -117,11 +117,19 @@ $btn-color: #20a0ff;
     height: 23px;
     color : #fff;
     font-size : 15px;
-    background-color: #20a0ff;
     border: 0;
     border-radius: 50%;
     text-align: center;
     line-height: 22px;
+    &--MEMBER {
+      background-color: #E0E0E0;
+    }
+    &--MANAGER  {
+      background-color: #F50057;
+    }
+    &--OWNER  {
+      background-color: #3F51B5;
+    }
   }
 
   
@@ -260,7 +268,24 @@ $btn-color: #20a0ff;
               }
             }
             .menu__item--share {
-              
+              &:hover {
+        
+                border-color: slateblue;
+                color: slateblue;
+                
+                &:before {
+                  background-color: rgba(slateblue, 0.2);
+                }
+        
+                .menu__item-text {
+                  color: slateblue;
+                }
+        
+                .menu__item-icon {
+                  color: slateblue;
+                }
+        
+              }
             }
             .menu__item--lock {
               &:hover {

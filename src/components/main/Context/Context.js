@@ -13,17 +13,18 @@ class Context extends Component {
             전체 공지 사항
           </div>
           <div className={cx('notice')} >
-              <div className={cx('comment')}>
-                    <AlignItemsList rows={this.props.chatNotice}/>
-              </div>
               <div className={cx('directory')} >
                   <div className={cx('folder')}>
                     <EnhancedTable category='폴더' rows={this.props.folderNotice} />
                   </div>
-                  <div className={cx('note')}>
-                    <EnhancedTable category='노트' rows={this.props.noteNotice}/>
+                  <div className={cx('comment')}>
+                    <AlignItemsList rows={this.props.chatNotice}/>
                   </div>
               </div>
+              <div className={cx('note')}>
+                    <EnhancedTable category='노트' rows={this.props.noteNotice}/>
+              </div>
+              
           </div>
       </div>
     );

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import styles from './CommentTool.scss';
+
 import classNames from 'classnames/bind';
 import { Send } from "@material-ui/icons";
+import styles from './CommentTool.scss';
 const cx = classNames.bind(styles);
 
 const Comment=(props)=>{

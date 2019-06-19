@@ -7,6 +7,8 @@ import 'react-quill/dist/quill.bubble.css';
 import styles from './Editor.scss';
 import UserList from './UserList';
 
+import { ImageDrop } from 'quill-image-drop-module';
+import BlotFormatter from 'quill-blot-formatter';
 import QuillCursors from './Cursors';
 import ReconnectingWebSocket from 'reconnectingwebsocket';
 
@@ -15,6 +17,9 @@ const ShareDB = require('sharedb/lib/client');
 
 ShareDB.types.register(require('rich-text').type);
 Quill.register('modules/cursors', QuillCursors);
+Quill.register('modules/imageDrop', ImageDrop);
+Quill.register('modules/blotFormatter', BlotFormatter);
+
 const shareDBSocket = new ReconnectingWebSocket(((window.location.protocol === 'https:') ? 'wss' : 'ws') + '://' + window.location.hostname + ':4000/sharedb');
 
 const shareDBConnection = new ShareDB.Connection(shareDBSocket);
@@ -255,7 +260,7 @@ Editor.modules = {
     autoRegisterListener: false
   },
   toolbar: [
-    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
   ['blockquote', 'code-block'],
 
   [{ 'header': 1 }, { 'header': 2 }],               // custom button values
@@ -278,7 +283,13 @@ Editor.modules = {
   history: {
     userOnly: true
   },
-  clipboard: {matchVisual: false }
+  clipboard: {matchVisual: false },
+  imageDrop : {
+
+  },
+  blotFormatter: {
+    // see config options below
+  },
 };
 
 

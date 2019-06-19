@@ -1,10 +1,10 @@
 import React from 'react';
 import PublicTemplate from 'components/common/PublicTemplate'
-import Editor from 'components/main/Editor';
+import PublicNoteContainer from '../containers/main/PublicNoteContainer';
 const PublicPage = ({match}) => {
   return (
     <PublicTemplate>
-         <Editor key={match.params.uuid} note={match.params.uuid}/>
+        <PublicNoteContainer key={match.params.uuid} note={match.params.uuid}/>
     </PublicTemplate>
   );
 };
