@@ -169,7 +169,9 @@ componentWillReceiveProps(nextProps) {
     const { addAttachment, deleteAttachment, downloadAttachment } = this;
     if (note_uuid) {
       return (
-        <NoteToolTemplate >
+          <div style={{minWidth : "5px", backgroundColor : background}}>
+              {this.renderSpreadBtn(isSpread)}
+        <NoteToolTemplate  display={display} isSpread={isSpread} width={width} >
           <NoteToolBox items={['댓글', '첨부']} >
             <CommentTool data={comment} sendMessage={this.handleSendMessage} handleSelectSendMessage={this.handleSelectSendMessage} user_id={user_id} user_list={user_list} />
             <AttachmentTool
@@ -181,7 +183,7 @@ componentWillReceiveProps(nextProps) {
             />
           </NoteToolBox>
         </NoteToolTemplate>
-
+          </div>
       );
     } else {
       return (

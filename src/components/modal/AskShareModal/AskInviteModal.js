@@ -88,8 +88,6 @@ class AskInviteModal extends React.Component {
                 modal_icon, modal_title, modal_content, btn_name, id } = this.props;
         const { selectedOption, friends }=this.state;
 
-        console.log("안에 있는 props", this.props);
-
 
         return (
             <ModalWrapper visible={visible}>

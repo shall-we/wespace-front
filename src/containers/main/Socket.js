@@ -1,10 +1,11 @@
 
 import socketio from "socket.io-client";
-export let socket = socketio.connect("http://192.168.0.19:4000");
+const URL = "http://192.168.43.240:4000";
+export let socket = socketio.connect(URL);
 
 export function initSocket () {
     console.log("init socket", socket);
-    socket = socketio.connect("http://192.168.0.19:4000");
+    socket = socketio.connect(URL);
     console.log("init after socket", socket);
 }
 

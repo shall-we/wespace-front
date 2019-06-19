@@ -666,6 +666,19 @@ class Directory extends React.Component {
                     text={this.state.modal_text}
                 />
 
+                <AskInviteModal
+                    key={"modal-askInviteModal"}
+                    visible={this.state.selectFriendModal}
+                    onCancel={(e)=>this.handleUnSetModal('selectFriendModal')}
+                    onConfirm={this.state.modal_action}
+                    modal_icon={this.state.modal_icon}
+                    modal_title={this.state.modal_title}
+                    modal_content={this.state.modal_content}
+                    btn_name={this.state.btn_name}
+                    id={this.state.modal_id}
+                    text={this.state.modal_text}
+                />
+
                 <AskInviteChatroomModal
                     key={"modal-askInviteChatroomModal"}
                     visible={this.state.selectInviteChatroomModal}

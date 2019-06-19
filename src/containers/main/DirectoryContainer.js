@@ -66,6 +66,7 @@ class DirectoryContainer extends React.Component {
     };
 
     addFriend = async (user_id, friend_id) => {
+        console.log("add friend", user_id, friend_id);
         const {DirectoryActions} = this.props;
         await DirectoryActions.addFriend(user_id, friend_id);
         this.getFriendList(user_id);

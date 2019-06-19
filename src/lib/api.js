@@ -24,9 +24,9 @@ export const sharedFolder = (user_id,folder_id,permission) => axios.post('/folde
 export const unsharedFolder = (folder_id,user_id) => axios.delete(`/folder/shared/${folder_id}/${user_id}`);
 
 // Note API
-export const createNote = (folder_id,name) => axios.post('note',{folder_id,name});
+export const createNote = (folder_id,name) => axios.post('/note',{folder_id,name});
 export const getNoteList = (folder_id) => axios.get(`/note/list?${queryString.stringify({folder_id})}`);
-export const updateNote = (note_id, note_name) => axios.patch(`note/${note_id}/${note_name}`);
+export const updateNote = (note_id, note_name) => axios.patch(`/note/${note_id}/${note_name}`);
 export const updateNoteStatusDeleted = (note_id) => axios.patch(`/note/status/${note_id}/DELETED`);
 export const getSearchNoteList = (folder_id, search) => axios.get(`/note/searchlist?${queryString.stringify({folder_id, search})}`);
 export const getDeletedNoteList = (folder_id) => axios.get(`/note/deletedlist?${queryString.stringify({folder_id})}`);
