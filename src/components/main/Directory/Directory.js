@@ -23,10 +23,11 @@ import AskInviteModal from '../../modal/AskShareModal/AskInviteModal';
 import AskInviteChatroomModal from '../../modal/AskShareModal/AskInviteChatroomModal';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import './Directory.scss';
+import ChatBox from '../chat/chat';
 
 import * as api from "lib/api";
 
-const drawerWidth = 250;
+const drawerWidth = "250px";
 
 const styles = theme => ({
     root: {
@@ -37,19 +38,25 @@ const styles = theme => ({
     },
     drawer: {
         width: drawerWidth,
-        flexShrink: 0,
+        flexShrink: 0
+    },
+
+    subDrawer: {
+        width: drawerWidth,
+        flexShrink: 0
+
     },
     drawerOpen: {
-        height: 'calc(100vh - 4rem)', 
         position:'unset',
         width: drawerWidth,
+        height: 'calc(100vh - 4rem)',
         transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
+            duration: theme.transitions.duration.leavingScreen
         }),
     },
     drawerClose: {
-        height: 'calc(100vh - 4rem)', 
+        height: 'calc(100vh - 4rem)',
         transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
@@ -61,16 +68,23 @@ const styles = theme => ({
         }
     },
     SubDrawerOpen: {
-        height: 'calc(100vh - 4rem)', 
-        position:'unset',
+        height: 'calc(100vh - 4rem)',
         width: drawerWidth,
+        position:"unset",
         transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen
         }),
     },
     SubDrawerClose: {
-        display: 'none'
+        height: 'calc(100vh - 4rem)',
+        width : 0,
+        position:"relative",
+        transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+        })
+
     },
     FriendDrawerOpen: {
         height: 'calc(100vh - 4rem)',
@@ -82,7 +96,13 @@ const styles = theme => ({
         }),
     },
     FriendDrawerClose: {
-        display: 'none'
+        height: 'calc(100vh - 4rem)',
+        width : 0,
+        position:"relative",
+        transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+        })
     },
 
     ChatDrawerOpen: {
@@ -95,7 +115,13 @@ const styles = theme => ({
         }),
     },
     ChatDrawerClose: {
-        display: 'none'
+        height: 'calc(100vh - 4rem)',
+        width : 0,
+        position:"relative",
+        transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+        })
     },
 
     ChatListDrawerOpen :{
@@ -109,7 +135,13 @@ const styles = theme => ({
     },
 
     ChatListDrawerClose: {
-        display: 'none'
+        height: 'calc(100vh - 4rem)',
+        width : 0,
+        position:"relative",
+        transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+        })
     },
 
     toolbar: {
@@ -208,7 +240,7 @@ class Directory extends React.Component {
             modal_icon: '',
             modal_title: '',
             modal_content: '',
-            btn_name: '',
+            btn_name: ''
         };
     }
     handlePublicClick = () => {
@@ -252,6 +284,19 @@ class Directory extends React.Component {
 
 
     /** [main navigation] handling folder modal */
+    getParticipantsImage = (chatroom_id) => {
+        this.props.getChatParticipantsInfo(chatroom_id).then(result => {
+            console.log("받아온 결과는 ! result.... ", result);
+            if(result){
+            const {data} = result.data;
+            const profiles = data.map(el => {
+               const {name, profile} = el.info;
+               console.log(name, profile);
+            });
+            return profiles;
+            }
+        });
+    };
 
 
     handleSetModal=(array,action,id,text)=>{
@@ -326,11 +371,13 @@ class Directory extends React.Component {
         if(response.data.chats){
             this.props.setChats({chats : response.data.chats, participants : participants.data, chatroom_id : chatroom_id});
         }
+
+        await api.updateChatCheckTime(user_id, chatroom_id);
         this.setState({ SubOpen: false, ChatOpen: true, ChatListOpen : false, FriendOpen: false, chatroom_id : chatroom_id  });
     };
 
 
-    async handleChatDrawerOpenByChatroomId (chatroom_id){
+    async handleChatDrawerOpenByChatroomId (user_id, chatroom_id){
 
         let response = await api.getChats(chatroom_id, 1, 0);
         let participants = await api.getChatParticipantsInfo(chatroom_id);
@@ -340,6 +387,8 @@ class Directory extends React.Component {
         if(response.data.chats){
             this.props.setChats({chats : response.data.chats, participants : participants.data, chatroom_id : chatroom_id});
         }
+
+        await api.updateChatCheckTime(user_id, chatroom_id);
         this.setState({ SubOpen: false, ChatOpen: true, ChatListOpen : false, FriendOpen: false, chatroom_id : chatroom_id });
     };
 
@@ -417,7 +466,7 @@ class Directory extends React.Component {
                     onClick={(e)=>{ this.handleNoteData(item.id, item.name,item.content,item.lock); }}
                     onDoubleClick={(e)=>this.handleSetModal(modalList[5],this.props.updateNote,{note_id:item.id, folder_id: this.state.folder_id},item.name)}
                     onMouseDown={(e)=>this.handleNoteData(item.id, item.name,item.content)}>
-                    <ListItemText primary={item.name} key={id}/>
+                    <ListItemText primary={item.name} key={id} style={{wordBreak : "break-all"}}/>
                     {/* <Statebutton/> */}
                     <div className="stateButton">
                         <div className="menu menu--button">
@@ -469,17 +518,79 @@ class Directory extends React.Component {
     );
 
 
+    FriendContextmenu (item) {return (
+        <div className='context-menu' key={"friend-" + item.get("id")}>
+            <ContextMenuTrigger id={item.get("id")}>
+                <ListItem onAuxClick={(e)=>this.handleFriendData(this, item.get("id"), item.get("name"))} style={{wordBreak : "break-all"}}>
+                    {item.get("joined") ?
+                        <Brightness1 style={{color : "orange", width : "10"}}/>
+                        : <Brightness1 style={{color : "green", width : "10"}}/>}
+                    <span style={{width : "20%", textAlign : "left", marginLeft : "18px"}}>
+                   <img style={{width : 40, height : 40, borderStyle : "groove", borderRadius : "100%"}} src={item.get("profile")} alt="profile"/>
+                   </span>
+                    <span style={{width: "60%", textAlign : "left", paddingLeft : "10px"}}>{item.get("name")}</span></ListItem>
+                <Divider />
+            </ContextMenuTrigger>
+            <ContextMenu id={item.get("id")}>
+                <MenuItem onClick={(e)=>{ this.handleSetModal(modalList[9],this.props.deleteFriend, {user_id : this.props.user_id, friend_id : item.get("id")}, '')}}>
+                    친구삭제
+                </MenuItem>
+                <MenuItem onClick={ (e)=>{ this.handleChatDrawerOpen(this.props.user_id, item.get("id")) }}>
+                    채팅하기
+                </MenuItem>
+            </ContextMenu>
+        </div>
+    )};
+
+
+    ChatContextmenu (hasNew, item, index) {
+        let timeObj = new Date(item.get("last_update"));
+        let timeStr = (timeObj.getMonth()+1) + "/" +timeObj.getDate() + " " + timeObj.getHours() + ":" + timeObj.getMinutes();
+        return (
+            <div className='context-menu' key={"chat-" + index}>
+
+                <ContextMenuTrigger id={item.get("chatroom_id")}>
+
+                    <Grid container direction="row" spacing={3}  style={{padding : "10px", cursor : "pointer"}} onClick = {(e)=>this.handleChatDrawerOpenByChatroomId(this.props.user_id, item.get("chatroom_id"))}>
+                        <Grid container direction="row" xs={10} alignItems="center"  spacing={0}>
+                            {hasNew ?
+                                <Grid item xs={3} sm={2} style={{textAlign:"center"}}> <AddAlert style={{color : "red", width : "20"}}/></Grid>
+                                :  <Grid item xs={3} sm={2}></Grid>}
+                            <Grid item xs={9} sm={10} ><span style={{fontSize : "10pt", marginRight : "3px", fontWeight : "bold"}}>{item.get("chatroom_title") && item.get("chatroom_title").length > 0 ? item.get("chatroom_title") : "이름 없는 채팅방"}</span>
+                                <span style={{fontSize : "6pt"}}>{timeStr}</span>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={2}><KeyboardArrowRight/></Grid>
+                    </Grid>
+
+                    <Divider />
+                </ContextMenuTrigger>
+
+                <ContextMenu id={item.get("chatroom_id")}>
+                    <MenuItem onClick={(e)=>this.handleSetModal(modalList[11],this.props.deleteChatroom,{user_id : item.get("user_id"), chatroom_id: item.get("chatroom_id")}, '')}>
+                        나가기
+                    </MenuItem>
+                    <MenuItem onClick={(e)=>this.handleSetModal(modalList[10],this.props.updateChatroomTitle,{user_id : item.get("user_id"), chatroom_id: item.get("chatroom_id")}, item.get("chatroom_title"))}>
+                        이름 변경
+                    </MenuItem>
+                </ContextMenu>
+
+            </div>
+        )};
+
 
     render() {
         const { classes, theme,
              sharedList = [], privateList = [], noteList = [],
              user_id = 0,
              createFolder, sharedFolder,unsharedFolder, deleteFolder, updateFolder,
-             createNote, updateNote, deleteNote } = this.props;
+             createNote, updateNote, deleteNote,
+             addFriend, deleteFriend, friends, getChatList
+        } = this.props;
         
         return (
             <div className={classes.root}>
-                     <OneInputModal 
+                                <OneInputModal
                                              visible={this.state.oneInputModal}
                                              onCancel={(e)=>this.handleUnSetModal('oneInputModal')}
                                              onConfirm={this.state.modal_action}
@@ -514,7 +625,35 @@ class Directory extends React.Component {
                                             id={this.state.modal_id}
                                             text={this.state.modal_text}
                                            />
-                            
+
+                                <AskInviteModal
+                                    key={"modal-askInviteModal"}
+                                    visible={this.state.selectFriendModal}
+                                    onCancel={(e)=>this.handleUnSetModal('selectFriendModal')}
+                                    onConfirm={this.state.modal_action}
+                                    modal_icon={this.state.modal_icon}
+                                    modal_title={this.state.modal_title}
+                                    modal_content={this.state.modal_content}
+                                    btn_name={this.state.btn_name}
+                                    id={this.state.modal_id}
+                                    text={this.state.modal_text}
+                                />
+
+
+                                <AskInviteChatroomModal
+                                    key={"modal-askInviteChatroomModal"}
+                                    visible={this.state.selectInviteChatroomModal}
+                                    onCancel={(e)=>this.handleUnSetModal('selectInviteChatroomModal')}
+                                    onConfirm={this.state.modal_action}
+                                    modal_icon={this.state.modal_icon}
+                                    modal_title={this.state.modal_title}
+                                    modal_content={this.state.modal_content}
+                                    btn_name={this.state.btn_name}
+                                    id={this.state.modal_id}
+                                    text={this.state.modal_text}
+                                    handleCloseInviteChatroomModal = {this.handleCloseInviteChatroomModal}
+                                />
+
                 <Drawer 
                     variant="permanent"
                     className={classNames(classes.drawer, {
@@ -527,7 +666,8 @@ class Directory extends React.Component {
                             [classes.drawerClose]: !this.state.open,
                         })
                     }}
-                    open={this.state.open}>
+                    open={this.state.open}
+                >
                     <div className={classes.toolbar}>
                         {this.state.open ? (
                             <div>
@@ -617,10 +757,46 @@ class Directory extends React.Component {
                             </Collapse>
                         ))}
                     </List>
+                    <Divider />
+
+                    <List className={classes.list} >
+
+                        <ListItem
+                            button
+                            onClick={event => {
+                                this.handleDrawerOpen();
+                                this.handleFriendDrawerOpen();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <People />
+                            </ListItemIcon>
+                            <ListItemText primary="Friends" />
+                        </ListItem>
+                    </List>
+
+                    <Divider />
+
+                    <List className={classes.list} >
+                        <ListItem
+                            button
+                            onClick={event => {
+
+                                this.handleChatListDrawerOpen();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <Chat />
+                            </ListItemIcon>
+                            <ListItemText primary="Chats" />
+                        </ListItem>
+
+                    </List>
+
                 </Drawer>
                 <Drawer
                     variant="permanent"
-                    className={classNames(classes.drawer, {
+                    className={classNames(classes.subDrawer, {
                         [classes.SubDrawerClose]: !this.state.SubOpen
                     })}
                     classes={{
@@ -629,7 +805,9 @@ class Directory extends React.Component {
                             [classes.SubDrawerClose]: !this.state.SubOpen
                         }),
                     }}
-                    open={this.state.SubOpen}>
+                    open={this.state.SubOpen}
+
+                >
 
                     <div className={classes.toolbar}>
                     <div>
@@ -677,14 +855,154 @@ class Directory extends React.Component {
                     </List>
                     </div>
                 </Drawer>
+
+                <Drawer
+                    variant="permanent"
+                    className={classNames(classes.drawer, {
+                        [classes.FriendDrawerClose]: !this.state.FriendOpen
+                    })}
+                    classes={{
+                        paper: classNames( {
+                            [classes.FriendDrawerOpen]: this.state.FriendOpen,
+                            [classes.FriendDrawerClose]: !this.state.FriendOpen
+                        }),
+                    }}
+                    open={this.state.FriendOpen}>
+                    <div className={classes.toolbar} style={{marginRight: 6}}>
+                        {console.log("props? ", this.props)}
+                        <div>
+                            <IconButton>
+                                <PersonAdd color="primary" onClick={(e)=>{this.handleSetModal(modalList[12], [addFriend, deleteFriend], this.props.user_id, '', false)}} />
+                            </IconButton>
+
+                            <IconButton
+                                onClick={(e)=>this.handleFriendDrawerClose()}
+                            >
+                                {theme.direction === "rtl" ? (
+                                    <ChevronRight />
+                                ) : (
+                                    <ChevronLeft />
+                                )}
+                            </IconButton>
+                        </div>
+                    </div>
+                    <Divider />
+                    <div className={classes.drawerOverflow}>
+
+                        {friends.map((item, index) => (
+                            <List component="div" disablePadding style = {{cursor : "pointer"}}>
+                                {this.FriendContextmenu.call(this, item)}
+                            </List>
+                        ))}
+
+                    </div>
+
+                </Drawer>
+
+
+                <Drawer
+                    variant="permanent"
+                    className={classNames(classes.drawer, {
+                        [classes.ChatListDrawerClose]: !this.state.ChatListOpen
+                    })}
+                    classes={{
+                        paper: classNames( {
+                            [classes.ChatListDrawerOpen]: this.state.ChatListOpen,
+                            [classes.ChatListDrawerClose]: !this.state.ChatListOpen
+                        }),
+                    }}
+                    open={this.state.FriendOpen}>
+
+                    {
+                        this.hasNotReadChat = (myViewTime, lastUpdateTime) => {
+                            return Date.parse(myViewTime) < Date.parse(lastUpdateTime) ? true : false;
+                        }}
+
+                    <div className={classes.toolbar} style={{marginRight: 6}}>
+
+                        <div>
+
+                            <IconButton
+                                onClick={(e)=>this.handleChatListDrawerClose()}
+                            >
+                                {theme.direction === "rtl" ? (
+                                    <ChevronRight />
+                                ) : (
+                                    <ChevronLeft />
+                                )}
+                            </IconButton>
+                        </div>
+                    </div>
+                    <Divider />
+                    <div className={classes.drawerOverflow}>
+
+                        {this.props.privateChatList.map((item, index) => (
+                            this.ChatContextmenu.call(this, this.hasNotReadChat(item.get("view_time"), item.get("last_update")), item, index)
+                        ))}
+
+                    </div>
+
+                </Drawer>
+
+
+
+                <Drawer
+                    variant="permanent"
+                    className={classNames(classes.drawer, {
+                        [classes.ChatDrawerClose]: !this.state.ChatOpen
+                    })}
+                    classes={{
+                        paper: classNames( {
+                            [classes.ChatDrawerOpen]: this.state.ChatOpen,
+                            [classes.ChatDrawerClose]: !this.state.ChatOpen
+                        }),
+                    }}
+                    open={this.state.ChatOpen}>
+                    <div className={classes.toolbar} style={{marginRight: 6}}>
+
+                        <div>
+
+                            {this.getParticipantsImage(this.state.chatroom_id)}
+                            <IconButton onClick={(e)=>{this.handleSetModal(modalList[13], [getChatList], {user_id : this.props.user_id, chatroom_id : this.state.chatroom_id}, '', false)}}>
+                                <PersonAdd color="primary"/>
+                            </IconButton>
+
+                            <IconButton
+                                onClick={(e)=>this.handleChatDrawerClose()}
+                            >
+                                {theme.direction === "rtl" ? (
+                                    <ChevronRight />
+                                ) : (
+                                    <ChevronLeft />
+                                )}
+                            </IconButton>
+                        </div>
+                    </div>
+                    <Divider />
+
+                    <div className={classes.drawerOverflow}>
+                        <ChatBox
+                            chats = {this.props.chats}
+                            userId = {this.props.user_id}
+                            sendChat = {this.props.sendChat}
+                            joinChatRoom = {this.props.joinChatRoom}
+                            leaveChatRoom = {this.props.leaveChatRoom}
+
+                        />
+                    </div>
+
+                </Drawer>
             </div>
         );
     }
 }
 
+
+
 Directory.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired
 };
+
 
 export default withStyles(styles, { withTheme: true })(Directory);

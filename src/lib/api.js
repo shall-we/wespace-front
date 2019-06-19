@@ -65,13 +65,13 @@ export const getPrivateChatList = (user_id) => axios.get(`/chat/getPrivateChatro
 export const countChatroom = (chatroom_id) => axios.get(`/chat/countChatroom?${queryString.stringify({chatroom_id})}`);
 
 export const updateChatroomTitle = (info, newTitle) => axios.patch(`/chat/updateChatRoomTitle`, {info, newTitle});
-
+export const inviteMultiChatroom = (participants, master_id, chatroom_id) => axios.post(`/chat/inviteMultiChatroom`, {participants, master_id, chatroom_id});
 
 export const addFriend = (user_id, friend_id) => axios.post(`/friend/add?`, {user_id, friend_id});
 export const deleteFriend = (user_id, friend_id) => axios.delete(`/friend/delete?${queryString.stringify({user_id, friend_id})}`);
 export const dropChatroom = (user_id, chatroom_id) => axios.delete(`/chat/dropChatroom?${queryString.stringify({user_id, chatroom_id})}`);
 export const getAllFriend = (user_id) => axios.get(`/friend/getAllFriend?${queryString.stringify({user_id})}`);
-
+export const updateChatCheckTime = (user_id, chatroom_id) => axios.patch(`/chat/updateChatCheckTime`, {user_id, chatroom_id});
 
 export const getAllUserList = () => axios.get('/admin/user');
 export const getAllFolderList = () => axios.get('/admin/folder');

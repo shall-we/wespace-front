@@ -6,8 +6,13 @@ import * as userActions from '../../store/modules/user';
 import {withRouter} from 'react-router-dom';
 import {autoLogin, logout} from '../../lib/api';
 import * as directoryActions from "store/modules/directory";
+import {socket} from '../main/Socket';
+import {initSocket} from '../main/Socket';
 
 let flag = false;
+
+
+
 
 class HeaderContainer extends Component {
 
@@ -39,14 +44,18 @@ class HeaderContainer extends Component {
     logout = async () => {
     const { UserActions, DirectoryActions } = this.props;
     await logout();
+    console.log("socket emit disconnect", socket);
+    await socket.disconnect();
+    await initSocket();
+    await UserActions.setLogoutState();
     await UserActions.logout();
-    DirectoryActions.setNote(null);
+    await DirectoryActions.setNote(null);
   }
 
   render() {
-    const { name,profile } = this.props;
+    const { name,profile, isLogin } = this.props;
     // update image if image url includes 'static' , it change default_profile.png
-      console.log("확인!!", name, profile);
+      console.log("확인!!", name, profile, isLogin);
     const { logout } = this;
     return (
       <Header
@@ -62,6 +71,7 @@ class HeaderContainer extends Component {
     (state) => ({
       name: state.user.get('name'),
       profile: state.user.get('profile'),
+      isLogin : state.user.get('isLogin')
     }),
     (dispatch) => ({
       UserActions: bindActionCreators(userActions, dispatch),

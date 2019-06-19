@@ -45,13 +45,14 @@ class ChipsArray extends React.Component {
     }
 
     render() {
-        const { classes,onDelete,folder_id } = this.props;
+        const { classes,onDelete,folder_id, user_id } = this.props;
+        const id = folder_id && !user_id ? folder_id : user_id;
         return (
             <Paper className={classes.root}>
                 {this.state.members.map((data, i) => {
                     return (<Grid item xs={10} sm={5} className={classes.grid}>
                                 {(data.permission!=='OWNER')?(
-                                <Chip label={data.label} onDelete={()=>onDelete[1](folder_id,data.value)} className={classes.chip}
+                                <Chip label={data.label} onDelete={()=>onDelete[1](id,data.value)} className={classes.chip}
                                 color={(data.permission==='MANAGER')?'primary':'secondary'} />
                                 ):
                                 <Chip avatar={<Avatar>M</Avatar>} label={data.label} className={classes.chip} />}

@@ -10,8 +10,8 @@ import NoteToolTemplate from "components/common/NoteToolTemplate";
 import NoteToolBox from "components/toolbox/NoteToolBox";
 import CommentTool from "components/tool/CommentTool";
 import AttachmentTool from "components/tool/AttachmentTool";
-
-import socket from './Socket';
+import {  ArrowForwardIos, ArrowBackIos } from "@material-ui/icons";
+import {socket} from './Socket';
 
 class NoteToolContainer extends Component {
   state={
@@ -21,7 +21,11 @@ class NoteToolContainer extends Component {
     user_list:this.props.user_list,
     attachmentList : this.props.attachmentList,
     attachment : this.props.attachment,
-  }
+    width : "250px",
+    isSpread : true,
+    background : null,
+    isBtnHovered : false
+  };
 /////////////////////////////////////////////////////첨부파일
 getAttachmentList = async()=>{
   console.log('getAttachmentList');
@@ -34,21 +38,21 @@ deleteAttachment = async(attachment_id)=>{
   const {NoteToolActions}= this.props;
   await NoteToolActions.deleteAttachment(attachment_id);
   socket.emit('updateShareBox',{ msg:'deleteAttachment'});
-}
+};
 
 addAttachment = async(uploadList)=>{
   console.log('addAttachment');
   const {NoteToolActions} = this.props; //note_id
   await NoteToolActions.addAttachment(this.state.note_id,uploadList);
   socket.emit('updateShareBox',{ msg:'addAttachment'});
-}
+};
 
 downloadAttachment=async(url)=>{
   console.log('downloadAttachment');
   const {NoteToolActions} =this.props;
   await NoteToolActions.downloadAttachment(url);
   socket.emit('updateShareBox',{ msg:'downloadAttachment'});
-}
+};
 
 /////////////////////////////////////////첨부파일 영역
 
@@ -58,7 +62,7 @@ downloadAttachment=async(url)=>{
     const {NoticeActions,user_id} =this.props;
     await NoticeActions.sendMessage('COMMENT',user_id,this.state.note_id,message,'MULTI',null);
     socket.emit('updateCommentList',{ msg:'handleSendMessage'});
-  }
+  };
 
   handleSelectSendMessage=async(to_list,message)=>{
     const {NoticeActions,user_id} =this.props;
@@ -68,29 +72,61 @@ downloadAttachment=async(url)=>{
       NoticeActions.sendMessage('CHAT',user_id,note_id,message,'SINGLE',user_id);
   });
     socket.emit('updateCommentList',{ msg:'handleSendMessage'});
-  }
+  };
 
   updateCommentList=async()=>{
     await this.props.NoticeActions.updateNoticeList(this.state.user_id,this.state.note_id,'COMMENT');
     await this.props.NoticeActions.getNoticeList(this.state.note_id,'COMMENT',this.state.user_id);
-  }
+  };
 
 
-componentDidMount(){
+
+
+    componentDidMount(){
     socket.on('updateCommentList',(obj)=>{
       if(this.props.note_id)
       {
         this.updateCommentList();
       }
-    })
+    });
 
     socket.on('updateShareBox',(obj)=>{
       if(this.props.note_id)
       {
         this.getAttachmentList();
       }
-    })
+    });
+
 }
+
+    toggling = () => {
+        const {isSpread} = this.state;
+        console.log(isSpread);
+        if(isSpread){
+            this.setState({width : 0, isSpread : false, isBtnHovered : false });
+        }else{
+            this.setState({width : "250px", isSpread : true, isBtnHovered : false});
+        }
+    };
+
+
+    renderSpreadBtn = (isSpread) => {
+        const nonHoveredStyle = {width : "40px", height : "40px",
+            marginLeft : "-25px", marginTop : "200px",  backgroundColor : "transparent",
+            color : "grey",
+            textAlign : "center"};
+        const hoveredStyle = Object.assign({}, nonHoveredStyle);
+        hoveredStyle.color = "#339AF0";
+        let iconStyle = this.state.isBtnHovered ? hoveredStyle : nonHoveredStyle;
+        const mouseHoverToggle = () => {
+            this.setState({isBtnHovered : !this.state.isBtnHovered});
+        };
+        return (
+            <div onClick = {this.toggling}
+                     style={{height : "100%", cursor : "pointer", position : "fixed", display : "block"}}>
+                    {isSpread ? <ArrowForwardIos style={iconStyle} onMouseEnter = { mouseHoverToggle } onMouseLeave={ mouseHoverToggle } color="action"/> : <ArrowBackIos style={iconStyle} onMouseEnter = { mouseHoverToggle } onMouseLeave={ mouseHoverToggle } color="action"/>}
+                </div>)
+    };
 
 componentWillReceiveProps(nextProps) {
 
@@ -108,25 +144,34 @@ componentWillReceiveProps(nextProps) {
     this.setState({attachment : nextProps.attachment});
   }
 
+
+
+
 }
 
+
     render() {
-      const {comment,note_id,user_id,attachmentList, attachment,user_list}=this.state;
+      const {comment,note_id,user_id,attachmentList, attachment,user_list, isSpread, width, display, background}=this.state;
       const {addAttachment , deleteAttachment, downloadAttachment} = this;
-      if(note_id){
-      return (
-          <NoteToolTemplate >
-             <NoteToolBox items={ ['댓글', '첨부'] } >
-                <CommentTool data={comment} sendMessage={this.handleSendMessage} handleSelectSendMessage={this.handleSelectSendMessage} user_id={user_id} user_list={user_list}/>
-                <AttachmentTool 
+
+
+        if(note_id){
+          return (
+           <div style={{minWidth : "5px", backgroundColor : background}}>
+               {this.renderSpreadBtn(isSpread)}
+               <NoteToolTemplate display={display} isSpread={isSpread} width={width} >
+             <NoteToolBox items={ ['댓글', '첨부']}>
+                <CommentTool data={comment}  sendMessage={this.handleSendMessage} handleSelectSendMessage={this.handleSelectSendMessage} user_id={user_id} user_list={user_list}/>
+                <AttachmentTool
                 data={attachmentList}
                 attachment = {attachment}
-                addAttachment = {addAttachment} 
+                addAttachment = {addAttachment}
                 deleteAttachment = {deleteAttachment}
                 downloadAttachment = {downloadAttachment}
                 />
              </NoteToolBox>
           </NoteToolTemplate>
+           </div>
                 
     );
       }else{

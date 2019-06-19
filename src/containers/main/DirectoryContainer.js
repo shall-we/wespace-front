@@ -8,12 +8,15 @@ import * as ChatActions from "store/modules/chat";
 
 import Directory from "components/main/Directory";
 import { withRouter } from "react-router-dom";
+import * as api from "lib/api";
 
-import socket from './Socket';
+import {socket} from './Socket';
 
 class DirectoryContainer extends React.Component {
 
     join=(user_id)=>{
+        console.log("join");
+        console.log(socket);
         socket.emit('join', {id : user_id});
     };
 
@@ -43,10 +46,7 @@ class DirectoryContainer extends React.Component {
         else {
             await DirectoryActions.deleteFriend(obj, friend_id);
             this.getFriendList(obj);
-
         }
-
-
     };
 
     outFriend = (friendId) =>{
@@ -73,6 +73,7 @@ class DirectoryContainer extends React.Component {
 
     deleteChatroom = async (data) => {
         const {ChatActions} = this.props;
+        console.log("채팅방 삭제", data);
         ChatActions.dropChatroom(data.user_id, data.chatroom_id);
     };
 
@@ -97,6 +98,12 @@ class DirectoryContainer extends React.Component {
         }
     };
 
+    getChatParticipantsInfo = async (chatroom_id) => {
+        if(chatroom_id){
+            return api.getChatParticipantsInfo(chatroom_id);
+        }
+    };
+
 
     updateFolderList=()=>{
         const {DirectoryActions,id}=this.props;
@@ -106,39 +113,39 @@ class DirectoryContainer extends React.Component {
         }
         console.log('== debug ==', id);
 
-    }
+    };
 
     createFolder=async(user_id,folder_name)=>{
         await this.props.DirectoryActions.createFolder(user_id, folder_name);
         await socket.emit('updateFolderList',{ msg:'createFolder'});
-    }
+    };
     sharedFolder=async(user_id,folder_id,permission)=>{
         const {UserActions,DirectoryActions,folder,NoticeActions,id}=this.props;
         await DirectoryActions.sharedFolder(user_id,folder_id,permission);
         await NoticeActions.sendMessage('FOLDER',id,folder_id,'초대','SINGLE',user_id);
         await UserActions.getUserList(folder);
         socket.emit('updateFolderList',{ msg:'sharedFolder'});
-    }
+    };
     unsharedFolder=async(folder_id,user_id)=>{
         const {UserActions,DirectoryActions,folder,NoticeActions,id}=this.props;
         await DirectoryActions.unsharedFolder(folder_id,user_id);
         await NoticeActions.sendMessage('FOLDER',id,folder_id,'탈퇴','SINGLE',user_id);
         await UserActions.getUserList(folder);
         socket.emit('updateFolderList',{ msg:'sharedFolder'});
-    }
+    };
 
     deleteFolder=async(folder_id) => {
         await this.props.DirectoryActions.deleteFolder(folder_id);
         await this.props.DirectoryActions.getNoteList(0);
         socket.emit('updateFolderList',{ msg:'deleteFolder'});
         socket.emit('updateNoteList',{ msg:'deleteFolder'});
-    }
+    };
 
     updateFolder=async(folder_id, folder_name) => {
         await this.props.DirectoryActions.updateFolder(folder_id, folder_name);
         await this.props.NoticeActions.sendMessage('FOLDER',this.props.id,folder_id,'이름변경','MULTI',null);
         await socket.emit('updateFolderList',{ msg:'updateFolder'});
-    }
+    };
 ///////////////////////////////---------------------NOTE----------------------//////////////////////////////
 
 
@@ -147,21 +154,21 @@ class DirectoryContainer extends React.Component {
         console.log('updateNoteList::',folder);
         if(folder)
         DirectoryActions.getNoteList(folder);
-    }
+    };
 
     updateSearchNoteList=async (search)=>{
         const {DirectoryActions,folder}=this.props;
         console.log('updateSearchNoteList::',folder);
         if(folder)
         await DirectoryActions.getSearchNoteList(folder, '%'+search+'%');
-    }
+    };
 
     createNote=async(folder_id,note_name)=>{
         const {DirectoryActions}=this.props;
         await DirectoryActions.createNote(folder_id,note_name);
         socket.emit('updateFolderList',{ msg:'createNote'});
         socket.emit('updateNoteList',{ msg:'createNote'});
-    }
+    };
 
     updateNote=async(ids, note_name) => {
         const {DirectoryActions,NoticeActions,id} = this.props;
@@ -169,7 +176,7 @@ class DirectoryContainer extends React.Component {
         await NoticeActions.sendMessage('NOTE',id,ids.note_id,'이름변경','MULTI',null);
         socket.emit('updateNoteList',{ msg:'updateNote'});
 
-    }
+    };
 
     deleteNote=async(ids) => {
         const {DirectoryActions,NoticeActions,id} = this.props;
@@ -179,7 +186,7 @@ class DirectoryContainer extends React.Component {
         socket.emit('updateNoteList',{ msg:'deleteNote'});
 
         DirectoryActions.setNote(null);
-    }
+    };
 
 
     setNote=async(note)=>{
@@ -190,12 +197,13 @@ class DirectoryContainer extends React.Component {
         await NoticeActions.getNoticeList(note.note_id,'COMMENT',id);
         await socket.emit('updateShareBox',{ msg:'setNote'});
         await socket.emit('updateCommentList',{ msg:'setNote'});
-    }
+        await socket.emit('updateShareBox', {msg :'setNote'});
+    };
     setFolder=async(folder_id)=>{
         const {DirectoryActions} = this.props;
         await DirectoryActions.setFolder(folder_id);
         await DirectoryActions.getNoteList(folder_id);
-    }
+    };
 
     setLock= async (note)=>{
         const {DirectoryActions} = this.props;
@@ -206,21 +214,32 @@ class DirectoryContainer extends React.Component {
         setTimeout(()=>{
              socket.emit('updateNoteLock',{note:note});
         }, 300);
-    }
+    };
+
+    initUserData = (id) => {
+        console.log("initUserData");
+        this.getChatList();
+        this.join(id);
+        this.getFriendList(id);
+    };
+
+
+
 
     componentWillMount(){
         setTimeout(()=>{
             if(this.props.id){
+                console.log("willMount");
+                this.initUserData(this.props.id);
                 this.updateFolderList();
-                this.getChatList();
-                this.join(this.props.id);
-                this.getFriendList(this.props.id);
-                }else{
+            }else{
                     this.props.history.push('/');
                 }
         }, 1000);
        
     }
+
+
     componentDidMount(){
         socket.on('updateFolderList',(obj)=>{
             console.log('폴더 업뎃함');
@@ -263,7 +282,7 @@ class DirectoryContainer extends React.Component {
         const { createFolder,sharedFolder,unsharedFolder, deleteFolder, updateFolder, setFolder,
                 updateNote, createNote, deleteNote, setNote, setLock, updateSearchNoteList,
                 joinChatRoom, leaveChatRoom, deleteFriend, addFriend,
-                setChats, sendChat, updateChatroomTitle, deleteChatroom, getFriendList, } = this;
+                setChats, sendChat, updateChatroomTitle, deleteChatroom, getFriendList, getChatList, getChatParticipantsInfo } = this;
 
         return (
             <div style={{ display: "flex" }}>
@@ -277,6 +296,8 @@ class DirectoryContainer extends React.Component {
                     getFriendList = {getFriendList} deleteFriend = {deleteFriend}
                     addFriend = {addFriend} leaveChatRoom = {leaveChatRoom} chats = {chats}
                     privateChatList = {privateChatList} updateChatroomTitle = {updateChatroomTitle}
+                    getChatList = {getChatList}
+                    getChatParticipantsInfo = {getChatParticipantsInfo}
                 />
             </div>
         );
@@ -293,13 +314,13 @@ export default connect(
         id: state.user.get("id"),
         chats : state.chat.get("chats"),
         friends: state.directory.get("friends"),
-        privateChatList : state.chat.get("privateChatList")
+        privateChatList : state.chat.get("privateChatList"),
+        isLogin : state.user.get("isLogin")
     }),
     (dispatch) => ({
         DirectoryActions: bindActionCreators(directoryActions, dispatch),
         UserActions: bindActionCreators(UserActions, dispatch),
         NoticeActions: bindActionCreators(noticeActions, dispatch),
         ChatActions : bindActionCreators(ChatActions, dispatch)
-
     })
 )(withRouter(DirectoryContainer));

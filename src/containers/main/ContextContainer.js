@@ -7,7 +7,7 @@ import Editor from 'components/main/Editor';
 import * as noticeActions from 'store/modules/notice';
 import {withRouter} from 'react-router-dom';
 
-import socket from './Socket';
+import {socket} from './Socket';
 
 class ContextContainer extends Component {
 
