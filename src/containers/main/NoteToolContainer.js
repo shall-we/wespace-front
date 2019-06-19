@@ -11,7 +11,7 @@ import NoteToolBox from "components/toolbox/NoteToolBox";
 import CommentTool from "components/tool/CommentTool";
 import AttachmentTool from "components/tool/AttachmentTool";
 
-import socket from './Socket';
+import {socket} from './Socket';
 
 class NoteToolContainer extends Component {
   state = {

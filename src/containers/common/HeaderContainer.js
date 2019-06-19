@@ -8,6 +8,7 @@ import * as noticeActions from 'store/modules/notice';
 import * as noteToolActions from 'store/modules/noteTool';
 import {withRouter} from 'react-router-dom';
 import {autoLogin, logout} from '../../lib/api';
+import {socket, initSocket} from '../main/Socket';
 
 let flag = false;
 
@@ -22,7 +23,7 @@ class HeaderContainer extends Component {
           const { UserActions } = this.props;
           await UserActions.login(email, password, true);
           flag = true;
-
+          
           if(authorizated){
           this.props.history.push('/admin');
           }else{
@@ -39,7 +40,9 @@ class HeaderContainer extends Component {
 
   logout = async () => {
     await logout();
-    const { UserActions,DirectoryActions,NoticeActions ,NoteToolActions } = this.props;
+    const { UserActions,DirectoryActions,NoticeActions ,NoteToolActions } = this.props; 
+    await socket.disconnect();
+    await initSocket();
     UserActions.logout();
     DirectoryActions.logout();
     NoticeActions.logout();

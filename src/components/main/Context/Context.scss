@@ -9,10 +9,11 @@
     display: flex;
     flex-direction: column;
     .system{
-
         flex:0.1;
         background: $oc-gray-4;
+        width : 52rem;
         margin: 2rem;
+        font-size : 1.5em;
     }
 
     .notice{ 

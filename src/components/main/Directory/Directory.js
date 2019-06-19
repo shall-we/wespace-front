@@ -401,7 +401,10 @@ class Directory extends React.Component {
                     selected={this.state.folder_id === item.folder_id}
 
                     onMouseDown={(e) => {
-                        this.handleFolderData(item.folder_id, item.name);
+                        this.handleFolderData(item.folder_id, item.name, item.permission);
+                        this.setState({
+                            permission: item.permission
+                        })
                     }}>
                     <ListItemText style={{ width: 150 }} primary={item.name} key={id} />
                     <div className={cx("count", (item.permission === 'OWNER') ? 'count--OWNER' : (item.permission === 'MANAGER') ? 'count--MANAGER' : 'count--MEMBER')}>
@@ -455,7 +458,7 @@ class Directory extends React.Component {
             <Link to={'/note/'+item.content}>
                 <div className="file-list"
                     onClick={(e) => { this.handleNoteData(item.id, item.name, item.content, item.lock); }}
-                    onMouseDown={(e) => this.handleNoteData(item.id, item.name, item.content)}>
+                    onMouseDown={(e) => this.handleNoteData(item.id, item.name, item.content, item.lock)}>
                     <ListItemText primary={item.name} key={id} />
                     {/* <Statebutton/> */}
                     {(this.state.permission !== 'MEMBER') ? (
@@ -465,18 +468,13 @@ class Directory extends React.Component {
                                     <i className="fa fa-pencil-square-o menu__item-icon" />
                                     <span className="menu__item-text">Rename</span>
                                 </div>
-                                {/* <div className="menu__item menu__item--share" onClick={(e) => this.handleSetModal(modalList[15], null, { note_id: item.id, folder_id: this.state.folder_id }, 
-                                    'http://localhost:3000/note/'+item.content)}>
-                                    <i className="fa fa-share-alt menu__item-icon" />
-                                    <span className="menu__item-text">Share</span>
-                                </div> */}
                                 {(item.status === "ACTIVED")?
-                                (<div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[15],this.props.publishNote,item.id,'http://localhost:3000/note/'+item.content)}>
+                                (<div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[15],this.props.publishNote,item.id,'http://localhost:3000/note/public/'+item.content)}>
                                     <i className="fa fa-share-alt-square menu__item-icon"/>
                                     <span className="menu__item-text">UnShare</span>
                                 </div>
                                 ):(
-                                <div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[7],this.props.activedNote,item.id,'http://localhost:3000/note/'+item.content)}>
+                                <div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[7],this.props.activedNote,item.id,'http://localhost:3000/note/public/'+item.content)}>
                                     <i className="fa fa-share-alt menu__item-icon"/>
                                     <span className="menu__item-text">Share</span>
                                 </div>

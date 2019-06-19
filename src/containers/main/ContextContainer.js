@@ -5,11 +5,10 @@ import * as directoryActions from 'store/modules/directory';
 import Context from 'components/main/Context';
 import Editor from 'components/main/Editor';
 import * as noticeActions from 'store/modules/notice';
+import * as adminActions from 'store/modules/admin';
 import { withRouter } from 'react-router-dom';
 
-//import socketio from 'socket.io-client';
-//const socket=socketio.connect('192.168.0.42:4000');
-import socket from './Socket'
+import {socket} from './Socket';
 
 class ContextContainer extends Component {
 
@@ -18,6 +17,7 @@ class ContextContainer extends Component {
     folderNotice: this.props.folderNotice,
     chatNotice: this.props.chatNotice,
     note_lock: this.props.note_lock,
+    announcementList : this.props.announcementList,
   }
 
   componentWillMount() {
@@ -26,7 +26,7 @@ class ContextContainer extends Component {
         this.props.NoticeActions.getNoticeList(this.props.user_id, 'CHAT');
         this.props.NoticeActions.getNoticeList(this.props.user_id, 'NOTE');
         this.props.NoticeActions.getNoticeList(this.props.user_id, 'FOLDER');
-
+        this.props.AdminActions.getAnnouncementList();
       } else {
         this.props.history.push('/');
       }
@@ -48,24 +48,29 @@ class ContextContainer extends Component {
     if (this.props.noteNotice !== nextProps.noteNotice
       || this.props.folderNotice !== nextProps.folderNotice
       || this.props.chatNotice !== nextProps.chatNotice
-      || this.props.note_lock !== nextProps.note_lock) {
-      this.setState({ noteNotice: nextProps.noteNotice, folderNotice: nextProps.folderNotice, chatNotice: nextProps.chatNotice });
-      this.setState({ note_lock: nextProps.note_lock });
+      || this.props.note_lock !== nextProps.note_lock
+      || this.props.announcementList !== nextProps.announcementList) {
+      this.setState({ 
+        noteNotice: nextProps.noteNotice, 
+        folderNotice: nextProps.folderNotice, 
+        chatNotice: nextProps.chatNotice,
+        note_lock: nextProps.note_lock,
+        announcementList: nextProps.announcementList,
+       });
     }
 
   }
 
   render() {
     const { note, name, profile } = this.props;
-    const { noteNotice = [], folderNotice = [], chatNotice = [], note_lock } = this.state;
-    console.log('note_lock', note_lock);
+    const { noteNotice = [], folderNotice = [], chatNotice = [], announcementList = [], note_lock } = this.state;
     if (note) {
       return (
         <Editor key={note} note={note} name={name} profile={profile} note_lock={note_lock} />
       );
     } else {
       return (
-        <Context noteNotice={noteNotice} folderNotice={folderNotice} chatNotice={chatNotice} />
+        <Context noteNotice={noteNotice} folderNotice={folderNotice} chatNotice={chatNotice} announcementList={announcementList}/>
       )
     }
   }
@@ -80,10 +85,12 @@ export default connect(
     noteNotice: state.notice.get("NOTE"),
     folderNotice: state.notice.get("FOLDER"),
     chatNotice: state.notice.get("CHAT"),
+    announcementList: state.admin.get("announcement_list")[0],
     note_lock: state.directory.get("note_lock"),
   }),
   (dispatch) => ({
     DirectoryActions: bindActionCreators(directoryActions, dispatch),
-    NoticeActions: bindActionCreators(noticeActions, dispatch)
+    NoticeActions: bindActionCreators(noticeActions, dispatch),
+    AdminActions: bindActionCreators(adminActions, dispatch)
   })
 )(withRouter(ContextContainer));
