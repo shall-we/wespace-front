@@ -471,7 +471,7 @@ class Directory extends React.Component {
                                     <span className="menu__item-text">Share</span>
                                 </div> */}
                                 {(item.status === "ACTIVED")?
-                                (<div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[6],this.props.publishNote,item.id,'http://localhost:3000/note/'+item.content)}>
+                                (<div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[15],this.props.publishNote,item.id,'http://localhost:3000/note/'+item.content)}>
                                     <i className="fa fa-share-alt-square menu__item-icon"/>
                                     <span className="menu__item-text">UnShare</span>
                                 </div>

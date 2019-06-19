@@ -55,6 +55,7 @@ class PublicNoteContainer extends Component {
         const { cancel, join, handleTextChange } = this;
 
         if(note_status!== "PUBLISHED"){
+            alert('허가되지 않은 페이지 입니다!');
             this.props.history.push("/");
         }
         if (flag) {

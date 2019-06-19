@@ -27,17 +27,17 @@ class ClipboardModal extends React.Component{
     }
 
     render(){
-        const { visible, onConfirm, onCancel,
+        const { visible, onConfirm, onCancel, id,
                 modal_icon, modal_title, modal_content, btn_name } = this.props;
         return (
             <div tabIndex="-1"
             onKeyDown={(e) => {
                 if(e.key === 'Enter') {
-                    onConfirm();
+                    onConfirm(id);
                     onCancel();
                 }
                 if(e.keyCode === 27) {
-                    onCancel();
+                    onCancel(id);
                     onConfirm();
                 }
             }}>
@@ -58,7 +58,7 @@ class ClipboardModal extends React.Component{
 
                 <div className={cx("options")}>
                     <Button theme='outline' onClick={(e)=>{ this.handleCopy(); }}>복사하기</Button>
-                    <Button theme='outline' onClick={(e)=>{ onConfirm(); onCancel(); }}>
+                    <Button theme='outline' onClick={(e)=>{ onConfirm(id); onCancel(); }}>
                         {btn_name}
                     </Button>
                 </div>
