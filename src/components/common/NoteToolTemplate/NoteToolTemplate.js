@@ -4,13 +4,13 @@ import classNames from 'classnames/bind';
 
 const cx = classNames.bind(styles);
  
-const NoteToolTemplate = ({children}) => (
-  <div className={cx('note-tool-template')}>
-    
-    
-      {children}
-    
+const NoteToolTemplate = (props) => {
+  console.log('NoteToolTemplate : ',props);
+
+  return(
+  <div className={cx('note-tool-template')} style={{width : props.width}} >
+        {props.children}
   </div>
-);
+)};
 
 export default NoteToolTemplate;

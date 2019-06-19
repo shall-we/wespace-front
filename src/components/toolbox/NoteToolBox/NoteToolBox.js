@@ -32,7 +32,7 @@ const cx = classNames.bind(styles);
             { this.props.items.map(function(m, index){
                 let style = '';
                 if(focused === index){style = 'focused';}    
-                return <div className={cx('btn',style)} onClick={()=>clicked(index)}>{m}</div>;
+                return <div className={cx('btn',style)} onClick={()=>{clicked(index);}}>{m}</div>;
             })} 
             </div>
 

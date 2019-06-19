@@ -162,8 +162,9 @@ export default handleActions(
     [SET_OUT_FRIEND]: (state, action) => {
       const { payload: friendId } = action;
       let friends = state.get("friends");
-      friends = friends.map(el => {
-        if (parseInt(el.id) === parseInt(friendId)) {
+
+        friends = friends.map(el => {
+        if (parseInt(el.get("id")) === parseInt(friendId)) {
           el = el.set("joined", false);
         }
         return el;

@@ -8,6 +8,8 @@ import * as noticeActions from 'store/modules/notice';
 import * as noteToolActions from 'store/modules/noteTool';
 import {withRouter} from 'react-router-dom';
 import {autoLogin, logout} from '../../lib/api';
+import {socket} from '../main/Socket';
+import {initSocket} from '../main/Socket';
 
 let flag = false;
 
@@ -37,18 +39,26 @@ class HeaderContainer extends Component {
     );
   }
 
-  logout = async () => {
+    logout = async () => {
+    const { UserActions, DirectoryActions, NoticeActions, NoteToolActions } = this.props;
     await logout();
-    const { UserActions,DirectoryActions,NoticeActions ,NoteToolActions } = this.props;
     UserActions.logout();
     DirectoryActions.logout();
     NoticeActions.logout();
     NoteToolActions.logout();
-    this.props.history.push('/');
-  }
+    await socket.disconnect();
+    await initSocket();
+    await UserActions.setLogoutState();
+    await UserActions.logout();
+    await DirectoryActions.setNote(null);
+        this.props.history.push('/');
+
+    }
 
   render() {
-    const { name,profile } = this.props;
+    const { name,profile, isLogin } = this.props;
+    // update image if image url includes 'static' , it change default_profile.png
+      console.log("확인!!", name, profile, isLogin);
     const { logout } = this;
     return (
       <Header
@@ -64,6 +74,7 @@ class HeaderContainer extends Component {
     (state) => ({
       name: state.user.get('name'),
       profile: state.user.get('profile'),
+      isLogin : state.user.get('isLogin')
     }),
     (dispatch) => ({
         DirectoryActions: bindActionCreators(directoryActions, dispatch),

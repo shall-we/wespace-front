@@ -13,8 +13,9 @@ class LoginContainer extends Component {
         console.log('authorizated : '+ this.props.authorizated);
         if(this.props.authorizated){
             this.props.history.push('/admin');
+
         }else{
-        this.props.history.push('/note');
+            this.props.history.push('/note');
         }
     };
 

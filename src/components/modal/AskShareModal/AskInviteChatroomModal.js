@@ -9,7 +9,7 @@ import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Members from 'components/common/ChipsArray';
 // modules
-import {getChatParticipantsInfo, getAllFriend} from "../../../lib/api";
+import {getChatParticipantsInfo, getAllFriend, inviteMultiChatroom} from "../../../lib/api";
 
 // react-select
 
@@ -27,8 +27,8 @@ class AskInviteChatroomModal extends React.Component {
         this.state = {
             selectedOption: null,
             friends : [],
-            participants : []
-                     };
+            participants : []};
+
 
     }
 
@@ -36,46 +36,36 @@ class AskInviteChatroomModal extends React.Component {
         this.setState({
             selectedOption: null,
             friends : [],
-            participants : []
+            participants : [],
+            isUpdate : false
          });
-    }
-
-    componentDidMount(){
-      this.initData();
-    }
-
-    requestInvite = () => {
-        
-    }
+    };
 
     invite = () => {
         let selected = this.state.selectedOption;
         if(!selected) return;
         let {friends, participants} = this.state;
 
-
         participants.push(selected);
          let removeIndex = friends.findIndex(el=>{
              return el.value === selected.value; 
-         })
+         });
         friends.splice(removeIndex, 1);
 
  
-         this.setState({
+          this.setState({
             participants : participants,
             friends : friends,
             selectedOption : null
-         })
-
-
-    }
+         });
+    };
 
     unInvite = (user_id, find_id) => {
         let {participants, friends} = this.state;
 
         let removeIndex = participants.findIndex(el=>{
             return el.value === find_id; 
-        })
+        });
         let removed = participants.splice(removeIndex, 1);
         friends = friends.concat(removed);
 
@@ -84,9 +74,37 @@ class AskInviteChatroomModal extends React.Component {
            friends : friends
         })
 
+    };
+
+    requestInvite = (participants, master_id, chatroom_id) => {
+
+
+        (async ()=>{
+            await inviteMultiChatroom(participants, master_id, chatroom_id);
+            await this.closeModalAction();
+            const {onConfirm} = this.props;
+            await onConfirm[0](master_id);
+
+        })();
+
+
+    };
+
+    getSnapshotBeforeUpdate(nextProps, prevProps){
+        if(!this.state.isUpdate){
+            this.initData().then(response=>{
+                console.log("response", response);
+                if(response && response["participants"] && response["friends"]){
+                    let {participants, friends} = response;
+                    this.setState ({participants : participants, friends : friends, isUpdate : true});
+                }
+            });
+        }
     }
 
+
     initData = async () => {
+        console.log("init data called");
         const {user_id, chatroom_id}=this.props.id;
         if(user_id && chatroom_id){
 
@@ -94,8 +112,6 @@ class AskInviteChatroomModal extends React.Component {
             friends = friends.data;
             let {data} = await getChatParticipantsInfo(chatroom_id);
              let participants = data.data;
-
-
 
             friends = friends.filter(el=>{
                 let index = participants.findIndex(part=>{
@@ -120,25 +136,30 @@ class AskInviteChatroomModal extends React.Component {
                         value: el["user_id"],
                         label: info["name"]
                     }
-                })
+                });
 
-
-           this.setState({participants : participants, friends : friends});
-
+                return {
+                    participants : participants,
+                    friends : friends
+                };
         }
-     }
+     };
 
+    closeModalAction = () => {
+        const {handleCloseInviteChatroomModal} = this.props;
+        this.initState();
+        handleCloseInviteChatroomModal();
+    };
 
     handleChange=(selectedOption) => {
         this.setState({ selectedOption });
-      }
+      };
 
 
     render() {
-        const { visible, onCancel, onConfirm, handleCloseInviteChatroomModal,  
+        const { visible,
                 modal_icon, modal_title, modal_content, btn_name, id} = this.props;
         const { selectedOption, participants, friends }=this.state;
-
 
         return (
             <ModalWrapper visible={visible}>
@@ -155,10 +176,7 @@ class AskInviteChatroomModal extends React.Component {
                     <Select className={cx("select")} value={this.state.selectedOption} onChange={this.handleChange} options={friends}/>
                     <IconButton>
  
-                    <Add onClick={
-                        (e)=>{
-                            this.invite();
-                        }}/>
+                    <Add onClick={this.invite}/>
                     </IconButton>
                     </div>          
                     <br /><br />
@@ -170,11 +188,11 @@ class AskInviteChatroomModal extends React.Component {
                 </div>
 
                 <div className={cx("options")}>
-                    <Button theme="outline" onClick={()=>{alert("현재 준비중인 기능입니다. 조금만 더 기다려 주세요!")}}>
+                    <Button theme="outline" onClick={()=>{this.requestInvite(participants, id.user_id, id.chatroom_id)}}>
                         {btn_name}
                     </Button>
 
-                    <Button theme="outline" onClick={()=>{this.initState(); this.initData(); handleCloseInviteChatroomModal();}}>
+                    <Button theme="outline" onClick={this.closeModalAction}>
                         닫기
                     </Button>
                 </div>

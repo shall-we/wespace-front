@@ -8,8 +8,9 @@ import * as ChatActions from "store/modules/chat";
 
 import Directory from "components/main/Directory";
 import { withRouter } from "react-router-dom";
+import * as api from "lib/api";
 
-import socket from './Socket';
+import {socket} from './Socket';
 
 class DirectoryContainer extends React.Component {
 
@@ -43,7 +44,10 @@ class DirectoryContainer extends React.Component {
         else {
             await DirectoryActions.deleteFriend(obj, friend_id);
             this.getFriendList(obj);
+
         }
+
+
     };
 
     outFriend = (friendId) =>{
@@ -91,6 +95,12 @@ class DirectoryContainer extends React.Component {
         const {ChatActions, id} = this.props;
         if(id){
             ChatActions.setPrivateChatList(id);
+        }
+    };
+
+    getChatParticipantsInfo = async (chatroom_id) => {
+        if(chatroom_id){
+            return api.getChatParticipantsInfo(chatroom_id);
         }
     };
 
@@ -232,31 +242,43 @@ class DirectoryContainer extends React.Component {
         await NoticeActions.sendMessage('NOTE',id,note.note_id,(note.lock === "LOCK") ? ('잠금') : ('잠금해제'),'MULTI',null);
         await socket.emit('updateNoteList',{msg :'setLock'});
         await socket.emit('updateNoticeList',{ msg:'NOTE'});
-      
+
         setTimeout(()=>{
              socket.emit('updateNoteLock',{note:note});
         }, 300);
-    }
+    };
+
+    initUserData = (id) => {
+        console.log("initUserData");
+        this.getChatList();
+        this.join(id);
+        this.getFriendList(id);
+    };
+
+
+
 
     componentWillMount(){
         setTimeout(()=>{
             if(this.props.id){
+                console.log("willMount");
+                this.initUserData(this.props.id);
                 this.updateFolderList();
-                this.getChatList();
-                this.join(this.props.id);
-                this.getFriendList(this.props.id);
-                }else{
+            }else{
                     this.props.history.push('/');
                 }
         }, 1000);
        
     }
+
+
     componentDidMount(){
         socket.on('updateFolderList',(obj)=>{
             console.log('폴더 업뎃함');
             this.updateFolderList();
         });
         socket.on('updateNoteLock',(obj)=>{
+          
             const {note} =obj;
 
             if(this.props.note_id===note.note_id) {
@@ -290,9 +312,10 @@ class DirectoryContainer extends React.Component {
     render() {
         const { sharedList,privateList, noteList, id, friends, chats, privateChatList} = this.props;
         const { createFolder,sharedFolder,unsharedFolder, deleteFolder, updateFolder, setFolder,
-                updateNote, createNote, deleteNote, setNote, setLock, updateSearchNoteList, 
+                updateNote, createNote, deleteNote, setNote, setLock, updateSearchNoteList,
                 joinChatRoom, leaveChatRoom, deleteFriend, addFriend, permissionTransform, setDeletedNoteList,
-                setChats, sendChat, updateChatroomTitle, deleteChatroom, getFriendList, publishNote,activedNote } = this;
+                setChats, sendChat, updateChatroomTitle, deleteChatroom,
+                getFriendList, publishNote,activedNote,getChatList, getChatParticipantsInfo } = this;
 
         return (
             <div style={{ display: "flex" }}>
@@ -306,6 +329,8 @@ class DirectoryContainer extends React.Component {
                     getFriendList = {getFriendList} deleteFriend = {deleteFriend} permissionTransform={permissionTransform}
                     addFriend = {addFriend} leaveChatRoom = {leaveChatRoom} chats = {chats} publishNote={publishNote } activedNote ={activedNote}
                     privateChatList = {privateChatList} updateChatroomTitle = {updateChatroomTitle}
+                    getChatList = {getChatList}
+                    getChatParticipantsInfo = {getChatParticipantsInfo}
                 />
             </div>
         );
@@ -322,7 +347,8 @@ export default connect(
         id: state.user.get("id"),
         chats : state.chat.get("chats"),
         friends: state.directory.get("friends"),
-        privateChatList : state.chat.get("privateChatList")
+        privateChatList : state.chat.get("privateChatList"),
+        isLogin : state.user.get("isLogin")
     }),
     (dispatch) => ({
         DirectoryActions: bindActionCreators(directoryActions, dispatch),
