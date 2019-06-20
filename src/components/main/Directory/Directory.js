@@ -24,7 +24,6 @@ import NoticeModal from '../../modal/NoticeModal';
 import AskInviteModal from '../../modal/AskShareModal/AskInviteModal';
 import AskInviteChatroomModal from '../../modal/AskShareModal/AskInviteChatroomModal';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
-import './Directory.scss';
 import ChatBox from '../chat/chat';
 
 import * as api from "lib/api";
@@ -38,7 +37,7 @@ const cx = classNames.bind(custom_style);
 
 const styles = theme => ({
     root: {
-        display:'flex',
+        display: 'flex',
     },
     menuButton: {
         marginRight: 3.5
@@ -165,7 +164,7 @@ const styles = theme => ({
         overflowX: "hidden",
         overflowY: "auto",
     },
-    
+
 });
 
 /** @param1 types of modal, @param2 icon, @param3 title of modal, @param4 content of modal, @param5 button */
@@ -191,7 +190,7 @@ const addFriendModalData = ["selectFriendModal", 'group', '친구 추가', '추�
 const inviteFriendModalData = ["selectInviteChatroomModal", 'group', '친구 초대', '그룹 채팅에 초대할 친구를 선택하세요.', '확인'];
 
 
-const modalList=[
+const modalList = [
     createFolderModalData,
     deleteFolderModalData,
     updateFolderModalData,
@@ -219,12 +218,12 @@ class Directory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            count : 0,
+            count: 0,
             open: false,
             SubOpen: false,
             ChatOpen: false,
-            FriendOpen : false,
-            ChatListOpen : false,
+            FriendOpen: false,
+            ChatListOpen: false,
 
             public_navigationOpen: false,
             private_navigationOpen: false,
@@ -232,24 +231,24 @@ class Directory extends React.Component {
 
             toggle: false,
 
-            search : '',
+            search: '',
 
-            folder_id : 0,
-            folder_name : '',
-            note_id : 0,
+            folder_id: 0,
+            folder_name: '',
+            note_id: 0,
             note_name: '',
 
-            permission:'',
+            permission: '',
             oneInputModal: false,
             noticeModal: false,
             selectModal: false,
             clipboardModal : false,
             selectFriendModal: false,
-            selectInviteChatroomModal : false,
+            selectInviteChatroomModal: false,
 
-            modal_action:null,
-            modal_text:'',
-            modal_id:0,
+            modal_action: null,
+            modal_text: '',
+            modal_id: 0,
             modal_icon: '',
             modal_title: '',
             modal_content: '',
@@ -275,7 +274,7 @@ class Directory extends React.Component {
             SubOpen: false,
             FriendOpen: false,
             ChatOpen: false,
-            ChatListOpen :false,
+            ChatListOpen: false,
             private_navigationOpen: false,
             public_navigationOpen: false
         });
@@ -285,7 +284,8 @@ class Directory extends React.Component {
             SubOpen: true,
             FriendOpen: false,
             ChatOpen: false,
-            ChatListOpen : false });
+            ChatListOpen: false
+        });
     };
     handleSubDrawerClose = () => {
         this.setState({ SubOpen: false });
@@ -312,7 +312,7 @@ class Directory extends React.Component {
     };
 
 
-    handleSetModal=(array,action,id,text)=>{
+    handleSetModal = (array, action, id, text) => {
         this.setState({
             [array[0]]: true,
             modal_icon: array[1],
@@ -324,22 +324,22 @@ class Directory extends React.Component {
             modal_text:text
         });
     }
-    
-    handleUnSetModal=(type)=>{
+
+    handleUnSetModal = (type) => {
         this.setState({
             [type]: false
         });
     };
 
-    handleFolderData = (folder_id, folder_name,permission) => {
-        this.setState({ folder_name: folder_name, folder_id:folder_id, permission:permission });
+    handleFolderData = (folder_id, folder_name, permission) => {
+        this.setState({ folder_name: folder_name, folder_id: folder_id, permission: permission });
         this.props.setFolder(folder_id);
     };
 
-    handleNoteData = (note_id, note_name,note_content, note_lock) => {
+    handleNoteData = (note_id, note_name, note_content, note_lock) => {
         console.log("note_id : ", note_id);
-        this.setState({note_id: note_id , note_name: note_name });
-        this.props.setNote({note_content,note_id,note_lock});
+        this.setState({ note_id: note_id, note_name: note_name });
+        this.props.setNote({ note_content, note_id, note_lock });
     };
 
     handlesetDeletedNoteListData = (folder_id, folder_name, permission) => {
@@ -348,33 +348,33 @@ class Directory extends React.Component {
     }
 
     handleFriendData(friend_id, friend_name) {
-        this.setState({friend_id: friend_id , friend_name: friend_name });
+        this.setState({ friend_id: friend_id, friend_name: friend_name });
     };
 
-    handleFriendDrawerOpen () {
-        this.setState({ SubOpen: false, FriendOpen: true, ChatOpen : false, ChatListOpen : false });
+    handleFriendDrawerOpen() {
+        this.setState({ SubOpen: false, FriendOpen: true, ChatOpen: false, ChatListOpen: false });
     };
-    handleFriendDrawerClose () {
+    handleFriendDrawerClose() {
         this.setState({ FriendOpen: false });
     };
 
 
-    async handleChatDrawerOpen (user_id, friend_id){
+    async handleChatDrawerOpen(user_id, friend_id) {
 
-        let response =  await api.getSingleChat(user_id, friend_id);
-        let {result} = response.data;
-        let {data} = response.data;
+        let response = await api.getSingleChat(user_id, friend_id);
+        let { result } = response.data;
+        let { data } = response.data;
 
 
         let chatroom_id;
-        if(result === "success"){
+        if (result === "success") {
             chatroom_id = data[0].chatroom_id;
 
-        }else if(result === "notExist"){
+        } else if (result === "notExist") {
             result = await api.initChatroom(user_id, friend_id);
             chatroom_id = result.data.data.chatroom_id;
 
-        }else {
+        } else {
             new Error("ERROR! 전달 받은 결과가 유효하지 않습니다.");
             return;
         }
@@ -386,8 +386,8 @@ class Directory extends React.Component {
         console.log(participants);
         participants = participants.data;
 
-        if(response.data.chats){
-            this.props.setChats({chats : response.data.chats, participants : participants.data, chatroom_id : chatroom_id});
+        if (response.data.chats) {
+            this.props.setChats({ chats: response.data.chats, participants: participants.data, chatroom_id: chatroom_id });
         }
 
         await api.updateChatCheckTime(user_id, chatroom_id);
@@ -448,10 +448,13 @@ class Directory extends React.Component {
                             permission: item.permission
                         })
                     }}
-                    selected = {this.state.folder_id === item.folder_id}
+                    selected={this.state.folder_id === item.folder_id}
 
                     onMouseDown={(e) => {
-                        this.handleFolderData(item.folder_id, item.name);
+                        this.handleFolderData(item.folder_id, item.name, item.permission);
+                        this.setState({
+                            permission: item.permission
+                        })
                     }}>
                     <ListItemText style={{ width: 150 }} primary={item.name} key={id} />
                     <div className={cx("count", (item.permission === 'OWNER') ? 'count--OWNER' : (item.permission === 'MANAGER') ? 'count--MANAGER' : 'count--MEMBER')}>
@@ -505,7 +508,7 @@ class Directory extends React.Component {
             <Link to={'/note/'+item.content}>
                 <div className="file-list"
                     onClick={(e) => { this.handleNoteData(item.id, item.name, item.content, item.lock); }}
-                    onMouseDown={(e) => this.handleNoteData(item.id, item.name, item.content)}>
+                    onMouseDown={(e) => this.handleNoteData(item.id, item.name, item.content, item.lock)}>
                     <ListItemText primary={item.name} key={id} />
                     {/* <Statebutton/> */}
                     {(this.state.permission !== 'MEMBER') ? (
@@ -515,18 +518,13 @@ class Directory extends React.Component {
                                     <i className="fa fa-pencil-square-o menu__item-icon" />
                                     <span className="menu__item-text">Rename</span>
                                 </div>
-                                {/* <div className="menu__item menu__item--share" onClick={(e) => this.handleSetModal(modalList[15], null, { note_id: item.id, folder_id: this.state.folder_id },
-                                    'http://localhost:3000/note/'+item.content)}>
-                                    <i className="fa fa-share-alt menu__item-icon" />
-                                    <span className="menu__item-text">Share</span>
-                                </div> */}
                                 {(item.status === "ACTIVED")?
-                                (<div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[15],this.props.publishNote,item.id,'http://localhost:3000/note/'+item.content)}>
+                                (<div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[15],this.props.publishNote,item.id,'http://localhost:3000/note/public/'+item.content)}>
                                     <i className="fa fa-share-alt-square menu__item-icon"/>
                                     <span className="menu__item-text">UnShare</span>
                                 </div>
                                 ):(
-                                <div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[7],this.props.activedNote,item.id,'http://localhost:3000/note/'+item.content)}>
+                                <div className="menu__item menu__item--share" onClick={(e)=>this.handleSetModal(modalList[7],this.props.activedNote,item.id,'http://localhost:3000/note/public/'+item.content)}>
                                     <i className="fa fa-share-alt menu__item-icon"/>
                                     <span className="menu__item-text">Share</span>
                                 </div>
@@ -722,7 +720,7 @@ class Directory extends React.Component {
                         {this.state.open ? (
                             <div>
                             <button className="create-folder" onClick={(e)=>this.handleSetModal(modalList[0],createFolder,user_id, '')}>New Folder</button>
-    
+
                             <IconButton
                                 onClick={this.handleDrawerClose}
                                 className={classNames(classes.menuButton)}
@@ -741,7 +739,7 @@ class Directory extends React.Component {
                     </div>
                     <Divider />
                     <List className={classes.list}>
-                        <ListItem 
+                        <ListItem
                             button
                             onClick={event => {
                                 this.handleDrawerOpen();
@@ -802,7 +800,7 @@ class Directory extends React.Component {
                                 unmountOnExit
                             >
                                 <List component="div" disablePadding>
-                                    {this.FolderContextmenu(item, "privateFolder_"+item.folder_id)}
+                                    {this.FolderContextmenu(item, "privateFolder_" + item.folder_id)}
                                 </List>
                             </Collapse>
                         ))}
@@ -859,7 +857,7 @@ class Directory extends React.Component {
 
                     <div className={classes.toolbar}>
                     <div>
-                    <input type="text" 
+                    <input type="text"
                     className="search-input" placeholder="Search" value={this.state.search}
                     onChange={e => {
                         this.setState({
@@ -884,7 +882,7 @@ class Directory extends React.Component {
                     }}
                     />
                 </div>
-                <div>                         
+                <div>
                     <IconButton
                         onClick={this.handleSubDrawerClose}
                     >

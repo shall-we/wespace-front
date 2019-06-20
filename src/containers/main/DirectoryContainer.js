@@ -133,6 +133,7 @@ class DirectoryContainer extends React.Component {
         await DirectoryActions.unsharedFolder(folder_id,user_id);
         await NoticeActions.sendMessage('FOLDER',id,folder_id,'탈퇴','SINGLE',user_id);
         await UserActions.getUserList(folder);
+        await this.props.DirectoryActions.getNoteList(0);
         socket.emit('updateFolderList',{ msg:'sharedFolder'});
         socket.emit('updateNoticeList',{ msg:'FOLDER'});
     }
@@ -269,7 +270,6 @@ class DirectoryContainer extends React.Component {
                     this.props.history.push('/');
                 }
         }, 1000);
-       
     }
 
 

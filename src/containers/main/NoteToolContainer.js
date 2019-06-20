@@ -13,6 +13,7 @@ import AttachmentTool from "components/tool/AttachmentTool";
 import {  ArrowForwardIos, ArrowBackIos } from "@material-ui/icons";
 import {socket} from './Socket';
 
+
 class NoteToolContainer extends Component {
   state = {
     user_id: this.props.user_id,
@@ -52,12 +53,12 @@ getAttachmentList = async()=>{
   await NoteToolActions.getAttachmentList(this.state.note_id);
 };
 
-deleteAttachment = async(attachment_id)=>{
-  console.log('deleteAttachment');
-  const {NoteToolActions}= this.props;
-  await NoteToolActions.deleteAttachment(attachment_id);
-  socket.emit('updateShareBox',{ msg:'deleteAttachment'});
-}
+  deleteAttachment = async (attachment_id) => {
+    console.log('deleteAttachment');
+    const { NoteToolActions } = this.props;
+    await NoteToolActions.deleteAttachment(attachment_id);
+    socket.emit('updateShareBox', { msg: 'deleteAttachment' });
+  }
 
   addAttachment = async (uploadList) => {
     console.log('addAttachment');
@@ -192,7 +193,7 @@ componentWillReceiveProps(nextProps) {
     }
   }
 }
-   
+
 export default connect(
   (state) => ({
     note_id: state.directory.get("note_id"),

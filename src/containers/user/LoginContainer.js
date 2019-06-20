@@ -9,7 +9,7 @@ class LoginContainer extends Component {
     
     login = async(email, password, autoLogin) => {
         const { UserActions} = this.props;
-        await UserActions.login(email, password, autoLogin); 
+        await UserActions.login(email, password, autoLogin);
         console.log('authorizated : '+ this.props.authorizated);
         if(this.props.authorizated){
             this.props.history.push('/admin');
