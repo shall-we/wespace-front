@@ -61,6 +61,19 @@ class ContextContainer extends Component {
 
   }
 
+  handleDeleteNotice=async(type, idx)=>{
+    const {NoticeActions}=this.props;
+    if(this.props.user_id) {
+      //console.log('last', type, data, this.props.user_id);
+      console.log('last', type, idx);
+
+      await NoticeActions.deleteNoticeList(idx);
+      console.log('this is ');
+      await  NoticeActions.getNoticeList(this.props.user_id,type);
+    }
+  };
+
+
   render() {
     const { note, name, profile } = this.props;
     const { noteNotice = [], folderNotice = [], chatNotice = [], announcementList = [], note_lock } = this.state;
@@ -70,7 +83,8 @@ class ContextContainer extends Component {
       );
     } else {
       return (
-        <Context noteNotice={noteNotice} folderNotice={folderNotice} chatNotice={chatNotice} announcementList={announcementList}/>
+        <Context noteNotice={noteNotice} folderNotice={folderNotice} chatNotice={chatNotice}
+                 deleteNotice={this.handleDeleteNotice} announcementList={announcementList}/>
       )
     }
   }

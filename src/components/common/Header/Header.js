@@ -7,7 +7,7 @@ import logo from '../../../image/logo.png';
 
 const cx = classNames.bind(styles);
  
-const Header = ({name,profile,logout}) => (
+const Header = ({name,profile,logout, chatNoticeCount}) => (
   <header className={cx('header')}>
     <div className={cx('header-content')}>
       <div className={cx('brand')}>
@@ -16,14 +16,15 @@ const Header = ({name,profile,logout}) => (
         </Link>
       </div>
       <div className={cx('right')}>
+
       {
         
           // flex를 유지하려고 배열 형태로 렌더링합니다.
           (name)?( [
-            <div key='login' className={cx('login')}><img src={profile} alt='이미지'/>
-            <span>{name}</span></div>,<Button key='logout' theme='outline' to='/' onClick={logout}>로그아웃</Button>
-          ]):[ <Button key='login' theme='outline' to='/login'>로 그 인</Button>,
-          <Button  key='logout' theme='outline' to='/join'>회원가입</Button>]
+            <div key='login' className={cx('login')}> <img src={profile} alt='이미지'/>
+                <span>{name}</span></div>,<span className={cx('stick')}>|</span>,<Button key='logout' theme='profile' to='/' onClick={logout}>로그아웃</Button>, <Link to="/note"><div key='alert' className={cx('notification')}></div></Link>
+          ]):[ <Button key='login' theme='profile' to='/login'>로 그 인</Button>,<span className={cx('stick')}>|</span>,
+          <Button  key='logout' theme='profile' to='/join'>회원가입</Button>]
         }
        
       </div>

@@ -1,8 +1,8 @@
 @import '../../../styles/utils.scss';
  
 .button {
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   font-weight: 600;
@@ -48,11 +48,26 @@
       border: 2px solid rgba(255,255,255,0.85);
     }
   }
- 
-  &:hover {
-    @include material-shadow(2,0.5); // 마우스 커서가 위에 있으면 그림자 생성
+
+  //&:hover {
+  //  @include material-shadow(2,0.5); // 마우스 커서가 위에 있으면 그림자 생성
+  //}
+
+  &.profile {
+
+    &:hover {
+      background: white;
+      font-weight: 900;
+   //   border: 1px solid $oc-gray-0;
+      color:#00AAF0;
+    }
+    &:active {
+    //  background: $oc-gray-0;
+    //  border: 1px solid $oc-gray-2;
+    }
   }
  
+
   // 비활성화된 버튼
   &.disabled {
     background: $oc-gray-4;

@@ -39,7 +39,7 @@ export const updateNoteStatusActived= (note_id) => axios.patch(`/note/status/${n
 export const sendMessage = (type,from,object,message,option,to) => axios.post('/notice',{type,from,object,message,option,to});
 export const getNoticeList = (id,type,user_id) => axios.get(`/notice?${queryString.stringify({id,type,user_id})}`);
 export const updateNoticeList = (to, object,type) => axios.patch(`/notice/${to}/${object}/${type}`);
-
+export const deleteNoticeList= (idx) => axios.patch(`/notice/${idx}`);
 // Attachment API
 export const addAttachment = (note_id, uploadList) => axios.post(`/attachment/create/${note_id}`, uploadList, { headers: {
     'Content-Type':'multipart/form-data;charset=utf-8'

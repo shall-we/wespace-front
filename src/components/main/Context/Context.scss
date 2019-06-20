@@ -1,41 +1,62 @@
 @import '../../../styles/utils.scss';
 
-
 .context{
     flex: 1;
-    height: calc(100vh - 4rem); 
+    height: calc(100vh - 4rem);
     overflow-y: auto;
     background: $oc-gray-2;
     display: flex;
     flex-direction: column;
+
+
     .system{
+
         flex:0.1;
-        background: $oc-gray-4;
-        width : 52rem;
-        margin: 2rem;
+        background: white;
+        margin: 3rem;
+        text-align : center;
         font-size : 1.5em;
+        color : $oc-gray-6;
+        margin-bottom : 0;
+        box-shadow: 1px 1px;
+        .text {
+            height : 0.5rem;
+            margin: 0.3rem ;
+            padding:0;
+            text-align: left;
+            margin-bottom : 1.5rem;
+            font-size : 1rem;
+        }
     }
 
-    .notice{ 
+    .notice{
+        flex:0.9;
         display: flex;
-        flex-direction: column;
         .directory{
+            flex:1;
             display: flex;
-            margin-left: 2rem;
-            .folder{
-                min-width : 30rem;
-            }
+            flex-direction: row;
+
             .comment{
-                overflow-y: auto;
-                margin: 2rem;
-                min-width : 20rem;
-                margin-left: 2rem;
-            }     
+                flex:1;
+                margin : 3rem;
+                margin-right : 0;
+                display: flex;
+            }
+            .folder{
+                flex:1;
+                margin : 3rem;
+                margin-right:0;
+                display: flex;
+            }
+            .note {
+                flex: 1;
+                display: flex;
+                margin : 3rem;
+            }
+
+
         }
-        .note{
-            margin-left: 2rem;
-            width : 52rem;
-        }
-           
+
     }
 }

@@ -34,24 +34,6 @@ class NoteToolContainer extends Component {
     const { NoteToolActions } = this.props; //note_id
     await NoteToolActions.getAttachmentList(this.state.note_id);
   };
-  state={
-    user_id:this.props.user_id,
-    comment:this.props.comment,
-    note_id:this.props.note_id,
-    user_list:this.props.user_list,
-    attachmentList : this.props.attachmentList,
-    attachment : this.props.attachment,
-    width : "250px",
-    isSpread : true,
-    background : null,
-    isBtnHovered : false
-  };
-/////////////////////////////////////////////////////첨부파일
-getAttachmentList = async()=>{
-  console.log('getAttachmentList');
-  const { NoteToolActions }= this.props; //note_id
-  await NoteToolActions.getAttachmentList(this.state.note_id);
-};
 
   deleteAttachment = async (attachment_id) => {
     console.log('deleteAttachment');

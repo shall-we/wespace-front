@@ -15,6 +15,19 @@ let flag = false;
 
 class HeaderContainer extends Component {
 
+  state = {
+    chatNoticeCount : this.props.chatNoticeCount
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    console.log("카운트");
+    console.log(nextProps.chatNoticeCount);
+    if(this.props.chatNoticeCount !== nextProps.chatNoticeCount){
+      this.setState({"chatNoticeCount" :  nextProps.chatNoticeCount});
+
+    }
+  }
+
   componentDidMount= async () => {
     await autoLogin()
     .then(async res =>{
@@ -57,6 +70,7 @@ class HeaderContainer extends Component {
 
   render() {
     const { name,profile, isLogin } = this.props;
+    const {chatNoticeCount} = this.state;
     // update image if image url includes 'static' , it change default_profile.png
       console.log("확인!!", name, profile, isLogin);
     const { logout } = this;
@@ -65,6 +79,7 @@ class HeaderContainer extends Component {
         name={name}
         profile={profile}
         logout={logout}
+        chatNoticeCount = {chatNoticeCount}
       />
     );
   }
@@ -74,7 +89,8 @@ class HeaderContainer extends Component {
     (state) => ({
       name: state.user.get('name'),
       profile: state.user.get('profile'),
-      isLogin : state.user.get('isLogin')
+      isLogin : state.user.get('isLogin'),
+      chatNoticeCount: state.notice.get("CHAT").length
     }),
     (dispatch) => ({
         DirectoryActions: bindActionCreators(directoryActions, dispatch),

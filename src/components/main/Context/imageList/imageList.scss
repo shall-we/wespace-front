@@ -1,0 +1,78 @@
+.imageList {
+  flex:1;
+  background : white;
+  box-shadow: 0 4px 8px 6px #eeeeee;
+  .imageListTile{
+    padding: 4px 16px 4px 24px;
+    label{
+      font-size:1.4rem;
+      fornt-weight:400;
+    }
+  }
+  .imageListContent {
+    height: 20rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+
+    .imageListItem {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: .4rem;
+      border: 1px solid #dddddd;
+      border-left: 0;
+      border-right: 0;
+      //border-top:0;
+      border-bottom: 0;
+
+      .imageListItem_profile {
+        flex: 0.15;
+
+        img {
+          width: 3.5rem;
+          height : 3.5rem;
+          padding: .2rem;
+          border-radius: 45px;
+        }
+      }
+
+      .imageListItem_info {
+        flex: 0.85;
+        flex-direction: column;
+        margin-left:.5rem;
+
+        .imageListItem_header {
+          flex: 1;
+          flex-direction: column;
+
+          .imageListItem_from {
+            flex: 1;
+            text-align: left;
+            font-size: .9rem;
+          }
+
+          .imageListItem_reg_date {
+            flex: 1;
+            float: right;
+            margin-right: .5rem;
+            font-size: .6rem;
+          }
+        }
+
+        .imageListItem_message {
+          flex: 1;
+          font-size: .9rem;
+          margin-left: 1rem;
+        }
+      }
+
+      &:hover{
+        background:#dddddd;
+        *{
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

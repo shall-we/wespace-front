@@ -22,9 +22,9 @@ export default function NoteDialog(props) {
 
     return (
         <div className="announcementList">
-            <Button className="announcement--button"
+            <button className="announcement-button"
                 onClick={handleClickOpen('paper')}>{props.List.title}
-            </Button>
+            </button>
             <Dialog
                 open={open}
                 onClose={handleClose}

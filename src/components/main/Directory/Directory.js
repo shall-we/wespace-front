@@ -509,7 +509,7 @@ class Directory extends React.Component {
                 <div className="file-list"
                     onClick={(e) => { this.handleNoteData(item.id, item.name, item.content, item.lock); }}
                     onMouseDown={(e) => this.handleNoteData(item.id, item.name, item.content, item.lock)}>
-                    <ListItemText primary={item.name} key={id} />
+                    <ListItemText primary={item.name} key={id} style={{wordBreak : "break-all"}} />
                     {/* <Statebutton/> */}
                     {(this.state.permission !== 'MEMBER') ? (
                         <div className="stateButton">
