@@ -9,7 +9,7 @@
        .bar{
         min-height: 3rem;
         display: flex;
-        background: $oc-blue-6;
+        background: $oc-gray-6;
         border-bottom:$oc-gray-4 solid 0.1rem;
             .btn{
                 flex: 1;
@@ -17,8 +17,7 @@
                 align-items: center;
                 justify-content: center;
                 cursor:pointer;
-                border-top-left-radius: 4px;
-                border-top-right-radius: 20px;
+
                 background-color:#eee;
                 border-right: $oc-gray-5 solid 1px;
                 color:#7B8585;

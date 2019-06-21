@@ -248,6 +248,7 @@ class Editor extends React.Component {
           readOnly
           modules= {Editor.modules}
           bounds= '.editor-main'
+          style={{wordBreak : "break-all"}}
           />
         </div>
       </div>

@@ -43,7 +43,7 @@
             &--them {
                 .message {
                     background: white;
-                    box-shadow: 0 5px 10px $oc-gray-4;
+                    box-shadow: 0 2px 4px $oc-gray-4;
                     color: $oc-gray-9;
                 }
                 
@@ -131,20 +131,22 @@
 
     
     .comment-form{
-        height: 60px;
-		background:  $oc-gray-6;
+        height: 50px;
+
+        margin: 0 0.4rem 0 0.4rem;
 		display: flex;
 		align-items: center;
 		box-sizing: border-box;
-        padding: 0 10px 0 10px;
+
         .submit-text{
             flex: 1 0 auto;
             width: 180px;
-			border-radius: 44px;
+            box-shadow: 0 1px 2px $oc-gray-4;
 			height: 40px;
 			box-sizing: border-box;
 			border: 0;
-			padding: 0 20px;
+
+            padding: 0.5rem;
 			color: black;
 			
 			font-size: 14px;
@@ -153,43 +155,42 @@
             
         }
         .submit-btn{
-            background: $oc-blue-6;
+            //background: $oc-blue-6;
 			height: 40px;
-			color: white;
+			color:$oc-gray-6;
 			font-size: 18px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			width: 40px;
 			border: 0;
-			border-radius: 50px;
-			margin-left: 10px;
-            
+            box-shadow: 0 1px 2px $oc-gray-4;
+
         }
         
     }
 
     .user-list-template{
         .all-list{
-            margin:1rem; 
-            border-radius: 0.5rem; 
+            margin:0 1rem 0 1rem;
+
             border:$oc-gray-4 solid 1px;
             display: none;
             flex-direction: column;
             height: max-content;
             overflow-y: auto;
-            background:  $oc-red-7;
-
             .member{
+                padding:0.5rem;
                 display: flex;
-                max-height: 3rem;
+                max-height: 4rem;
                 background:  $oc-gray-0;
                 border-top: $oc-gray-4 solid 1px;
 
                 align-items: center;
        
                 .profile{
-                  
+
+                    margin-right: 0.2rem;
                     flex:0.1;
                     height: 2rem;
                 }
@@ -197,10 +198,12 @@
                 .info{
                     flex:0.9;
                     .name{
-                        margin-left: 6px;
+                        padding-left:6px;
+                        font-size: 1rem;
+                        color:$oc-blue-9;
                     }
                     .email{
-                        font-size: 0.85em;
+                        font-size: 0.7em;
                         padding-left:6px;
                         white-space: nowrap;
                         overflow: hidden;
@@ -218,7 +221,7 @@
             width: 250px;
             display: flex;
         
-            background:  $oc-blue-7;
+           // background:  $oc-blue-7;
             align-items: center;
         
             overflow-x: auto;

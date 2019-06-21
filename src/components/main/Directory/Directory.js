@@ -257,12 +257,14 @@ class Directory extends React.Component {
     }
     handlePublicClick = () => {
         this.setState(state => ({
-            public_navigationOpen: !state.public_navigationOpen
+            public_navigationOpen: !state.public_navigationOpen,
+            private_navigationOpen : false,
         }));
     };
     handlePrivateClick = () => {
         this.setState(state => ({
-            private_navigationOpen: !state.private_navigationOpen
+            private_navigationOpen: !state.private_navigationOpen,
+            public_navigationOpen : false,
         }));
     };
     handleDrawerOpen = () => {
@@ -449,7 +451,6 @@ class Directory extends React.Component {
                         })
                     }}
                     selected={this.state.folder_id === item.folder_id}
-
                     onMouseDown={(e) => {
                         this.handleFolderData(item.folder_id, item.name, item.permission);
                         this.setState({
@@ -457,12 +458,33 @@ class Directory extends React.Component {
                         })
                     }}>
                     <ListItemText style={{ width: 150 }} primary={item.name} key={id} />
-                    <div className={cx("count", (item.permission === 'OWNER') ? 'count--OWNER' : (item.permission === 'MANAGER') ? 'count--MANAGER' : 'count--MEMBER')}>
+                    <div className="count">
                         {item.count}
                     </div>
                 </ListItem>
             </ContextMenuTrigger>
             <ContextMenu id={id}>
+                <MenuItem disabled={true}>
+                    <span style={{marginRight:"0.5em", color:"black"}}>권한</span> |
+                        {(item.permission === "OWNER") ?
+                        (
+                            <span style={{color:"#00af00", marginLeft:"0.5em"}}>
+                                {" "+item.permission}
+                            </span>
+                        ) :
+                        (item.permission === "MANAGER") ?
+                            (
+                                <span style={{color:"#1E90FF", marginLeft:"0.5em"}}>
+                                    {" "+item.permission}
+                                </span>) :
+                            (
+                                <span style={{color:"red", marginLeft:"0.5em"}}>
+                                    {" "+item.permission}
+                                </span>
+                            )
+                    }
+                </MenuItem>
+                <MenuItem divider disabled/>
                 {(item.permission !== 'MEMBER') ?
                     (
                         <div>

@@ -131,10 +131,12 @@ componentDidMount(){
 componentWillReceiveProps(nextProps) {
 
 
+    console.log('componentWill',this.props.note_id, nextProps.note_id );
+
+
     if (this.props.note_id !== nextProps.note_id) {
       this.setState({ note_id: nextProps.note_id });
     }
-
     if(this.props.comment!==nextProps.comment||this.props.note_uuid!==nextProps.note_uuid)
     {
       this.setState({comment:nextProps.comment,note_id:nextProps.note_id, user_id:nextProps.user_id,user_list:nextProps.user_list,note_uuid:nextProps.note_uuid});
@@ -152,7 +154,7 @@ componentWillReceiveProps(nextProps) {
     const { addAttachment, deleteAttachment, downloadAttachment } = this;
     if (note_uuid) {
       return (
-          <div style={{minWidth : "5px", backgroundColor : background}}>
+          <div style={{minWidth : "0", backgroundColor : background}}>
               {this.renderSpreadBtn(isSpread)}
         <NoteToolTemplate  display={display} isSpread={isSpread} width={width} >
           <NoteToolBox items={['댓글', '첨부']} >

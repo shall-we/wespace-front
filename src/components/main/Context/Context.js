@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styles from './Context.scss';
 import classNames from 'classnames/bind';
-import NoteDialog from './NoticeDialog/NoteDialog';
+import NoteDialog from './NoticeDialog/NoticeDialog';
 import CheckboxList from './checkboxList/index';
 import IamgeList from './imageList/index';
 const cx = classNames.bind(styles);

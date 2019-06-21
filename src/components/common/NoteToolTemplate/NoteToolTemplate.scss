@@ -2,7 +2,7 @@
 .note-tool-template{
     //flex: 0.25;
     width: 250px;
-    margin-left: 5px;
+    margin-left: 0px;
     transition: all ease 1s 0s;
     @include media("<medium") {
          display: none;
