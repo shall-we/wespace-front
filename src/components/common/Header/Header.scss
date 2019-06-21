@@ -106,7 +106,7 @@
     .notification {
         display: inline-block;
         position: relative;
-        padding: 0.4em;
+        padding: 0.2em;
         margin-right : 0.3rem;
         margin-left : 0.4rem;
         background: #3498db;
@@ -142,7 +142,7 @@
         border-radius: 60px;
         background: #3498db;
         opacity: 0;
-        content: attr(data-count);
+        content: attr(dataCount);
         opacity: 0;
         -webkit-transform: scale(0.5);
         transform: scale(0.5);

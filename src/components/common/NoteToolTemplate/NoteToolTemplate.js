@@ -6,9 +6,9 @@ const cx = classNames.bind(styles);
  
 const NoteToolTemplate = (props) => {
   console.log('NoteToolTemplate : ',props);
-
+  const display = props.isSpread? "block" : "none";
   return(
-  <div className={cx('note-tool-template')} style={{width : props.width}} >
+  <div className={cx('note-tool-template')} style={{display : display}} >
         {props.children}
   </div>
 )};
