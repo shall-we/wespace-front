@@ -3,6 +3,13 @@ import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import { Send } from "@material-ui/icons";
 import styles from './CommentTool.scss';
+
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+library.add(faPlusSquare);
+
 const cx = classNames.bind(styles);
 
 const Comment=(props)=>{
@@ -14,7 +21,9 @@ const Comment=(props)=>{
             <div className={cx(props.author?'you':'them')}>
                 <span className={cx('from')}>{props.from}</span>
                 <span className={cx('date')}>{props.reg_date}</span>
-                <span className={cx('check')}>{props.check}</span>
+                {props.check!==0?
+                <span className={cx('check')}>{props.check}</span>:null
+            }
             </div>
         </div>
     );
@@ -49,7 +58,8 @@ const Member=(props)=>{
 const User=(props)=>{
     return (
         <div className={cx("send-user")}>
-            <p  className={cx('name')}>{props.user.name}</p><p className={cx('cancel')} onClick={()=>{props.selectCancel(props.user.id)}}>X</p>
+           
+            <p  className={cx('name')}>#{props.user.name}</p><p className={cx('cancel')} onClick={()=>{props.selectCancel(props.user.id)}}>X</p>
         </div>
     );
 }
@@ -82,7 +92,8 @@ const UserList=(props)=>{
 const CommentForm=(props)=>{
         return (
                 <form className="comment-form" onSubmit={props.handleSubmit}>
-                    <input className={cx("submit-text")} value={props.text} placeholder="Your thoughts" onChange={props.handleTextChange} /><br/>
+                  <div className={cx("add-icon")}><FontAwesomeIcon   icon="plus-square" size="lg"/></div>
+                    <input className={cx("submit-text")} value={props.text} placeholder="댓글을 입력하세요" onChange={props.handleTextChange} /><br/>
                     <button  className={cx("submit-btn")} type="submit" > <Send color="default" /></button>
                 </form>
         );
