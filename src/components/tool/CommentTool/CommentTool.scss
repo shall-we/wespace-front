@@ -6,6 +6,7 @@
     flex-direction: column;
     height: calc(100vh - 7rem);
 
+    border-left:$oc-gray-3 solid 1px; 
     .comment-list{
         display: flex;
         flex-direction: column;
@@ -131,17 +132,21 @@
 
     
     .comment-form{
-        height: 50px;
-
-        margin: 0 0.4rem 0 0.4rem;
+        min-height: 40px;
+        background: white;
 		display: flex;
 		align-items: center;
 		box-sizing: border-box;
-
+        .add-icon{
+            background: white;
+            color: $oc-gray-6;
+            margin-left:0.5rem; 
+            cursor: pointer;
+        }
         .submit-text{
             flex: 1 0 auto;
             width: 180px;
-            box-shadow: 0 1px 2px $oc-gray-4;
+            
 			height: 40px;
 			box-sizing: border-box;
 			border: 0;
@@ -155,7 +160,7 @@
             
         }
         .submit-btn{
-            //background: $oc-blue-6;
+            background: white;
 			height: 40px;
 			color:$oc-gray-6;
 			font-size: 18px;
@@ -164,7 +169,7 @@
 			justify-content: center;
 			width: 40px;
 			border: 0;
-            box-shadow: 0 1px 2px $oc-gray-4;
+            cursor: pointer;
 
         }
         
@@ -220,39 +225,39 @@
             height: 30px;
             width: 250px;
             display: flex;
-        
-           // background:  $oc-blue-7;
             align-items: center;
-        
             overflow-x: auto;
-
-            
+        
+            margin-top: 1rem;
             &::-webkit-scrollbar {
                 display: none;
             }
             .send-user{
             
                     text-align: center;
-                    flex: 0 0 4rem;
-                    padding: 0.03rem 0.3rem 0.03rem 0.3rem;
-                    font-size: 0.4rem;
+                    font-size: 0.8rem;
                     font-weight: 700;
-                    color: white;
-                    margin-left:10px; 
-                    margin-right:10px; 
-                    background: $oc-yellow-6;
-                    border-radius: 3px;
-                 
-
+                    color: $oc-blue-9;
+                    margin-left:0.5rem; 
+                
                     .name{
                         display: inline;
                     }
                     .cancel{
-                        float: right;
-                        color: $oc-yellow-9;
+                        display: none;
+                        color: $oc-gray-6;
+                        font-size: 0.5rem;
                         font-weight: 900;
                         cursor: pointer;
                     }
+                    &:hover {
+                        .cancel{
+
+                            margin-left:0.2rem; 
+                        display: inline;
+                        }
+                        
+                      }
 
 
 
