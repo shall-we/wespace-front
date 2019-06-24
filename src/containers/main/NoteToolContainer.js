@@ -27,7 +27,7 @@ class NoteToolContainer extends Component {
     isSpread : true,
     background : null,
     isBtnHovered : false
-  }
+  };
   /////////////////////////////////////////////////////첨부파일
   getAttachmentList = async () => {
     console.log('getAttachmentList');
@@ -40,7 +40,7 @@ class NoteToolContainer extends Component {
     const { NoteToolActions } = this.props;
     await NoteToolActions.deleteAttachment(attachment_id);
     socket.emit('updateShareBox', { msg: 'deleteAttachment' });
-  }
+  };
 
   addAttachment = async (uploadList) => {
     console.log('addAttachment');
@@ -54,7 +54,7 @@ downloadAttachment=async(url)=>{
   const {NoteToolActions} =this.props;
   await NoteToolActions.downloadAttachment(url);
   socket.emit('updateShareBox',{ msg:'downloadAttachment'});
-}
+};
 
 /////////////////////////////////////////첨부파일 영역
 
@@ -64,7 +64,7 @@ downloadAttachment=async(url)=>{
     const {NoticeActions,user_id} =this.props;
     await NoticeActions.sendMessage('COMMENT',user_id,this.state.note_id,message,'MULTI',null);
     socket.emit('updateCommentList',{ msg:'handleSendMessage'});
-  }
+  };
 
   handleSelectSendMessage = async (to_list, message) => {
     const { NoticeActions, user_id } = this.props;
@@ -75,12 +75,12 @@ downloadAttachment=async(url)=>{
       socket.emit('updateNoticeList', {msg: 'CHAT'});
     });
     socket.emit('updateCommentList', { msg: 'handleSendMessage' });
-  }
+  };
 
   updateCommentList=async()=>{
     await this.props.NoticeActions.updateNoticeList(this.state.user_id,this.state.note_id,'COMMENT');
     await this.props.NoticeActions.getNoticeList(this.state.note_id,'COMMENT',this.state.user_id);
-  }
+  };
 
 
 componentDidMount(){
@@ -112,9 +112,9 @@ componentDidMount(){
 
     renderSpreadBtn = (isSpread) => {
         const nonHoveredStyle = {width : "40px", height : "40px",
-            marginLeft : "-25px", marginTop : "200px",  backgroundColor : "transparent",
+            backgroundColor : "transparent",
             color : "grey",
-            textAlign : "center"};
+            textAlign : "center", marginLeft : "-35px"};
         const hoveredStyle = Object.assign({}, nonHoveredStyle);
         hoveredStyle.color = "#339AF0";
         let iconStyle = this.state.isBtnHovered ? hoveredStyle : nonHoveredStyle;
@@ -122,9 +122,10 @@ componentDidMount(){
             this.setState({isBtnHovered : !this.state.isBtnHovered});
         };
         return (
-            <div onClick = {this.toggling}
-                 style={{height : "100%", cursor : "pointer", position : "fixed", display : "block"}}>
-                {isSpread ? <ArrowForwardIos style={iconStyle} onMouseEnter = { mouseHoverToggle } onMouseLeave={ mouseHoverToggle } color="action"/> : <ArrowBackIos style={iconStyle} onMouseEnter = { mouseHoverToggle } onMouseLeave={ mouseHoverToggle } color="action"/>}
+            <div style={{ margin : "auto 0", zIndex : 900}}>
+                    <div style={{cursor : "pointer"}}>
+                    {isSpread ? <ArrowForwardIos style={iconStyle} onClick = {this.toggling} onMouseEnter = { mouseHoverToggle } onMouseLeave={ mouseHoverToggle } color="action"/> : <ArrowBackIos style={iconStyle} onClick = {this.toggling} onMouseEnter = { mouseHoverToggle } onMouseLeave={ mouseHoverToggle } color="action"/>}
+                    </div>
             </div>)
     };
 
@@ -154,7 +155,7 @@ componentWillReceiveProps(nextProps) {
     const { addAttachment, deleteAttachment, downloadAttachment } = this;
     if (note_uuid) {
       return (
-          <div style={{minWidth : "0", backgroundColor : background}}>
+          <div style={{minWidth : "0", backgroundColor : background, display:"flex", flexDirection:"row"}}>
               {this.renderSpreadBtn(isSpread)}
         <NoteToolTemplate  display={display} isSpread={isSpread} width={width} >
           <NoteToolBox items={['댓글', '첨부']} >

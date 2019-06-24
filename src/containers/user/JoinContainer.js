@@ -6,25 +6,32 @@ import Join from '../../components/user/join/Join';
 
 class JoinContainer extends Component {
 
-    join=async(name,email,password,profile)=>{
+
+
+    join=async(formdata)=>{
         const {UserActions}=this.props;
-        await UserActions.join(name,email,password,profile);
+        await UserActions.join(formdata);
+
+        console.log(this.props.result_join);
+        return this.props.result_join;
     }
 
     render() {
-      const {join} = this;
-      return (
-        <div>
-         <Join action={join}/>
-        </div>
-      );
+        const {join} = this;
+
+        return (
+            <div>
+                <Join action={join}/>
+            </div>
+        );
     }
 }
 
 export default connect(
     (state) => ({
-      }),
+        result_join : state.user.get('result_join'),
+    }),
     (dispatch) => ({
-      UserActions: bindActionCreators(userActions, dispatch)
+        UserActions: bindActionCreators(userActions, dispatch)
     })
-  )(JoinContainer);
+)(JoinContainer);

@@ -136,6 +136,8 @@ class DirectoryContainer extends React.Component {
         await this.props.DirectoryActions.getNoteList(0);
         socket.emit('updateFolderList',{ msg:'sharedFolder'});
         socket.emit('updateNoticeList',{ msg:'FOLDER'});
+
+        this.props.history.push('/note');
     }
 
     deleteFolder=async(folder_id) => {
@@ -145,7 +147,7 @@ class DirectoryContainer extends React.Component {
         socket.emit('updateFolderList',{ msg:'deleteFolder'});
         socket.emit('updateNoteList',{ msg:'deleteFolder'});
 
-        DirectoryActions.setNote(null);
+        this.props.history.push('/note');
     }
 
     updateFolder=async(folder_id, folder_name) => {
@@ -190,7 +192,7 @@ class DirectoryContainer extends React.Component {
         await NoticeActions.sendMessage('NOTE',id,ids.note_id,'이름변경','MULTI',null);
         socket.emit('updateNoteList',{ msg:'updateNote'});
         socket.emit('updateNoticeList',{ msg:'NOTE'});
-    }
+    };
 
     deleteNote=async(ids) => {
         const {DirectoryActions,NoticeActions,id} = this.props;
@@ -199,21 +201,22 @@ class DirectoryContainer extends React.Component {
         socket.emit('updateFolderList',{ msg:'deleteNote'});
         socket.emit('updateNoteList',{ msg:'deleteNote'});
 
-        DirectoryActions.setNote(null);
-    }
+        this.props.history.push('/note');
+    };
     publishNote=async(note_id) => {
         const {DirectoryActions,NoticeActions,id} = this.props;
         await DirectoryActions.publishNote(note_id);
         await NoticeActions.sendMessage('NOTE',id,note_id,'배포','MULTI',null);
         socket.emit('updateNoticeList',{ msg:'NOTE'});
         socket.emit('updateNoteList',{ msg:'publishNote'});
-    }
+    };
     activedNote=async(note_id) => {
         const {DirectoryActions,NoticeActions,id} = this.props;
         await DirectoryActions.activedNote(note_id);
         await NoticeActions.sendMessage('NOTE',id,note_id,'복구','MULTI',null);
         socket.emit('updateNoticeList',{ msg:'NOTE'});
         socket.emit('updateNoteList',{ msg:'activedNote'});
+        socket.emit('updateFolderList',{ msg: 'folderCount'});
     }
 
     setNote=async(note)=>{
@@ -224,7 +227,7 @@ class DirectoryContainer extends React.Component {
         await NoticeActions.getNoticeList(note.note_id,'COMMENT',id);
         await socket.emit('updateShareBox',{ msg:'setNote'});
         await socket.emit('updateCommentList',{ msg:'setNote'});
-    }
+    };
     setFolder=async(folder_id)=>{
         const {DirectoryActions} = this.props;
         await DirectoryActions.setFolder(folder_id);

@@ -61,6 +61,13 @@ class ContextContainer extends Component {
 
   }
 
+  handeleGetNoticlist=async(note)=>{
+    const {NoticeActions,DirectoryActions, user_id}=this.props;
+    await NoticeActions.getNoticeList(note.note_id,'COMMENT',user_id);
+    await DirectoryActions.setNote(note);
+    await socket.emit('updateShareBox',{ msg:'setNote'});
+  }
+
   handleDeleteNotice=async(type, idx)=>{
     const {NoticeActions}=this.props;
     if(this.props.user_id) {
@@ -83,8 +90,9 @@ class ContextContainer extends Component {
       );
     } else {
       return (
-        <Context noteNotice={noteNotice} folderNotice={folderNotice} chatNotice={chatNotice}
-                 deleteNotice={this.handleDeleteNotice} announcementList={announcementList}/>
+          <Context noteNotice={noteNotice} folderNotice={folderNotice} chatNotice={chatNotice}
+                   deleteNotice={this.handleDeleteNotice} announcementList={announcementList}
+                   handeleGetNoticlist={this.handeleGetNoticlist}/>
       )
     }
   }

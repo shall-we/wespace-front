@@ -31,31 +31,38 @@ const cx = classNames.bind(style);
 
 class imageList extends React.Component{
 
+    onEnterNoteContent=async (idx, note_content, note_id, note_lock )=>{
+
+        const {deleteRows, type,handeleGetNoticlist} = this.props;
+        //제거
+        await deleteRows(type, idx);
+        await handeleGetNoticlist({note_content, note_id, note_lock});
+    };
+
     render()
     {
 
         //console.log(props.rows);
+        console.log('imageList', this.props);
 
         const children = this.props.rows.map((data, idx) => {
             console.log('data', data);
-            let link = '/note/'+data.content;
-            console.log('link', link);
             return (
-                <Link to={link}>
-                <div className={cx("imageListItem")}>
-                    <div className={cx("imageListItem_profile")}>
-                        <img src={data.profile}/>
-                    </div>
-                    <div className={cx("imageListItem_info")}>
-                        <div className={cx("imageListItem_header")}>
-                            <label className={cx("imageListItem_reg_date")} htmlFor="imageListItem_reg_date">{data.reg_date}</label>
-                            <label className={cx("imageListItem_from")} htmlFor="imageListItem_from">[{data.object}] {data.from}</label>
+                <Link to={'/note/'+data.content} onClick={(e)=>{this.onEnterNoteContent(data.notice_id,data.content,data.note_id, data.lock)}}>
+                    <div className={cx("imageListItem")} >
+                        <div className={cx("imageListItem_profile")}>
+                            <img src={data.profile}/>
                         </div>
-                        <label className={cx("imageListItem_message")} htmlFor="imageListItem_message">{data.message}</label>
+                        <div className={cx("imageListItem_info")}>
+                            <div className={cx("imageListItem_header")}>
+                                <label className={cx("imageListItem_reg_date")} htmlFor="imageListItem_reg_date">{data.reg_date}</label>
+                                <label className={cx("imageListItem_from")} htmlFor="imageListItem_from">[{data.object}] {data.from}</label>
+                            </div>
+                            <label className={cx("imageListItem_message")} htmlFor="imageListItem_message">{data.message}</label>
+                        </div>
                     </div>
-                </div>
                 </Link>
-          );
+            );
         });
 
         return (
@@ -64,9 +71,9 @@ class imageList extends React.Component{
                     <label htmlFor="iamgeListTile">{this.props.category}</label>
                 </div>
                 <div className={cx("imageListContent")}>
-            {children}
+                    {children}
                 </div>
-        </div>)
+            </div>)
     }
 }
 

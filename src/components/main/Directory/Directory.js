@@ -15,7 +15,7 @@ import Collapse from "@material-ui/core/Collapse";
 import {
     Menu, ExpandMore, ExpandLess, CreateNewFolder, FolderShared, Delete, Folder, Share, Lock,
     GroupAdd, ChevronLeft, ChevronRight, NoteAdd, People, Chat,
-    NotificationImportant, Assignment,
+    NotificationImportant, Assignment, RestoreFromTrashRounded,
     KeyboardArrowRight, Brightness1, AddAlert, PersonAdd, AssignmentInd, PermIdentity, DesktopWindowsRounded, DesktopWindows
 } from "@material-ui/icons";
 import OneInputModal from "../../modal/OneInputModal";
@@ -181,6 +181,7 @@ const updateNoteModalData = ["oneInputModal", 'file-signature', '노트 이름 �
 const clipboardModalData = ["clipboardModal", 'share-square', '배포하기', 'url 주소', '닫기'];
 const exportNoteModalData = ["noticeModal", 'file-pdf', '외부접근 허용', '해당 내용을 외부에 공개하시겠습니까?', '배포'];
 const activedNoteModalData = ["noticeModal", 'file-pdf', '외부접근 금지', '해당 내용의 외부접근을 금지하시겠습니까?', '배포중지'];
+const recoveryNoteModalData = ["noticeModal", 'file-alt', '노트 복구', '해당 노트를 복구 시키겠습니까?', '복구'];
 
 const deleteFriendModalData = ["noticeModal", 'trash-alt', '친구 삭제', '친구를 정말 삭제하시겠습니까?', '삭제'];
 const updateChatTitleModalData = ["oneInputModal", 'file-signature', '채팅방 이름 수정', '수정할 채팅방 이름을 입력하세요.', '수정'];
@@ -211,6 +212,7 @@ const modalList = [
 
     unshareFolderModalData,
     clipboardModalData,
+    recoveryNoteModalData,
 ]
 
 
@@ -485,12 +487,12 @@ class Directory extends React.Component {
                     }
                 </MenuItem>
                 <MenuItem divider disabled/>
+                <MenuItem onClick={(e) => this.handleSetModal(modalList[3], this.props.createNote, this.state.folder_id, '')}>
+                    노트 생성하기
+                </MenuItem>
                 {(item.permission !== 'MEMBER') ?
                     (
                         <div>
-                            <MenuItem onClick={(e) => this.handleSetModal(modalList[3], this.props.createNote, this.state.folder_id, '')}>
-                                노트 생성하기
-                            </MenuItem>
                             <MenuItem onClick={(e) => {
                                 this.handleSetModal(modalList[8], [this.props.sharedFolder, this.props.unsharedFolder], this.state.folder_id, this.state.permission);
                             }}>
@@ -533,7 +535,12 @@ class Directory extends React.Component {
                     onMouseDown={(e) => this.handleNoteData(item.id, item.name, item.content, item.lock)}>
                     <ListItemText primary={item.name} key={id} style={{wordBreak : "break-all"}} />
                     {/* <Statebutton/> */}
-                    {(this.state.permission !== 'MEMBER') ? (
+                    {  (item.status === 'DELETED') ? (
+                            <div className="recovery-icon" >
+                                <RestoreFromTrashRounded color = "primary" onClick={(e)=>this.handleSetModal(modalList[16],this.props.activedNote,item.id, item.name)}/>
+                            </div>
+                        ) : (
+                        (this.state.permission !== 'MEMBER') ? (
                         <div className="stateButton">
                             <div className="menu menu--button">
                                 <div className="menu__item menu__item--rename" onClick={(e) => this.handleSetModal(modalList[5], this.props.updateNote, { note_id: item.id, folder_id: this.state.folder_id }, item.name)}>
@@ -571,7 +578,7 @@ class Directory extends React.Component {
                             </div>
                         </div>) : (
                             null
-                        )}
+                        ))}
                     </div>
                 </Link>
             <Divider />

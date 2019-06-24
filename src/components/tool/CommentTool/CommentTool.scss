@@ -1,173 +1,178 @@
 @import '../../../styles/utils.scss';
 
 .comment-tool{
-    flex: 1; 
+    flex: 1;
     display: flex;
     flex-direction: column;
     height: calc(100vh - 7rem);
 
+    border-left:$oc-gray-3 solid 1px;
     .comment-list{
         display: flex;
         flex-direction: column;
-		height: calc(100% - 90px);
-		overflow-y: auto;
-		box-sizing: border-box;
-		background:  $oc-gray-1;
-        padding: 10px 0;	
+        height: calc(100% - 90px);
+        overflow-y: auto;
+        box-sizing: border-box;
+        background:  $oc-gray-1;
+        padding: 10px 0;
 
         .comment-template{
             width: 100%;
             margin-bottom: 10px;
-        .comment{
-           
-            padding: 5px 20px;
+            .comment{
 
-            .message {
-                padding: 10px;
-                box-sizing: border-box;
-                font-size: 12px;
-                display: inline-block;
-                font-weight: 600;
-                max-width: 80%;
-                line-height: 1.4;
-                border-radius: 3px;
-                overflow-wrap: break-word;
-                word-wrap: break-word;
-                word-break: break-word;
-                -ms-hyphens: auto;
-                -moz-hyphens: auto;
-                -webkit-hyphens: auto;
-                hyphens: auto;                
-            }
-            
-            &--them {
+                padding: 5px 20px;
+
                 .message {
-                    background: white;
-                    box-shadow: 0 2px 4px $oc-gray-4;
-                    color: $oc-gray-9;
+                    padding: 10px;
+                    box-sizing: border-box;
+                    font-size: 12px;
+                    display: inline-block;
+                    font-weight: 600;
+                    max-width: 80%;
+                    line-height: 1.4;
+                    border-radius: 3px;
+                    overflow-wrap: break-word;
+                    word-wrap: break-word;
+                    word-break: break-word;
+                    -ms-hyphens: auto;
+                    -moz-hyphens: auto;
+                    -webkit-hyphens: auto;
+                    hyphens: auto;
                 }
-                
+
+                &--them {
+                    .message {
+                        background: white;
+                        box-shadow: 0 2px 4px $oc-gray-4;
+                        color: $oc-gray-9;
+                    }
+
+                }
+
+                &--you {
+                    justify-content: flex-end;
+                    display: flex;
+
+
+                    .message {
+                        background: $oc-blue-8;
+                        box-shadow: 0 5px 10px $oc-gray-4;
+                        color: white;
+                    }
+                }
+                &--chat {
+                    .message {
+                        background:$oc-red-8;
+
+                        cursor: pointer;
+                        box-shadow: 0 5px 10px $oc-gray-4;
+                        color: white;
+                    }
+                }
+
             }
-            
-            &--you {
+            .you{
+
                 justify-content: flex-end;
                 display: flex;
-                
-    
-                .message {
-                    background: $oc-blue-8;
-                    box-shadow: 0 5px 10px $oc-gray-4;
+
+                .from{
+                    padding: 0.03rem 0.3rem 0.03rem 0.3rem;
+                    font-size: 0.4rem;
+                    font-weight: 700;
                     color: white;
+                    background: $oc-yellow-6;
+                    border-radius: 3px;
+                    margin-right:5px;
+
+                }
+                .date{
+                    font-size: 0.5rem;
+                    color: $oc-blue-8;
+                }
+                .check{
+                    font-size: 0.6rem;
+                    font-weight: 600;
+                    color: $oc-yellow-6;
+                    margin-left: 5px;
+                    margin-right:20px;
                 }
             }
-            &--chat {
-                .message {
-                    background:$oc-red-8;
-           
-                    cursor: pointer;
-                    box-shadow: 0 5px 10px $oc-gray-4;
+            .them{
+                .from{
+                    padding: 0.03rem 0.3rem 0.03rem 0.3rem;
+                    font-size: 0.4rem;
+                    font-weight: 700;
                     color: white;
+                    margin-left:20px;
+                    margin-right:5px;
+                    background: $oc-yellow-6;
+                    border-radius: 3px;
+
+                }
+                .date{
+                    font-size: 0.5rem;
+                    color: $oc-blue-8;
+
+                }
+                .check{
+                    font-size: 0.6rem;
+                    font-weight: 700;
+                    color: $oc-yellow-5;
+                    margin-left: 5px;
                 }
             }
-             
-        }
-        .you{
-           
-            justify-content: flex-end;
-            display: flex;
-            
-            .from{
-                padding: 0.03rem 0.3rem 0.03rem 0.3rem;
-                font-size: 0.4rem;
-                font-weight: 700;
-                color: white;
-                background: $oc-yellow-6;
-                border-radius: 3px;
-                margin-right:5px; 
-             
-            }
-            .date{
-                font-size: 0.5rem;
-                color: $oc-blue-8;
-            }
-            .check{
-                font-size: 0.6rem;
-                font-weight: 600;
-                color: $oc-yellow-6;
-                margin-left: 5px;
-                margin-right:20px; 
-            }
-        }
-        .them{
-            .from{
-                padding: 0.03rem 0.3rem 0.03rem 0.3rem;
-                font-size: 0.4rem;
-                font-weight: 700;
-                color: white;
-                margin-left:20px; 
-                margin-right:5px; 
-                background: $oc-yellow-6;
-                border-radius: 3px;
-                
-            }
-            .date{
-                font-size: 0.5rem;
-                color: $oc-blue-8;
-               
-            }
-            .check{
-                font-size: 0.6rem;
-                font-weight: 700;
-                color: $oc-yellow-5;
-                margin-left: 5px;
-            }
-        }
 
 
-    }
-        
+        }
+
     }
 
 
-    
+
     .comment-form{
-        height: 50px;
-
-        margin: 0 0.4rem 0 0.4rem;
-		display: flex;
-		align-items: center;
-		box-sizing: border-box;
-
+        min-height: 40px;
+        background: white;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        .add-icon{
+            background: white;
+            color: $oc-gray-6;
+            margin-left:0.5rem;
+            cursor: pointer;
+        }
         .submit-text{
             flex: 1 0 auto;
             width: 180px;
-            box-shadow: 0 1px 2px $oc-gray-4;
-			height: 40px;
-			box-sizing: border-box;
-			border: 0;
+
+            height: 40px;
+            box-sizing: border-box;
+            border: 0;
 
             padding: 0.5rem;
-			color: black;
-			
-			font-size: 14px;
-			font-weight: 400;
-			outline: none;
-            
-        }
-        .submit-btn{
-            //background: $oc-blue-6;
-			height: 40px;
-			color:$oc-gray-6;
-			font-size: 18px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 40px;
-			border: 0;
-            box-shadow: 0 1px 2px $oc-gray-4;
+            color: black;
+
+            font-size: 14px;
+            font-weight: 400;
+            outline: none;
 
         }
-        
+        .submit-btn{
+            background: white;
+            height: 40px;
+            color:$oc-gray-6;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            border: 0;
+            cursor: pointer;
+
+        }
+
     }
 
     .user-list-template{
@@ -187,7 +192,7 @@
                 border-top: $oc-gray-4 solid 1px;
 
                 align-items: center;
-       
+
                 .profile{
 
                     margin-right: 0.2rem;
@@ -210,9 +215,9 @@
                         text-overflow: ellipsis;
                         -o-text-overflow: ellipsis;
                     }
-    
+
                 }
-               
+
             }
 
         }
@@ -220,39 +225,39 @@
             height: 30px;
             width: 250px;
             display: flex;
-        
-           // background:  $oc-blue-7;
             align-items: center;
-        
             overflow-x: auto;
 
-            
+            margin-top: 1rem;
             &::-webkit-scrollbar {
                 display: none;
             }
             .send-user{
-            
-                    text-align: center;
-                    flex: 0 0 4rem;
-                    padding: 0.03rem 0.3rem 0.03rem 0.3rem;
-                    font-size: 0.4rem;
-                    font-weight: 700;
-                    color: white;
-                    margin-left:10px; 
-                    margin-right:10px; 
-                    background: $oc-yellow-6;
-                    border-radius: 3px;
-                 
 
-                    .name{
+                text-align: center;
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: $oc-blue-9;
+                margin-left:0.5rem;
+
+                .name{
+                    display: inline;
+                }
+                .cancel{
+                    display: none;
+                    color: $oc-gray-6;
+                    font-size: 0.5rem;
+                    font-weight: 900;
+                    cursor: pointer;
+                }
+                &:hover {
+                    .cancel{
+
+                        margin-left:0.2rem;
                         display: inline;
                     }
-                    .cancel{
-                        float: right;
-                        color: $oc-yellow-9;
-                        font-weight: 900;
-                        cursor: pointer;
-                    }
+
+                }
 
 
 

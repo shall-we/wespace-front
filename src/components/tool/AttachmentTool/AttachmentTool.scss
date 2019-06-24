@@ -4,20 +4,57 @@
 .attach-Template{
     flex: 1;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     background : none;
     height: calc(100vh - 7rem);
+    border : 1px solid rgba(0, 0, 0, 0.14);
+    border-bottom: 0;
+    border-right: 0;
+    border-top : 0;
 
-    .upload-img{
-        width:100%;
-        flex:0.1;
-        display:flex;
-        align-items: center;
-        justify-content: center;
-        background-color : rgb(61,68,129);
-        img{
-          height: 4rem;
-          cursor: pointer;
+    //.upload-img{
+    //    width:100%;
+    //    flex:0.1;
+    //    display:flex;
+    //    align-items: center;
+    //    justify-content: center;
+    //    background-color : rgb(61,68,129);
+    //    img{
+    //      height: 4rem;
+    //      cursor: pointer;
+    //    }
+    //  }
+
+    .attach-content{
+        flex:0.9;
+        overflow-y: auto;
+        overflow-x: hidden;
+        width: 100%;
+        background: white;
+    }
+
+    .selectFile{
+        flex : 0.1;
+        display: flex;
+        padding : 1rem;
+        border : 1px solid rgba(0, 0, 0, 0.14);
+        border-bottom: 0;
+        border-right: 0;
+        border-left: 0;
+
+        label{
+            cursor: pointer;
+            text-align:center;
+            border-color: dodgerblue;
+            font-size: 1rem;
+            border-radius:15px;
+            border-style:dashed;
+            border-width :3px;
+            padding:1rem;
+
         }
-      }
+
+    }
+
+
 }

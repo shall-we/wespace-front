@@ -38,12 +38,21 @@ const initialState = Map({
     user_list: [],
     not_friend_users: [],
     authorizated: false,
-    isLogin : false
+    isLogin : false,
+    result_join : {},
 });
 
 // reducer
 export default handleActions({
     [LOGOUT]: (state, action) => initialState,
+    ...pender({
+        type : [JOIN],
+        onSuccess : (state, action)=>{
+            const data = action.payload.data;
+            console.log('JOIN', data);
+            return state.set('result_join', data);
+        }
+    }),
     ...pender({
         type: [LOGIN],
         onSuccess: (state, action) => {
