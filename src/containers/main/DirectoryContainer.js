@@ -278,7 +278,6 @@ class DirectoryContainer extends React.Component {
 
     componentDidMount(){
         socket.on('updateFolderList',(obj)=>{
-            console.log('폴더 업뎃함');
             this.updateFolderList();
         });
         socket.on('updateNoteLock',(obj)=>{
@@ -306,7 +305,13 @@ class DirectoryContainer extends React.Component {
             this.outFriend(friendId);
         });
 
-        //채팅 왔을때
+
+        socket.on('fetchChatList', ()=> {
+            const {ChatActions, id} = this.props;
+            console.log("fetchChatList!");
+            ChatActions.setPrivateChatList(id);
+        });
+
         socket.on('broadcastChat', (chatObj)=>{
             const {ChatActions} = this.props;
             ChatActions.setChatMessage(chatObj);

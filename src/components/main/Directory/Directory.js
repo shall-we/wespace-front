@@ -365,6 +365,7 @@ class Directory extends React.Component {
 
     async handleChatDrawerOpen(user_id, friend_id) {
 
+        const {ChatActions} = this.props;
         let response = await api.getSingleChat(user_id, friend_id);
         let { result } = response.data;
         let { data } = response.data;
@@ -376,6 +377,7 @@ class Directory extends React.Component {
 
         } else if (result === "notExist") {
             result = await api.initChatroom(user_id, friend_id);
+            ChatActions.setPrivateChatList(user_id);
             chatroom_id = result.data.data.chatroom_id;
 
         } else {

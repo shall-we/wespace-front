@@ -1,6 +1,6 @@
 
 import socketio from "socket.io-client";
-const URL = "http://192.168.0.19:4000";
+const URL = "http://192.168.0.92:4000";
 export let socket = socketio.connect(URL);
 
 export function initSocket () {
