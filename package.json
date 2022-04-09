@@ -48,7 +48,7 @@
     "js-cookie": "^2.2.0",
     "marked": "^4.0.10",
     "mini-css-extract-plugin": "0.5.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-sass": "^7.0.0",
     "open-color": "^1.6.3",
     "optimize-css-assets-webpack-plugin": "5.0.1",
